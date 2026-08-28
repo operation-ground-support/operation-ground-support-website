@@ -1,0 +1,34 @@
+name: Site CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    name: Build and check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      # Type-checks .astro files and validates every content file against its schema.
+      - name: Check
+        run: npm run check
+
+      # Also fails on any internal link pointing at a page that does not exist.
+      - name: Build
+        run: npm run build
+
+      # Reports stale pages and the outstanding content gaps. Non-blocking for the gaps; fails if
+      # a page or the needs list has aged out.
+      - name: Audit
+        run: node tools/audit.mjs

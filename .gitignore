@@ -1,0 +1,9 @@
+# Astro build output and cache
+/dist
+/.astro
+# npm
+/node_modules
+/.npm-cache
+# Editors / OS
+.DS_Store
+*.swp

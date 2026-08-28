@@ -1,0 +1,106 @@
+---
+/**
+ * Audience triage: three doors, phrased in the visitor's own voice.
+ *
+ * A pantry homepage has audiences arriving with incompatible goals — someone who needs food,
+ * someone with a car full of coats, someone with a free Saturday. Making them choose in their
+ * own words is better information architecture than a single "Learn more".
+ *
+ * Deliberately not icon cards. Icon triptychs are the strongest single tell of a template site,
+ * and an icon adds nothing to "I need help" that the words do not already carry.
+ *
+ * "I need help" is first. On the current site nothing at all is addressed to the people served;
+ * everything speaks to donors and volunteers. Putting that door first is a service obligation,
+ * and it also happens to tell a funder that this organization knows its community.
+ */
+import { useTranslations } from '../i18n/ui'
+import { navLink, type Locale } from '../i18n/routes'
+
+interface Props {
+  locale: Locale
+}
+
+const { locale } = Astro.props
+const t = useTranslations(locale)
+
+// As in the nav, a door whose page is not translated still opens — onto the English page, marked
+// as such. "I need help" is the one that must never be a fallback, and it is fully translated.
+// `hreflang` without `lang`, for the reason given in Header.astro.
+const doors = [
+  { ...navLink('getHelp', locale), label: t('cta.getHelp') },
+  { ...navLink('give', locale), label: t('cta.give') },
+  { ...navLink('volunteer', locale), label: t('cta.volunteer') },
+]
+---
+
+<ul class="doors">
+  {
+    doors.map((door) => (
+      <li>
+        <a
+          href={door.href}
+          hreflang={door.isFallback ? door.lang : undefined}
+        >
+          {door.label}
+          {door.isFallback && (
+            <>
+              {' '}
+              <span class="doors__badge" aria-hidden="true">{t('nav.langBadge')}</span>
+              <span class="visually-hidden">({t('nav.inOtherLanguage')})</span>
+            </>
+          )}
+        </a>
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .doors {
+    list-style: none;
+    padding: 0;
+    margin: var(--space-l) 0 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-s);
+  }
+
+  .doors a {
+    display: inline-block;
+    padding: var(--space-xs) var(--space-m);
+    border: 1px solid var(--rule-strong);
+    border-radius: var(--radius);
+    text-decoration: none;
+    color: var(--ink);
+    font-weight: 500;
+    background: var(--paper);
+    transition: border-color 120ms ease, background 120ms ease;
+  }
+
+  .doors a:hover {
+    border-color: var(--accent);
+    background: var(--accent-wash);
+  }
+
+  /* The first door is the one for people who need something. It carries the weight. */
+  .doors li:first-child a {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--paper);
+  }
+
+  .doors li:first-child a:hover {
+    background: var(--accent-deep);
+  }
+
+  .doors__badge {
+    font-size: 0.7em;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--ink-faint);
+    border: 1px solid var(--rule-strong);
+    border-radius: var(--radius);
+    padding: 0 0.25em;
+    vertical-align: 0.1em;
+  }
+</style>

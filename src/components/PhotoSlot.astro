@@ -1,0 +1,50 @@
+---
+/**
+ * A placeholder for a photograph that has not been taken yet.
+ *
+ * It renders as a labelled frame during `just dev` and renders *nothing at all* in a production
+ * build. That asymmetry is deliberate: the site should never ship a grey box, but the shot list
+ * should be visible to whoever is working on the page, in the exact spot the picture goes.
+ *
+ * The `brief` is a shot instruction, not a description. Write what to point the camera at.
+ */
+interface Props {
+  brief: string
+  width?: 'content' | 'wide'
+}
+
+const { brief, width = 'content' } = Astro.props
+const isDev = import.meta.env.DEV
+---
+
+{
+  isDev && (
+    <figure class={width === 'wide' ? 'slot wide' : 'slot'}>
+      <div class="slot__frame">
+        <span class="eyebrow">Photo needed</span>
+        <p>{brief}</p>
+      </div>
+    </figure>
+  )
+}
+
+<style>
+  .slot {
+    margin-block: var(--space-l);
+  }
+
+  .slot__frame {
+    border: 1px dashed var(--rule-strong);
+    background: var(--paper-sunk);
+    padding: var(--space-l) var(--space-m);
+    text-align: center;
+    color: var(--ink-muted);
+    font-size: var(--text-sm);
+  }
+
+  .slot__frame p {
+    margin-block-start: var(--space-2xs);
+    max-width: 30rem;
+    margin-inline: auto;
+  }
+</style>

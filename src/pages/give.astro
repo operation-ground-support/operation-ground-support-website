@@ -1,0 +1,148 @@
+---
+/**
+ * Give — goods, money, and wish list on one page.
+ *
+ * The current site splits drop-off logistics across a Donate page and a Contact page that repeat
+ * each other nearly verbatim, and has no way to give money at all. One page, three ways to give,
+ * logistics stated once.
+ */
+import Base from '../layouts/Base.astro'
+import NeedsList from '../components/NeedsList.astro'
+import PhotoSlot from '../components/PhotoSlot.astro'
+import Todo from '../components/Todo.astro'
+import { org } from '../data/org'
+
+const locale = 'en' as const
+---
+
+<Base
+  title="Give"
+  description="Drop off clothing, food, hygiene supplies, and household goods at Grace United Methodist Church in Old East Dallas, or give money to Operation Ground Support."
+  locale={locale}
+  pageKey="give"
+  lastReviewed="2026-08-27"
+>
+  <h1>Give</h1>
+  <p class="lede">
+    Goods can be dropped off during the hours below. Everything collected goes directly to
+    neighbors; nothing is resold.
+  </p>
+
+  <NeedsList locale={locale} as="h2" />
+
+  <section class="section">
+    <h2>Dropping off</h2>
+    <dl class="hours">
+      {org.dropOff.hours.map((h) => (
+        <div>
+          <dt>{h.days.en}</dt>
+          <dd>{h.time.en}</dd>
+        </div>
+      ))}
+    </dl>
+    <p class="where">
+      {org.location.partner}
+      {org.location.street && <> — {org.location.street}, {org.location.city}, {org.location.state} {org.location.zip}</>}
+    </p>
+    <ol class="steps">
+      {org.dropOff.instructions.map((step) => <li>{step}</li>)}
+    </ol>
+    {org.location.mapUrl && <p><a href={org.location.mapUrl} rel="noopener">Open in maps</a></p>}
+    <p class="note">
+      Clothing may be new or used. Hygiene products must be new and unopened.
+    </p>
+  </section>
+
+  <PhotoSlot
+    brief="The back door and the doorbell, shot from where a donor stands holding a box. This is a wayfinding photo, so frame it wide enough to recognise the building."
+  />
+
+  <section class="section">
+    <h2>Giving money</h2>
+    {
+      org.donate.url ? (
+        <>
+          <p>
+            {org.donate.conversion ??
+              'Money is used to buy what the shelves are short of, which is usually diapers, hygiene products, and food.'}
+          </p>
+          <p><a class="button" href={org.donate.url} rel="noopener">Donate{org.donate.platform ? ` via ${org.donate.platform}` : ''}</a></p>
+        </>
+      ) : (
+        <Todo label="Not set up yet">
+          Set up a donation processor and put its URL in <code>org.donate.url</code>. Zeffy takes 0%
+          and is the usual choice for a small organization; Givebutter is the common default if you
+          want built-in donor management. Until this exists there is no way to give money on the
+          site, which is one of the things a funder checks first.
+        </Todo>
+      )
+    }
+  </section>
+
+  {
+    org.registryUrl && (
+      <section class="section">
+        <h2>Wish list</h2>
+        <p>
+          If you would rather ship something directly,
+          {' '}<a href={org.registryUrl} rel="noopener">our wish list</a> stays in sync with what is short.
+        </p>
+      </section>
+    )
+  }
+
+  <section class="section">
+    <h2>Other ways</h2>
+    <p>
+      Congregations, schools, and workplaces run collection drives for us. Email
+      {' '}<a href={`mailto:${org.email}`}>{org.email}</a> and we will tell you what is short that month
+      and lend you boxes.
+    </p>
+  </section>
+</Base>
+
+<style>
+  .section {
+    margin-block-start: var(--space-xl);
+  }
+
+  .hours {
+    margin-block-start: var(--space-s);
+    display: grid;
+    gap: var(--space-3xs) var(--space-m);
+    grid-template-columns: max-content 1fr;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .hours > div {
+    display: contents;
+  }
+
+  .hours dt {
+    font-weight: 500;
+  }
+
+  .hours dd {
+    margin: 0;
+    color: var(--ink-muted);
+  }
+
+  .where {
+    margin-block-start: var(--space-s);
+  }
+
+  .steps {
+    margin-block-start: var(--space-s);
+    padding-inline-start: var(--space-m);
+  }
+
+  .steps li + li {
+    margin-block-start: var(--space-2xs);
+  }
+
+  .note {
+    margin-block-start: var(--space-s);
+    color: var(--ink-muted);
+    font-size: var(--text-sm);
+  }
+</style>

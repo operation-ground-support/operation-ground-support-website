@@ -1,0 +1,101 @@
+---
+/**
+ * The footer repeats the identity facts, because a reviewer who scrolled to the bottom of a page
+ * should not have to scroll back up to find the EIN. Dallas Life does this and it is the right
+ * instinct.
+ */
+import { org } from '../data/org'
+import { useTranslations } from '../i18n/ui'
+import { path, type Locale } from '../i18n/routes'
+
+interface Props {
+  locale: Locale
+}
+
+const { locale } = Astro.props
+const t = useTranslations(locale)
+
+const address = [org.location.street, `${org.location.city}, ${org.location.state} ${org.location.zip ?? ''}`.trim()]
+  .filter(Boolean)
+  .join(' · ')
+
+const latestFiling = org.filings.length > 0 ? org.filings[0] : null
+---
+
+<footer class="footer full">
+  <div class="footer__inner">
+    <div class="footer__col">
+      <p class="footer__name">{org.name}</p>
+      <p class="footer__muted">{t('footer.tagline')}</p>
+      {org.ein && <p class="footer__muted">{t('bar.ein')} {org.ein}</p>}
+    </div>
+
+    <div class="footer__col">
+      <h2 class="eyebrow">{t('footer.contact')}</h2>
+      <p><a href={`mailto:${org.email}`}>{org.email}</a></p>
+      {org.phone && (
+        <p><a href={`tel:${org.phone.replace(/[^0-9+]/g, '')}`}>{org.phone}</a></p>
+      )}
+      {org.location.street && (
+        <p class="footer__muted">
+          {org.location.mapUrl ? <a href={org.location.mapUrl} rel="noopener">{address}</a> : address}
+        </p>
+      )}
+    </div>
+
+    <div class="footer__col">
+      <h2 class="eyebrow">{t('footer.transparency')}</h2>
+      <ul>
+        {org.determinationLetter && <li><a href={org.determinationLetter}>{t('bar.determination')}</a></li>}
+        {latestFiling && <li><a href={latestFiling.href}>{t('bar.financials')} ({latestFiling.year})</a></li>}
+        {org.candidUrl && <li><a href={org.candidUrl} rel="noopener">{t('bar.candid')}</a></li>}
+        {org.annualReport && <li><a href={org.annualReport}>Annual report</a></li>}
+        {path('about', locale) && <li><a href={path('about', locale)!}>{t('nav.about')}</a></li>}
+      </ul>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    background: var(--paper-sunk);
+    border-block-start: 1px solid var(--rule);
+    font-size: var(--text-sm);
+    padding-block: var(--space-xl);
+  }
+
+  .footer__inner {
+    max-width: calc(var(--measure) + 20rem);
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+    display: grid;
+    gap: var(--space-l);
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  }
+
+  .footer__name {
+    font-family: var(--font-serif), Georgia, serif;
+    font-weight: 600;
+    font-size: var(--text-lg);
+  }
+
+  .footer__muted {
+    color: var(--ink-muted);
+  }
+
+  .footer__col ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .footer__col :global(.eyebrow) {
+    margin-block-end: var(--space-2xs);
+    display: block;
+  }
+
+  .footer__col li + li,
+  .footer__col p + p {
+    margin-block-start: var(--space-3xs);
+  }
+</style>

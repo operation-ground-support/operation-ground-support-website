@@ -1,0 +1,75 @@
+---
+/**
+ * Two or three counted numbers.
+ *
+ * The rule enforced here is that a metric cannot be rendered without a `basis` — the sentence
+ * explaining what was counted and how. That is not decoration: "we distribute roughly 40 bags of
+ * groceries a week, counted at the door" is more persuasive to a grant reviewer than "4,000
+ * families served", precisely because it sounds like someone counted rather than estimated.
+ *
+ * If `org.metrics` is empty this renders nothing. Do not fill it with plausible numbers to make
+ * the section appear — an invented figure that a reviewer probes is worse than a missing one.
+ */
+import { org } from '../data/org'
+import { useTranslations, formatDate } from '../i18n/ui'
+import type { Locale } from '../i18n/routes'
+
+interface Props {
+  locale: Locale
+}
+
+const { locale } = Astro.props
+const t = useTranslations(locale)
+const metrics = org.metrics
+---
+
+{
+  metrics.length > 0 && (
+    <dl class="metrics wide">
+      {metrics.map((m) => (
+        <div class="metric">
+          <dt class="metric__value">{m.value}</dt>
+          <dd class="metric__label">
+            {m.label}
+            <span class="metric__basis">
+              {m.basis} · {t('metrics.asOf')} {formatDate(new Date(m.asOf), locale)}
+            </span>
+          </dd>
+        </div>
+      ))}
+    </dl>
+  )
+}
+
+<style>
+  .metrics {
+    display: grid;
+    gap: var(--space-l);
+    grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+    margin: 0;
+    padding-block: var(--space-m);
+    border-block: 1px solid var(--rule);
+  }
+
+  .metric__value {
+    font-family: var(--font-serif), Georgia, serif;
+    font-size: var(--text-3xl);
+    font-weight: 600;
+    line-height: 1;
+    font-variant-numeric: tabular-nums lining-nums;
+    color: var(--accent);
+  }
+
+  .metric__label {
+    margin: var(--space-2xs) 0 0;
+    font-size: var(--text-sm);
+    line-height: var(--leading-snug);
+  }
+
+  .metric__basis {
+    display: block;
+    margin-block-start: var(--space-3xs);
+    color: var(--ink-faint);
+    font-size: var(--text-xs);
+  }
+</style>

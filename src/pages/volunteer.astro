@@ -1,0 +1,90 @@
+---
+import Base from '../layouts/Base.astro'
+import EventList from '../components/EventList.astro'
+import PhotoSlot from '../components/PhotoSlot.astro'
+import Todo from '../components/Todo.astro'
+import { org } from '../data/org'
+
+const locale = 'en' as const
+---
+
+<Base
+  title="Volunteer"
+  description="Sort donations, pack bags, and staff distributions with Operation Ground Support in Old East Dallas."
+  locale={locale}
+  pageKey="volunteer"
+  lastReviewed="2026-08-27"
+>
+  <h1>Volunteer</h1>
+  <p class="lede">
+    Most of the work is sorting what comes in, packing it, and handing it out. No experience is
+    needed and no commitment is required beyond the shift you sign up for.
+  </p>
+
+  <section class="section">
+    <h2>What you would actually do</h2>
+    <ul class="tasks">
+      <li>Sort clothing by type and size, and set aside what is not usable.</li>
+      <li>Check hygiene products for damaged or opened packaging.</li>
+      <li>Pack grocery bags and stage boxes for distribution.</li>
+      <li>Staff the door during open hours.</li>
+      <li>Break down cardboard and keep the basement navigable, which matters more than it sounds.</li>
+    </ul>
+    {/* TODO: replace this list with the real one once someone who runs a shift reviews it.
+        Specificity is the whole point — "help our mission" recruits nobody. */}
+  </section>
+
+  <section class="section">
+    <h2>Signing up</h2>
+    {
+      org.signUpUrl ? (
+        <p><a class="button" href={org.signUpUrl} rel="noopener">Sign up to volunteer</a></p>
+      ) : (
+        <Todo label="Link needed">
+          Put the volunteer sign-up form URL in <code>org.signUpUrl</code>. The current site uses a
+          Google Form, which is fine — link it here rather than making it a separate nav item.
+        </Todo>
+      )
+    }
+    <p class="note">
+      Groups are welcome. Email <a href={`mailto:${org.email}`}>{org.email}</a> before bringing more
+      than about six people, so there is room and enough to do.
+    </p>
+  </section>
+
+  <PhotoSlot
+    brief="Hands sorting or packing — close, from above, no faces. This is the one image on the site that shows work happening, so it is worth shooting several and keeping the sharpest."
+  />
+
+  <EventList locale={locale} />
+
+  <section class="section">
+    <h2>Photographs and privacy</h2>
+    <p>
+      We do not photograph the people we serve. Volunteers are sometimes photographed for this site
+      and for updates, and we ask first — you can always say no, and it changes nothing about your
+      shift.
+    </p>
+  </section>
+</Base>
+
+<style>
+  .section {
+    margin-block-start: var(--space-xl);
+  }
+
+  .tasks {
+    margin-block-start: var(--space-s);
+    padding-inline-start: var(--space-m);
+  }
+
+  .tasks li + li {
+    margin-block-start: var(--space-2xs);
+  }
+
+  .note {
+    margin-block-start: var(--space-m);
+    color: var(--ink-muted);
+    font-size: var(--text-sm);
+  }
+</style>

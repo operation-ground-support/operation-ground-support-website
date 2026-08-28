@@ -1,0 +1,123 @@
+---
+/**
+ * A thin strip above the masthead carrying the EIN, the 501(c)(3) letter, financial filings, and
+ * the language switch.
+ *
+ * This is the single highest-value element on the site for the stated problem. A grant reviewer
+ * arrives running a checklist, and the first two items are "is this a real 501(c)(3)" and "can I
+ * see where the money goes". Putting the answers above the fold on every page, before being
+ * asked, is what separates an organization that reads as established from one that reads as new.
+ *
+ * Every transparency item is conditional on the underlying fact existing in `org.ts`, so the bar
+ * currently carries only the language switch. That emptiness is the actual problem to fix, and
+ * `just audit` keeps saying so.
+ */
+import { org } from '../data/org'
+import { useTranslations } from '../i18n/ui'
+import { switchLocale, type Locale, type PageKey } from '../i18n/routes'
+
+interface Props {
+  locale: Locale
+  pageKey: PageKey
+}
+
+const { locale, pageKey } = Astro.props
+const t = useTranslations(locale)
+
+const other: Locale = locale === 'en' ? 'es' : 'en'
+// Always offer the switch. When this page has no counterpart the switcher lands on the other
+// language's home page rather than disappearing — a visitor who asks for Spanish should end up
+// somewhere Spanish, even if it is not the page they were on.
+const otherLang = switchLocale(pageKey, other)
+
+const latestFiling = org.filings.length > 0 ? org.filings[0] : null
+
+/** Explains, on hover, that the switch will not land on this same page. */
+const langTitle = otherLang.isHomeFallback
+  ? other === 'es'
+    ? 'Esta página solo está en inglés. Ir al inicio en español.'
+    : 'This page is only in English. Go to the English home page.'
+  : undefined
+---
+
+<div class="bar full" aria-label={t('a11y.transparencyBar')}>
+    <div class="bar__inner">
+      <ul class="bar__list">
+        {org.ein && (
+          <li>
+            <span class="bar__label">{t('bar.ein')}</span> <span class="bar__value">{org.ein}</span>
+          </li>
+        )}
+        {org.determinationLetter && (
+          <li>
+            <a href={org.determinationLetter}>{t('bar.determination')}</a>
+          </li>
+        )}
+        {latestFiling && (
+          <li>
+            <a href={latestFiling.href}>
+              {t('bar.financials')} ({latestFiling.year})
+            </a>
+          </li>
+        )}
+        {org.candidUrl && (
+          <li>
+            <a href={org.candidUrl} rel="noopener">
+              {t('bar.candid')}
+            </a>
+          </li>
+        )}
+      </ul>
+      <a class="bar__lang" href={otherLang.href} lang={other} hreflang={other} title={langTitle}>
+        {t('bar.otherLanguage')}
+      </a>
+    </div>
+</div>
+
+<style>
+  .bar {
+    background: var(--paper-sunk);
+    border-block-end: 1px solid var(--rule);
+    font-size: var(--text-xs);
+    color: var(--ink-muted);
+  }
+
+  .bar__inner {
+    max-width: calc(var(--measure) + 20rem);
+    margin-inline: auto;
+    padding: var(--space-2xs) var(--gutter);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-xs);
+  }
+
+  .bar__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-s);
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .bar__label {
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .bar__value {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .bar a {
+    color: inherit;
+  }
+
+  .bar__lang {
+    font-weight: 500;
+    white-space: nowrap;
+  }
+</style>

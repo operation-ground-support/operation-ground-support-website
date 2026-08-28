@@ -1,0 +1,147 @@
+---
+/**
+ * The dated "what we need right now" list.
+ *
+ * Rendered from the newest file in `src/content/needs/`. The date is shown prominently and not
+ * apologetically: a list dated last week is proof of an active operation, and it is the reason
+ * this component exists as data rather than as a static bulleted list in a page.
+ */
+import { getCollection } from 'astro:content'
+import { useTranslations, formatDate } from '../i18n/ui'
+import { tr } from '../i18n/content'
+import type { Locale } from '../i18n/routes'
+
+interface Props {
+  locale: Locale
+  /** Heading level to render, so this can sit under an h1 or an h2 without breaking outline. */
+  as?: 'h2' | 'h3'
+}
+
+const { locale, as = 'h2' } = Astro.props
+const t = useTranslations(locale)
+
+const all = await getCollection('needs')
+const latest = all.sort((a, b) => b.data.date.getTime() - a.data.date.getTime())[0]
+
+/** Items are either a bare (possibly localized) string or an object with `urgent`/`note`. */
+function normalize(item: unknown) {
+  if (typeof item === 'string' || (item && typeof item === 'object' && !('name' in (item as object)))) {
+    return { name: item as any, urgent: false, note: undefined as any }
+  }
+  return item as { name: any; urgent: boolean; note?: any }
+}
+
+const Heading = as
+---
+
+{
+  latest ? (
+    <section class="needs">
+      <div class="needs__head">
+        <Heading id="needs">{t('needs.heading')}</Heading>
+        <p class="needs__date">
+          <span class="eyebrow">{t('needs.updated')}</span>{' '}
+          <time datetime={latest.data.date.toISOString().slice(0, 10)}>
+            {formatDate(latest.data.date, locale)}
+          </time>
+        </p>
+      </div>
+
+      <div class="needs__grid">
+        {latest.data.categories.map((category) => (
+          <div class="needs__category">
+            <h3 class="needs__categoryName">{tr(category.name, locale)}</h3>
+            <ul>
+              {category.items.map((raw) => {
+                const item = normalize(raw)
+                return (
+                  <li class={item.urgent ? 'is-urgent' : undefined}>
+                    {tr(item.name, locale)}
+                    {item.note && <span class="needs__note"> — {tr(item.note, locale)}</span>}
+                    {item.urgent && <span class="visually-hidden"> ({t('needs.urgent')})</span>}
+                  </li>
+                )
+              })}
+            </ul>
+          </div>
+        ))}
+      </div>
+
+      {latest.data.notNeeded.length > 0 && (
+        <p class="needs__not">
+          <span class="eyebrow">{t('needs.notNeeded')}</span>{' '}
+          {latest.data.notNeeded.map((n) => tr(n, locale)).join(', ')}.
+        </p>
+      )}
+    </section>
+  ) : (
+    <p>{t('needs.empty')}</p>
+  )
+}
+
+<style>
+  .needs__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-2xs) var(--space-m);
+    padding-block-end: var(--space-2xs);
+    border-block-end: 1px solid var(--rule-strong);
+  }
+
+  .needs__date {
+    color: var(--ink-muted);
+    font-size: var(--text-sm);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .needs__grid {
+    margin-block-start: var(--space-m);
+    display: grid;
+    gap: var(--space-m) var(--space-l);
+    grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+  }
+
+  .needs__categoryName {
+    font-size: var(--text-base);
+    font-family: var(--font-sans), system-ui, sans-serif;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    margin-block-end: var(--space-3xs);
+  }
+
+  .needs__category ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: var(--text-sm);
+    color: var(--ink-muted);
+  }
+
+  .needs__category li {
+    padding-block: 1px;
+  }
+
+  /* The urgent marker is a rule, not a colour block or an icon. It reads as an editorial mark
+     rather than a badge, and it survives being printed in black and white for a bulletin. */
+  .needs__category li.is-urgent {
+    color: var(--ink);
+    font-weight: 500;
+    box-shadow: inset 3px 0 0 var(--alert);
+    padding-inline-start: var(--space-2xs);
+    margin-inline-start: calc(var(--space-2xs) * -1);
+  }
+
+  .needs__note {
+    color: var(--ink-faint);
+  }
+
+  .needs__not {
+    margin-block-start: var(--space-m);
+    padding-block-start: var(--space-xs);
+    border-block-start: 1px solid var(--rule);
+    font-size: var(--text-sm);
+    color: var(--ink-muted);
+  }
+</style>

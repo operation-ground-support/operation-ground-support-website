@@ -1,0 +1,170 @@
+---
+/**
+ * About — the page that does not exist on the current site, and the structural hole that most
+ * likely cost the funding application.
+ *
+ * Everything a grant reviewer's diligence checklist asks for lives here or in the transparency
+ * bar: who runs this, is the 501(c)(3) real, what has been done, where the money goes, and what
+ * the relationship with the host congregation actually is. Board list, EIN, and one honest
+ * number would move further with a funder than any amount of redesign.
+ *
+ * The sections below render only when the underlying facts exist, so this page is currently
+ * mostly gaps. Those gaps are the worklist; run `just audit`.
+ */
+import Base from '../layouts/Base.astro'
+import MetricRow from '../components/MetricRow.astro'
+import PhotoSlot from '../components/PhotoSlot.astro'
+import Todo from '../components/Todo.astro'
+import { org } from '../data/org'
+
+const locale = 'en' as const
+const people = [
+  { heading: 'Board', list: org.board },
+  { heading: 'Staff and volunteers', list: org.staff },
+].filter((group) => group.list.length > 0)
+---
+
+<Base
+  title="About"
+  description={`Who runs ${org.name}, how it started, and where the money goes.`}
+  locale={locale}
+  pageKey="about"
+  lastReviewed="2026-08-27"
+>
+  <h1>About</h1>
+  <p class="lede">{org.mission}</p>
+
+  <section class="section">
+    <h2>How this works</h2>
+    <p>
+      Donated clothing, food, hygiene supplies, school supplies, and household goods come in through
+      the back door of {org.location.partner} in {org.location.neighborhood}. Volunteers sort them
+      in the basement, and neighbors who need them take them, at no cost, during open hours.
+    </p>
+    {/* TODO: two or three more sentences of history — when this started, what prompted it, and
+        who the neighbors are. Being new is fine; being undated is what reads badly. Write it
+        plainly, without the word "passionate". */}
+    {
+      !org.founded && (
+        <Todo label="History needed">
+          Add the founding year to <code>org.founded</code> and write two or three sentences here on
+          how this started and who it serves. A reviewer cannot tell whether this organization is
+          two months or ten years old, and that ambiguity reads worse than either answer.
+        </Todo>
+      )
+    }
+  </section>
+
+  <MetricRow locale={locale} />
+  {
+    org.metrics.length === 0 && (
+      <Todo label="Numbers needed">
+        Publish at least one number that someone actually counted, in <code>org.metrics</code> —
+        bags handed out in a typical week, households in a month, pounds of food. Include how it was
+        counted and the date. Start counting now even if you cannot publish yet; in six months you
+        will want a year of data. Do not invent a round number to fill this space.
+      </Todo>
+    )
+  }
+
+  <section class="section">
+    <h2>Our partnership with {org.location.partner}</h2>
+    {/* TODO: characterize the relationship. Does the church provide the space rent-free? Is OGS a
+        ministry of the congregation or an independent 501(c)(3) that rents from it? Utilities?
+        A funder reads an uncharacterized partnership as an unexamined one. */}
+    <Todo label="Needs writing">
+      Describe the actual relationship with the church: who provides the space, on what terms,
+      whether the organization is independent of the congregation, and who is accountable for what.
+      On the current site the church appears only as an address and a phone number.
+    </Todo>
+    <PhotoSlot brief="The exterior of Grace UMC, or the stairs down to the basement. Plain, straight-on, no people." />
+  </section>
+
+  {
+    people.length > 0 ? (
+      people.map((group) => (
+        <section class="section">
+          <h2>{group.heading}</h2>
+          <ul class="people">
+            {group.list.map((person) => (
+              <li>
+                <p class="person__name">{person.name}</p>
+                <p class="person__role">{person.role}</p>
+                {person.bio && <p class="person__bio">{person.bio}</p>}
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))
+    ) : (
+      <section class="section">
+        <h2>Board</h2>
+        <Todo label="Most important gap on the site">
+          Fill in <code>org.board</code> with names and roles. A 501(c)(3) with no identifiable
+          people anywhere on its website is the single loudest red flag in grant diligence, and it
+          is the cheapest one to fix. Roles alone are fine if someone does not want a bio.
+        </Todo>
+      </section>
+    )
+  }
+
+  <section class="section">
+    <h2>Money and governance</h2>
+    {
+      org.ein || org.filings.length > 0 || org.determinationLetter ? (
+        <ul class="filings">
+          {org.ein && <li>EIN {org.ein}</li>}
+          {org.determinationLetter && <li><a href={org.determinationLetter}>IRS 501(c)(3) determination letter</a></li>}
+          {org.filings.map((f) => <li><a href={f.href}>Form 990, {f.year}</a></li>)}
+          {org.candidUrl && <li><a href={org.candidUrl} rel="noopener">Candid profile</a></li>}
+          {org.annualReport && <li><a href={org.annualReport}>Annual report</a></li>}
+        </ul>
+      ) : (
+        <Todo label="Nothing verifiable yet">
+          Add the EIN, scan the IRS determination letter into <code>/public/filings/</code>, and
+          claim the free Candid/GuideStar profile. Right now a reviewer cannot confirm the
+          501(c)(3) claim without leaving the site, and most will not bother.
+        </Todo>
+      )
+    }
+  </section>
+</Base>
+
+<style>
+  .section {
+    margin-block-start: var(--space-xl);
+  }
+
+  .people {
+    list-style: none;
+    padding: 0;
+    margin-block-start: var(--space-s);
+    display: grid;
+    gap: var(--space-m);
+    grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  }
+
+  .person__name {
+    font-weight: 500;
+  }
+
+  .person__role {
+    font-size: var(--text-sm);
+    color: var(--ink-muted);
+  }
+
+  .person__bio {
+    margin-block-start: var(--space-3xs);
+    font-size: var(--text-sm);
+    color: var(--ink-muted);
+  }
+
+  .filings {
+    margin-block-start: var(--space-s);
+    padding-inline-start: var(--space-m);
+  }
+
+  .filings li + li {
+    margin-block-start: var(--space-3xs);
+  }
+</style>

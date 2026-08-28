@@ -1,0 +1,96 @@
+---
+/**
+ * Spanish homepage.
+ *
+ * Shorter than the English one, because Get help and Contact are the only pages translated so
+ * far. The other doors still open — onto the English pages, marked "EN" — so a Spanish speaker
+ * can at least discover that the organization takes volunteers. As pages get translated, filling
+ * in `routes.ts` swaps those links over here and in the nav with no other change.
+ */
+import Base from '../../layouts/Base.astro'
+import NeedsList from '../../components/NeedsList.astro'
+import Doors from '../../components/Doors.astro'
+import { org } from '../../data/org'
+import { path } from '../../i18n/routes'
+
+const locale = 'es' as const
+---
+
+<Base
+  title="Inicio"
+  description="Operation Ground Support reparte ropa, comida, artículos de higiene y artículos del hogar sin costo en Old East Dallas."
+  locale={locale}
+  pageKey="home"
+  lastReviewed="2026-08-27"
+>
+  <p class="eyebrow">Old East Dallas</p>
+  <h1 class="statement">Ropa, comida y artículos de primera necesidad, sin costo, para nuestros vecinos.</h1>
+
+  <p class="lede">
+    Recibimos donaciones y las entregamos a quien las necesite, en el sótano de
+    {' '}{org.location.partner}, en {org.location.neighborhood}.
+  </p>
+
+  <Doors locale={locale} />
+
+  <div class="band full">
+    <div class="layout">
+      <NeedsList locale={locale} />
+    </div>
+  </div>
+
+  <section class="section">
+    <h2>Dónde estamos</h2>
+    <p>
+      {org.location.partner}, {org.location.street}, {org.location.city}, {org.location.state} {org.location.zip}.
+    </p>
+    <dl class="hours">
+      {org.dropOff.hours.map((h) => (
+        <div>
+          <dt>{h.days.es}</dt>
+          <dd>{h.time.es}</dd>
+        </div>
+      ))}
+    </dl>
+    <p><a href={path('contact', locale)!}>Contacto</a></p>
+  </section>
+</Base>
+
+<style>
+  .statement {
+    font-size: var(--text-display);
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+    margin-block-start: var(--space-2xs);
+    max-width: 20ch;
+  }
+
+  .lede {
+    margin-block-start: var(--space-m);
+  }
+
+  .section {
+    margin-block-start: var(--space-2xl);
+  }
+
+  .hours {
+    margin-block-start: var(--space-s);
+    display: grid;
+    gap: var(--space-3xs) var(--space-m);
+    grid-template-columns: max-content 1fr;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .hours > div {
+    display: contents;
+  }
+
+  .hours dt {
+    font-weight: 500;
+  }
+
+  .hours dd {
+    margin: 0;
+    color: var(--ink-muted);
+  }
+</style>

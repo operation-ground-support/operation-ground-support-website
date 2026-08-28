@@ -1,0 +1,169 @@
+---
+/**
+ * Upcoming and past events.
+ *
+ * The awkward part of events on a static site: "upcoming" is computed when the site is built, so
+ * a page built in August still calls an August event upcoming in September. Two mitigations,
+ * both cheap:
+ *
+ *   1. Every item carries its ISO timestamp in `data-start`, and a few lines of script move
+ *      anything already past into the past list on load. No framework, no hydration.
+ *   2. The deploy is rebuilt on a schedule so the no-JavaScript rendering is never far off.
+ *      See `docs/operations.md`.
+ *
+ * This is the piece Squarespace gives you natively. It is about forty lines here, which is the
+ * honest price of the portability the rest of the stack buys.
+ */
+import { getCollection } from 'astro:content'
+import { useTranslations, formatDate } from '../i18n/ui'
+import { tr } from '../i18n/content'
+import type { Locale } from '../i18n/routes'
+
+interface Props {
+  locale: Locale
+  /** Cap the upcoming list; the past list is always capped at 4. */
+  limit?: number
+}
+
+const { locale, limit = 6 } = Astro.props
+const t = useTranslations(locale)
+
+const now = Date.now()
+const all = (await getCollection('events')).sort((a, b) => a.data.start.getTime() - b.data.start.getTime())
+
+const upcoming = all.filter((e) => (e.data.end ?? e.data.start).getTime() >= now).slice(0, limit)
+const past = all.filter((e) => (e.data.end ?? e.data.start).getTime() < now).reverse().slice(0, 4)
+
+function timeLabel(start: Date, end?: Date): string {
+  const opts: Intl.DateTimeFormatOptions = { hour: 'numeric', minute: '2-digit', timeZone: 'America/Chicago' }
+  const fmt = (d: Date) => new Intl.DateTimeFormat(locale === 'es' ? 'es-US' : 'en-US', opts).format(d)
+  return end ? `${fmt(start)}–${fmt(end)}` : fmt(start)
+}
+---
+
+<section class="events" data-events>
+  <h2>{t('events.heading')}</h2>
+
+  <ul class="events__list" data-list="upcoming">
+    {
+      upcoming.map((e) => (
+        <li data-start={(e.data.end ?? e.data.start).toISOString()}>
+          <time datetime={e.data.start.toISOString()}>
+            <span class="events__date">{formatDate(e.data.start, locale, { month: 'short', day: 'numeric' })}</span>
+            <span class="events__time">{timeLabel(e.data.start, e.data.end)}</span>
+          </time>
+          <div>
+            <p class="events__title">{tr(e.data.title, locale)}</p>
+            {e.data.location && <p class="events__meta">{tr(e.data.location, locale)}</p>}
+            {e.data.description && <p class="events__meta">{tr(e.data.description, locale)}</p>}
+            {e.data.signUpUrl && <p><a href={e.data.signUpUrl} rel="noopener">{t('cta.volunteer')}</a></p>}
+          </div>
+        </li>
+      ))
+    }
+  </ul>
+
+  <p class="events__empty" data-empty hidden={upcoming.length > 0}>{t('events.none')}</p>
+
+  {
+    past.length > 0 && (
+      <details class="events__past">
+        <summary>{t('events.past')}</summary>
+        <ul class="events__list" data-list="past">
+          {past.map((e) => (
+            <li>
+              <time datetime={e.data.start.toISOString()}>
+                <span class="events__date">{formatDate(e.data.start, locale, { month: 'short', day: 'numeric' })}</span>
+              </time>
+              <div>
+                <p class="events__title">{tr(e.data.title, locale)}</p>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </details>
+    )
+  }
+</section>
+
+<script>
+  // Re-evaluate "upcoming" in the visitor's browser, so a stale build does not advertise an event
+  // that already happened. Progressive enhancement: with scripting off, the build-time split
+  // still applies and is at worst a few days out of date.
+  for (const root of document.querySelectorAll('[data-events]')) {
+    const upcoming = root.querySelector('[data-list="upcoming"]')
+    const past = root.querySelector('[data-list="past"]')
+    const empty = root.querySelector('[data-empty]')
+    if (!upcoming) continue
+
+    const now = Date.now()
+    for (const item of Array.from(upcoming.querySelectorAll('li[data-start]'))) {
+      const start = item.getAttribute('data-start')
+      if (start && new Date(start).getTime() < now) {
+        if (past) past.prepend(item)
+        else item.remove()
+      }
+    }
+    if (empty) (empty as HTMLElement).hidden = upcoming.children.length > 0
+  }
+</script>
+
+<style>
+  .events__list {
+    list-style: none;
+    padding: 0;
+    margin: var(--space-m) 0 0;
+  }
+
+  .events__list li {
+    display: grid;
+    grid-template-columns: 6.5rem 1fr;
+    gap: var(--space-m);
+    padding-block: var(--space-s);
+    border-block-start: 1px solid var(--rule);
+  }
+
+  .events__date {
+    display: block;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .events__time {
+    display: block;
+    font-size: var(--text-xs);
+    color: var(--ink-faint);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .events__title {
+    font-weight: 500;
+  }
+
+  .events__meta {
+    font-size: var(--text-sm);
+    color: var(--ink-muted);
+  }
+
+  .events__empty {
+    color: var(--ink-muted);
+    margin-block-start: var(--space-s);
+  }
+
+  .events__past {
+    margin-block-start: var(--space-l);
+    font-size: var(--text-sm);
+  }
+
+  .events__past summary {
+    cursor: pointer;
+    color: var(--ink-muted);
+  }
+
+  @media (max-width: 32rem) {
+    .events__list li {
+      grid-template-columns: 1fr;
+      gap: var(--space-2xs);
+    }
+  }
+</style>

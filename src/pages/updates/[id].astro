@@ -1,0 +1,69 @@
+---
+import type { GetStaticPaths } from 'astro'
+import Base from '../../layouts/Base.astro'
+import { getCollection, render, type CollectionEntry } from 'astro:content'
+import { formatDate } from '../../i18n/ui'
+
+/** `Astro.props` on a dynamic route is untyped unless the shape is declared. */
+interface Props {
+  post: CollectionEntry<'updates'>
+}
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const posts = await getCollection('updates', ({ data }) => !data.draft)
+  return posts.map((post) => ({ params: { id: post.id }, props: { post } }))
+}
+
+const { post } = Astro.props as Props
+const { Content } = await render(post)
+const locale = post.data.lang
+---
+
+<Base
+  title={post.data.title}
+  description={post.data.summary}
+  locale={locale}
+  pageKey="updates"
+  lastReviewed={post.data.date.toISOString().slice(0, 10)}
+>
+  <article class="flow">
+    <p class="eyebrow">
+      <time datetime={post.data.date.toISOString().slice(0, 10)}>
+        {formatDate(post.data.date, locale)}
+      </time>
+      {post.data.byline && <> · {post.data.byline}</>}
+    </p>
+    <h1>{post.data.title}</h1>
+    <Content />
+  </article>
+  <p class="back"><a href="/updates">All updates</a></p>
+</Base>
+
+<style>
+  article :global(h2) {
+    margin-block-start: var(--space-xl);
+  }
+
+  article :global(p + p) {
+    margin-block-start: var(--space-s);
+  }
+
+  article :global(ul),
+  article :global(ol) {
+    padding-inline-start: var(--space-m);
+  }
+
+  article :global(blockquote) {
+    margin-block: var(--space-m);
+    padding-inline-start: var(--space-m);
+    border-inline-start: 2px solid var(--rule-strong);
+    font-family: var(--font-serif), Georgia, serif;
+    font-size: var(--text-lg);
+    color: var(--ink-muted);
+  }
+
+  .back {
+    margin-block-start: var(--space-2xl);
+    font-size: var(--text-sm);
+  }
+</style>

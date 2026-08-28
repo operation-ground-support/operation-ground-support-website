@@ -1,0 +1,182 @@
+---
+/**
+ * Homepage.
+ *
+ * The largest thing on this page is a sentence, not a photograph. That is the central design
+ * decision of the site: restraint reads as sophistication in this sector, a typographic opening
+ * survives the logo not being finished, and it means the page needs one good photograph instead
+ * of five.
+ */
+import Base from '../layouts/Base.astro'
+import Doors from '../components/Doors.astro'
+import NeedsList from '../components/NeedsList.astro'
+import MetricRow from '../components/MetricRow.astro'
+import EventList from '../components/EventList.astro'
+import PhotoSlot from '../components/PhotoSlot.astro'
+import { org } from '../data/org'
+import { path } from '../i18n/routes'
+import { getCollection } from 'astro:content'
+import { formatDate } from '../i18n/ui'
+
+const locale = 'en' as const
+
+const updates = (await getCollection('updates', ({ data }) => !data.draft && data.lang === 'en'))
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+  .slice(0, 2)
+
+const hours = org.dropOff.hours
+---
+
+<Base
+  title="Home"
+  description={`${org.name} is a 501(c)(3) collecting and distributing clothing, food, hygiene supplies, and household goods from the basement of Grace United Methodist Church in Old East Dallas.`}
+  locale={locale}
+  pageKey="home"
+  lastReviewed="2026-08-27"
+>
+  <p class="eyebrow">Old East Dallas</p>
+  <h1 class="statement">{org.mission}</h1>
+
+  {
+    org.lede ? (
+      <p class="lede">{org.lede}</p>
+    ) : (
+      /* TODO: write the plain-language sentence for `org.lede` and get the board to approve it.
+         Something like: what is collected, who it goes to, how often, and from where. The mission
+         statement above is the formal one; this is the one that tells a stranger what happens. */
+      <p class="lede">
+        We collect clothing, food, hygiene supplies, school supplies, and household goods, and give
+        them to neighbors who need them — from the basement of {org.location.partner} in
+        {' '}{org.location.neighborhood}.
+      </p>
+    )
+  }
+
+  <Doors locale={locale} />
+
+  <MetricRow locale={locale} />
+
+  <div class="band full">
+    <div class="layout">
+      <NeedsList locale={locale} />
+    </div>
+  </div>
+
+  <PhotoSlot
+    width="wide"
+    brief="The one photograph on this page. Shoot the shelves — stocked or bare, both are honest — or boxes staged for a distribution. No faces. Natural light, shot straight-on rather than at an angle."
+  />
+
+  <EventList locale={locale} />
+
+  {
+    updates.length > 0 && (
+      <section class="recent">
+        <h2>Recent updates</h2>
+        <ul>
+          {updates.map((post) => (
+            <li>
+              <time datetime={post.data.date.toISOString().slice(0, 10)}>
+                {formatDate(post.data.date, locale)}
+              </time>
+              <a href={`/updates/${post.id}`}>{post.data.title}</a>
+              <p>{post.data.summary}</p>
+            </li>
+          ))}
+        </ul>
+        <p><a href={path('updates', locale)!}>All updates</a></p>
+      </section>
+    )
+  }
+
+  <section class="find">
+    <h2>Where to find us</h2>
+    <p>
+      {org.location.partner}, {org.location.within}
+      {org.location.street && <>, {org.location.street}, {org.location.city}, {org.location.state} {org.location.zip}</>}.
+    </p>
+    {
+      hours.length > 0 && (
+        <dl class="hours">
+          {hours.map((h) => (
+            <div>
+              <dt>{h.days.en}</dt>
+              <dd>{h.time.en}</dd>
+            </div>
+          ))}
+        </dl>
+      )
+    }
+    <p><a href={path('contact', locale)!}>Directions and drop-off instructions</a></p>
+  </section>
+</Base>
+
+<style>
+  /* The opening statement. Serif, large, tight — and capped in width so it stays a sentence
+     someone reads rather than a banner they skim past. */
+  .statement {
+    font-size: var(--text-display);
+    line-height: 1.08;
+    letter-spacing: -0.02em;
+    margin-block-start: var(--space-2xs);
+    max-width: 18ch;
+  }
+
+  .lede {
+    margin-block-start: var(--space-m);
+  }
+
+  .recent,
+  .find {
+    margin-block-start: var(--space-2xl);
+  }
+
+  .recent ul {
+    list-style: none;
+    padding: 0;
+    margin-block: var(--space-m);
+  }
+
+  .recent li {
+    padding-block: var(--space-s);
+    border-block-start: 1px solid var(--rule);
+  }
+
+  .recent time {
+    display: block;
+    font-size: var(--text-xs);
+    color: var(--ink-faint);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .recent a {
+    font-weight: 500;
+  }
+
+  .recent p {
+    color: var(--ink-muted);
+    font-size: var(--text-sm);
+    margin-block-start: var(--space-3xs);
+  }
+
+  .hours {
+    margin-block: var(--space-s);
+    display: grid;
+    gap: var(--space-3xs) var(--space-m);
+    grid-template-columns: max-content 1fr;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .hours > div {
+    display: contents;
+  }
+
+  .hours dt {
+    font-weight: 500;
+  }
+
+  .hours dd {
+    margin: 0;
+    color: var(--ink-muted);
+  }
+</style>

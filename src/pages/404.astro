@@ -1,0 +1,30 @@
+---
+import Base from '../layouts/Base.astro'
+import { org } from '../data/org'
+---
+
+<Base
+  title="Page not found"
+  description="That page does not exist."
+  locale="en"
+  pageKey="home"
+  lastReviewed="2026-08-27"
+  noindex
+>
+  <h1>That page does not exist</h1>
+  <p class="lede">
+    It may have moved. The pages people usually want are
+    {' '}<a href="/get-help">Get help</a>, <a href="/give">Give</a>, and
+    {' '}<a href="/contact">Contact</a>.
+  </p>
+  <p class="note">
+    If you were looking for something specific, email <a href={`mailto:${org.email}`}>{org.email}</a>.
+  </p>
+</Base>
+
+<style>
+  .note {
+    margin-block-start: var(--space-l);
+    color: var(--ink-muted);
+  }
+</style>

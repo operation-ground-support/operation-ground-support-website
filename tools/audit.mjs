@@ -1,0 +1,132 @@
+/**
+ * `just audit` — the content worklist.
+ *
+ * The design of this site deliberately hides missing facts rather than rendering empty shells, so
+ * something has to make those gaps visible. This is that something. It reports:
+ *
+ *   1. Facts a grant reviewer expects to find that are still `null` in `src/data/org.ts`.
+ *   2. Pages whose `lastReviewed` date has aged out, so a stale page is greppable rather than
+ *      quietly rotting. A stale site is worse in front of a funder than a plain current one.
+ *   3. Pages with no Spanish translation.
+ *   4. How old the current needs list is, since a dated list is the site's proof of life.
+ *
+ * Exits non-zero only for staleness, not for missing facts — filling in a board roster is not
+ * something a build should block on, but a page nobody has looked at in a year is a defect.
+ * `--strict` makes everything fail, for use in CI once the gaps are actually closed.
+ */
+import { readdir, readFile } from 'node:fs/promises'
+import path from 'node:path'
+import { org, REQUIRED_FOR_FUNDERS } from '../src/data/org.ts'
+import { routes, PAGE_KEYS, LOCALES } from '../src/i18n/routes.ts'
+
+const STALE_AFTER_DAYS = 180
+const NEEDS_STALE_AFTER_DAYS = 21
+const strict = process.argv.includes('--strict')
+
+const bold = (s) => `\x1b[1m${s}\x1b[0m`
+const dim = (s) => `\x1b[2m${s}\x1b[0m`
+const red = (s) => `\x1b[31m${s}\x1b[0m`
+const yellow = (s) => `\x1b[33m${s}\x1b[0m`
+const green = (s) => `\x1b[32m${s}\x1b[0m`
+
+const daysSince = (date) => Math.floor((Date.now() - date.getTime()) / 86_400_000)
+
+/** Read a dotted path like `location.street` out of the org object. */
+function get(obj, dotted) {
+  return dotted.split('.').reduce((acc, key) => (acc == null ? acc : acc[key]), obj)
+}
+
+function isMissing(value) {
+  if (value == null) return true
+  if (Array.isArray(value) && value.length === 0) return true
+  if (typeof value === 'string' && value.trim() === '') return true
+  return false
+}
+
+let problems = 0
+
+// 1 -----------------------------------------------------------------------------------------
+console.log(bold('\nFacts funders look for'))
+const missing = REQUIRED_FOR_FUNDERS.filter((f) => isMissing(get(org, f.path)))
+if (missing.length === 0) {
+  console.log(green('  all present'))
+} else {
+  for (const f of missing) {
+    console.log(`  ${yellow('missing')} ${bold(f.path)}`)
+    console.log(dim(`          ${f.why}`))
+  }
+  if (strict) problems += missing.length
+}
+
+// 2 -----------------------------------------------------------------------------------------
+console.log(bold('\nPage freshness'))
+async function walk(dir, out = []) {
+  for (const entry of await readdir(dir, { withFileTypes: true })) {
+    const full = path.join(dir, entry.name)
+    if (entry.isDirectory()) await walk(full, out)
+    else if (entry.name.endsWith('.astro')) out.push(full)
+  }
+  return out
+}
+
+const pages = await walk('src/pages')
+const stale = []
+for (const file of pages) {
+  const source = await readFile(file, 'utf8')
+  const match = source.match(/lastReviewed=["'](\d{4}-\d{2}-\d{2})["']/)
+  if (!match) continue // dynamic routes derive it from content dates
+  const age = daysSince(new Date(match[1]))
+  if (age > STALE_AFTER_DAYS) stale.push({ file, date: match[1], age })
+}
+if (stale.length === 0) {
+  console.log(green(`  ${pages.length} pages, none older than ${STALE_AFTER_DAYS} days`))
+} else {
+  for (const s of stale) {
+    console.log(`  ${red('stale')}   ${s.file} ${dim(`last reviewed ${s.date}, ${s.age} days ago`)}`)
+  }
+  problems += stale.length
+}
+
+// 3 -----------------------------------------------------------------------------------------
+console.log(bold('\nTranslations'))
+const untranslated = []
+for (const key of PAGE_KEYS) {
+  for (const locale of LOCALES) {
+    if (locale === 'en') continue
+    if (routes[key][locale] === null) untranslated.push(`${key} (${locale})`)
+  }
+}
+if (untranslated.length === 0) {
+  console.log(green('  every page exists in every locale'))
+} else {
+  console.log(`  ${yellow('untranslated')} ${untranslated.join(', ')}`)
+  console.log(dim('          These link to the English page, marked "EN" in the nav. Usable, not translated.'))
+  console.log(dim('          Get help must never be a fallback; the rest can wait.'))
+  if (strict) problems += untranslated.length
+}
+
+// 4 -----------------------------------------------------------------------------------------
+console.log(bold('\nNeeds list'))
+const needsFiles = (await readdir('src/content/needs')).filter((f) => /\.ya?ml$/.test(f)).sort()
+const newest = needsFiles.at(-1)
+if (!newest) {
+  console.log(`  ${red('none')} — the homepage has nothing to show`)
+  problems += 1
+} else {
+  const date = new Date(newest.replace(/\.ya?ml$/, ''))
+  const age = daysSince(date)
+  const label = `${age} day${age === 1 ? "" : "s"} old`
+  const verdict = age > NEEDS_STALE_AFTER_DAYS ? red(label) : green(label)
+  console.log(`  ${newest} — ${verdict}`)
+  if (age > NEEDS_STALE_AFTER_DAYS) {
+    console.log(dim('          This is the site\'s proof of life. Copy it to a new dated file and update it.'))
+    problems += 1
+  }
+}
+
+console.log('')
+if (problems > 0) {
+  console.log(red(`${problems} item(s) need attention.\n`))
+  process.exit(1)
+}
+console.log(green('Nothing stale.\n'))

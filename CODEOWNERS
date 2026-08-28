@@ -1,0 +1,11 @@
+# Every change to the site requires review from an organization admin.
+#
+# For this to actually be a gate rather than a decoration, the repository must ALSO have:
+#   - branch protection on `main` requiring a pull request with one approving review
+#   - "Do not allow bypassing the above settings" enabled, so an Owner cannot push directly
+#
+# Without that second setting the rules do not apply to administrators and the review gate is
+# cosmetic. See docs/operations.md.
+#
+# TODO: replace with the two admins' GitHub usernames.
+# * @admin-one @admin-two

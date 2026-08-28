@@ -1,0 +1,111 @@
+---
+/**
+ * Contact details, shared by `/contact` and `/es/contacto`.
+ *
+ * Kept short on purpose. On the current site this page repeats the drop-off logistics from the
+ * Donate page nearly verbatim; here the logistics live on Give and Get help, and this page is
+ * just how to reach a person.
+ */
+import { org } from '../data/org'
+import type { Locale } from '../i18n/routes'
+
+interface Props {
+  locale: Locale
+}
+
+const { locale } = Astro.props
+const es = locale === 'es'
+
+const t = {
+  lede: {
+    en: 'Email is read daily. The phone reaches the church office during open hours.',
+    es: 'El correo se revisa todos los días. El teléfono llega a la oficina de la iglesia durante el horario de atención.',
+  },
+  address: { en: 'Address', es: 'Dirección' },
+  hours: { en: 'Open hours', es: 'Horario' },
+  press: { en: 'Press and partnerships', es: 'Prensa y colaboraciones' },
+  pressBody: {
+    en: 'Reporters, congregations, and organizations looking to run a drive: use the same address and say so in the subject line.',
+    es: 'Periodistas, congregaciones y organizaciones que quieran organizar una colecta: use la misma dirección e indíquelo en el asunto.',
+  },
+}
+
+const pick = <T,>(pair: { en: T; es: T }): T => (es ? pair.es : pair.en)
+---
+
+<p class="lede">{pick(t.lede)}</p>
+
+<ul class="contact">
+  <li><a href={`mailto:${org.email}`}>{org.email}</a></li>
+  {org.phone && <li><a href={`tel:${org.phone.replace(/[^0-9+]/g, '')}`}>{org.phone}</a></li>}
+</ul>
+
+<section class="section">
+  <h2>{pick(t.address)}</h2>
+  <p class="address">
+    {org.location.partner}<br />
+    {org.location.street && <>{org.location.street}<br /></>}
+    {org.location.city}, {org.location.state} {org.location.zip}
+  </p>
+  {org.location.mapUrl && <p><a href={org.location.mapUrl} rel="noopener">{es ? 'Ver en el mapa' : 'Open in maps'}</a></p>}
+</section>
+
+<section class="section">
+  <h2>{pick(t.hours)}</h2>
+  <dl class="hours">
+    {org.dropOff.hours.map((h) => (
+      <div>
+        <dt>{pick(h.days)}</dt>
+        <dd>{pick(h.time)}</dd>
+      </div>
+    ))}
+  </dl>
+</section>
+
+<section class="section">
+  <h2>{pick(t.press)}</h2>
+  <p>{pick(t.pressBody)}</p>
+</section>
+
+<style>
+  .contact {
+    list-style: none;
+    padding: 0;
+    margin-block-start: var(--space-m);
+    font-size: var(--text-lg);
+  }
+
+  .contact li + li {
+    margin-block-start: var(--space-3xs);
+  }
+
+  .section {
+    margin-block-start: var(--space-xl);
+  }
+
+  .address {
+    margin-block-start: var(--space-s);
+    line-height: var(--leading-snug);
+  }
+
+  .hours {
+    margin-block-start: var(--space-s);
+    display: grid;
+    gap: var(--space-3xs) var(--space-m);
+    grid-template-columns: max-content 1fr;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .hours > div {
+    display: contents;
+  }
+
+  .hours dt {
+    font-weight: 500;
+  }
+
+  .hours dd {
+    margin: 0;
+    color: var(--ink-muted);
+  }
+</style>

@@ -1,0 +1,204 @@
+---
+/**
+ * The body of the Get help page, in either language.
+ *
+ * Both `/get-help` and `/es/ayuda` render this one component. That is what keeps the two
+ * versions structurally identical: a section added in English cannot silently fail to appear in
+ * Spanish, and a question answered in one language but not the other is visible immediately.
+ *
+ * The questions below are the ones this constituency actually asks before deciding whether it is
+ * safe to walk through a door. Answers come from `org.intake` and are rendered only when they
+ * exist — see the long comment there for why nothing here is guessed.
+ */
+import { org } from '../data/org'
+import Todo from './Todo.astro'
+import type { Locale } from '../i18n/routes'
+
+interface Props {
+  locale: Locale
+}
+
+const { locale } = Astro.props
+const es = locale === 'es'
+
+const questions = [
+  {
+    q: { en: 'Who can receive goods?', es: '¿Quién puede recibir artículos?' },
+    a: org.intake.whoCanReceive,
+    todo: 'Answer who can receive goods. Is there a service area? A household limit?',
+  },
+  {
+    q: { en: 'Do I need an ID?', es: '¿Necesito identificación?' },
+    a: org.intake.idRequired,
+    todo: 'Answer whether ID is required, and what happens for someone who has none.',
+  },
+  {
+    q: { en: 'Do I have to prove that I need help?', es: '¿Tengo que comprobar que necesito ayuda?' },
+    a: org.intake.proofOfNeed,
+    todo: 'Answer whether income or need must be documented.',
+  },
+  {
+    q: { en: 'Will anyone ask about my immigration status?', es: '¿Alguien me preguntará sobre mi estatus migratorio?' },
+    a: org.intake.immigrationStatus,
+    todo: 'Answer whether anyone asks about immigration status. Board decision, and a safety answer.',
+  },
+  {
+    q: { en: 'Is anything written down about me?', es: '¿Se anota algo sobre mí?' },
+    a: org.intake.recordsKept,
+    todo: 'Say what is recorded, who can see it, and how long it is kept.',
+  },
+  {
+    q: { en: 'How often can I come?', es: '¿Con qué frecuencia puedo venir?' },
+    a: org.intake.howOften,
+    todo: 'Answer how often a household may come.',
+  },
+  {
+    q: { en: 'Do I need an appointment?', es: '¿Necesito una cita?' },
+    a: org.intake.appointment,
+    todo: 'Answer whether people can simply arrive during open hours.',
+  },
+]
+
+const text = {
+  lede: {
+    en: 'Come to the back door of the church during the hours below. There is no cost.',
+    es: 'Venga a la puerta trasera de la iglesia durante el horario indicado abajo. No hay ningún costo.',
+  },
+  hours: { en: 'When we are open', es: 'Horario' },
+  finding: { en: 'Finding the door', es: 'Cómo llegar a la puerta' },
+  questions: { en: 'Common questions', es: 'Preguntas frecuentes' },
+  askUs: {
+    en: 'If your question is not answered here, email or call us. You do not have to give your name.',
+    es: 'Si su pregunta no aparece aquí, escríbanos o llámenos. No tiene que dar su nombre.',
+  },
+  directions: {
+    en: [
+      'Park in the lot behind the church building.',
+      'Go to the back door, the one that opens onto the parking lot.',
+      'If the door is locked, ring the doorbell and someone will come.',
+    ],
+    es: [
+      'Estacione en el lote detrás del edificio de la iglesia.',
+      'Vaya a la puerta trasera, la que da al estacionamiento.',
+      'Si la puerta está cerrada con llave, toque el timbre y alguien vendrá.',
+    ],
+  },
+}
+
+/** Pick the string for the active locale out of an `{en, es}` pair. */
+function pick<T>(pair: { en: T; es: T }): T {
+  return es ? pair.es : pair.en
+}
+---
+
+<p class="lede">{pick(text.lede)}</p>
+
+<section class="section">
+  <h2>{pick(text.hours)}</h2>
+  <dl class="hours">
+    {
+      org.dropOff.hours.map((h) => (
+        <div>
+          <dt>{pick(h.days)}</dt>
+          <dd>{pick(h.time)}</dd>
+        </div>
+      ))
+    }
+  </dl>
+</section>
+
+<section class="section">
+  <h2>{pick(text.finding)}</h2>
+  <p>
+    {org.location.partner}
+    {org.location.street && <> — {org.location.street}, {org.location.city}, {org.location.state} {org.location.zip}</>}
+  </p>
+  <ol class="steps">
+    {pick(text.directions).map((step) => <li>{step}</li>)}
+  </ol>
+  {org.location.mapUrl && <p><a href={org.location.mapUrl} rel="noopener">{es ? 'Ver en el mapa' : 'Open in maps'}</a></p>}
+</section>
+
+<section class="section">
+  <h2>{pick(text.questions)}</h2>
+  <dl class="qa">
+    {
+      questions.map((item) =>
+        item.a ? (
+          <div>
+            <dt>{pick(item.q)}</dt>
+            <dd>{pick(item.a)}</dd>
+          </div>
+        ) : (
+          <Todo label="Answer needed">
+            <strong>{item.q.en}</strong> — {item.todo}
+          </Todo>
+        ),
+      )
+    }
+  </dl>
+  <p class="muted">{pick(text.askUs)}</p>
+  <p>
+    <a href={`mailto:${org.email}`}>{org.email}</a>
+    {org.phone && <> · <a href={`tel:${org.phone.replace(/[^0-9+]/g, '')}`}>{org.phone}</a></>}
+  </p>
+</section>
+
+<style>
+  .section {
+    margin-block-start: var(--space-xl);
+  }
+
+  .hours {
+    margin-block-start: var(--space-s);
+    display: grid;
+    gap: var(--space-3xs) var(--space-m);
+    grid-template-columns: max-content 1fr;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .hours > div {
+    display: contents;
+  }
+
+  .hours dt {
+    font-weight: 500;
+  }
+
+  .hours dd {
+    margin: 0;
+    color: var(--ink-muted);
+  }
+
+  .steps {
+    margin-block-start: var(--space-s);
+    padding-inline-start: var(--space-m);
+  }
+
+  .steps li + li {
+    margin-block-start: var(--space-2xs);
+  }
+
+  .qa {
+    margin-block-start: var(--space-s);
+  }
+
+  .qa > div {
+    padding-block: var(--space-s);
+    border-block-start: 1px solid var(--rule);
+  }
+
+  .qa dt {
+    font-weight: 500;
+  }
+
+  .qa dd {
+    margin: var(--space-3xs) 0 0;
+    color: var(--ink-muted);
+  }
+
+  .muted {
+    margin-block-start: var(--space-m);
+    color: var(--ink-muted);
+  }
+</style>
