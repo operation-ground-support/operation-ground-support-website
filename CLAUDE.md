@@ -39,7 +39,7 @@ The site is type-led on purpose. Do not introduce:
 
 - a full-bleed hero, or any text set over a photograph
 - icon triptychs or three-up feature cards
-- a carousel, a parallax section, or an autoplaying video
+- a carousel, a parallax section, or an autoplaying video (actually, we may include two or three of these things, but there is a limited specialness budget)
 - a second button style, or rounded "card" containers
 - a photo slot that nobody has a photograph for — use `PhotoSlot.astro`, which shows a shot brief
   in dev and renders nothing in production
