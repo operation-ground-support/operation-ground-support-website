@@ -70,8 +70,24 @@
   --space-2xl: 5rem;
   --space-3xl: 7.5rem;
 
-  /* Measure and gutters */
-  --measure: 36rem; /* ~68 characters at --text-base */
+  /* Measure and gutters ------------------------------------------------------------------------
+   * `--measure` is the reading column: the width of body text, and the thing to change if the
+   * page feels too narrow or too wide. Below ~30rem lines are choppy; past ~42rem the eye starts
+   * losing its place returning to the left edge. 40rem is about 75 characters, the upper end of
+   * comfortable, chosen because this page carries lists and tables as well as prose.
+   *
+   * The other two are derived from it and should not be set independently:
+   *
+   *   --wide-track  how far a photo or the metric row may spill past the reading column
+   *   --shell       the masthead, transparency bar, and footer
+   *
+   * `--shell` equals the reading column plus both wide tracks, which is what makes the masthead's
+   * inner edges land exactly where a `wide` element starts and stops. Break that and the page
+   * stops looking set. To widen everything, change `--measure` alone.
+   */
+  --measure: 40rem;
+  --wide-track: 10rem;
+  --shell: calc(var(--measure) + var(--wide-track) * 2);
   --gutter: clamp(1.25rem, 5vw, 3rem);
 
   --radius: 2px; /* almost square. Rounded cards read as a template. */
@@ -231,9 +247,9 @@ hr {
   display: grid;
   grid-template-columns:
     [full-start] minmax(var(--gutter), 1fr)
-    [wide-start] minmax(0, 10rem)
+    [wide-start] minmax(0, var(--wide-track))
     [content-start] min(var(--measure), 100% - (var(--gutter) * 2)) [content-end]
-    minmax(0, 10rem) [wide-end]
+    minmax(0, var(--wide-track)) [wide-end]
     minmax(var(--gutter), 1fr) [full-end];
 }
 
