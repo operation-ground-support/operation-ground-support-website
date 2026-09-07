@@ -33,6 +33,28 @@ dev *ARGS:
 # Fails on: a content file that does not match its schema, a type error, and any internal link
 # pointing at a page that does not exist.
 
+# Dev server reachable from other devices on the LAN
+lan:
+  #!/usr/bin/env bash
+  set -euo pipefail
+  ip=$(ip -4 -o addr show scope global | awk '$2 !~ /^(docker|br-|virbr)/ {print $4}' | cut -d/ -f1 | head -n1)
+  echo "  On this machine:  http://localhost:4321"
+  echo "  On your phone:    http://${ip}:4321"
+  echo
+  npm run dev -- --host
+
+# Stop the background dev server
+dev-stop:
+  npx astro dev stop
+
+# Is a dev server running, and where
+dev-status:
+  npx astro dev status
+
+# Tail the background dev server's output
+dev-logs *ARGS:
+  npx astro dev logs {{ARGS}}
+
 # Build the static site into `dist/`
 build:
   npm run build

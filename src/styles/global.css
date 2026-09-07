@@ -85,8 +85,8 @@
    * inner edges land exactly where a `wide` element starts and stops. Break that and the page
    * stops looking set. To widen everything, change `--measure` alone.
    */
-  --measure: 40rem;
-  --wide-track: 10rem;
+  --measure: 42rem;
+  --wide-track: 20rem;
   --shell: calc(var(--measure) + var(--wide-track) * 2);
   --gutter: clamp(1.25rem, 5vw, 3rem);
 

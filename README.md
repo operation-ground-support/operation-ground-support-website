@@ -10,6 +10,11 @@ plain HTML.
 nix develop          # node, npm, just, and the image tools
 just install         # once, and after any lockfile change
 just dev             # http://localhost:4321, live reload
+just lan # binds to every interface, so you can open it on a mobile device
+
+just dev-status
+just dev-logs
+just dev-stop # to actually stop the Astro 7 dev server
 ```
 
 Or without staying in the shell: `nix develop -c just dev`.
