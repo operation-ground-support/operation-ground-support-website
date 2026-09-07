@@ -1,8 +1,6 @@
 ---
 /**
- * The footer repeats the identity facts, because a reviewer who scrolled to the bottom of a page
- * should not have to scroll back up to find the EIN. Dallas Life does this and it is the right
- * instinct.
+ * The footer repeats the identity facts
  */
 import { org } from '../data/org'
 import { useTranslations } from '../i18n/ui'
@@ -15,7 +13,7 @@ interface Props {
 const { locale } = Astro.props
 const t = useTranslations(locale)
 
-const address = [org.location.street, `${org.location.city}, ${org.location.state} ${org.location.zip ?? ''}`.trim()]
+const address = [org.postal_address.street, `${org.postal_address.city}, ${org.postal_address.state} ${org.postal_address.zip ?? ''}`.trim()]
   .filter(Boolean)
   .join(' · ')
 
@@ -36,9 +34,9 @@ const latestFiling = org.filings.length > 0 ? org.filings[0] : null
       {org.phone && (
         <p><a href={`tel:${org.phone.replace(/[^0-9+]/g, '')}`}>{org.phone}</a></p>
       )}
-      {org.location.street && (
+      {org.postal_address.street && (
         <p class="footer__muted">
-          {org.location.mapUrl ? <a href={org.location.mapUrl} rel="noopener">{address}</a> : address}
+          {org.postal_address.mapUrl ? <a href={org.postal_address.mapUrl} rel="noopener">{address}</a> : address}
         </p>
       )}
     </div>

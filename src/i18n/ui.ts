@@ -47,7 +47,7 @@ const en = {
   'metrics.asOf': 'as of',
   'metrics.basis': 'How we count this',
 
-  'footer.tagline': 'Collecting and distributing donated goods in Old East Dallas.',
+  'footer.tagline': 'Dedicated to serving our neighbors in Dallas.',
   'footer.contact': 'Contact',
   'footer.transparency': 'Transparency',
   'footer.lastUpdated': 'Site last updated',

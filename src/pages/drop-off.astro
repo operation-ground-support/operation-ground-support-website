@@ -1,5 +1,6 @@
 ---
 /**
+ * TODO delete this?
  * Drop off — physical goods only. Money lives on `/donate`.
  *
  * The split is by *act*, not by generosity: dropping off goods needs an address, hours, and a
@@ -48,14 +49,9 @@ const locale = 'en' as const
         </div>
       ))}
     </dl>
-    <p class="where">
-      {org.location.partner}
-      {org.location.street && <> — {org.location.street}, {org.location.city}, {org.location.state} {org.location.zip}</>}
-    </p>
     <ol class="steps">
       {org.dropOff.instructions.map((step) => <li>{step}</li>)}
     </ol>
-    {org.location.mapUrl && <p><a href={org.location.mapUrl} rel="noopener">Open in maps</a></p>}
     <p class="note">
       Clothing may be new or used. Hygiene products must be new and unopened.
     </p>

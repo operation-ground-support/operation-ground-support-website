@@ -2,10 +2,7 @@
 /**
  * The page shell. Every page goes through here.
  *
- * `lastReviewed` is a required prop rather than an optional one on purpose: a page that nobody
- * will admit to having checked recently is exactly the page that goes stale and embarrasses the
- * organization in front of a funder. Making it required means a new page cannot be added without
- * someone dating it, and `just audit` reports the ones that have aged out.
+ * `lastReviewed` is a required prop to prevent staleness
  */
 import { Font } from 'astro:assets'
 import { org } from '../data/org'
@@ -73,10 +70,10 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href
       ...(org.founded ? { foundingDate: org.founded } : {}),
       address: {
         '@type': 'PostalAddress',
-        ...(org.location.street ? { streetAddress: org.location.street } : {}),
-        addressLocality: org.location.city,
-        addressRegion: org.location.state,
-        ...(org.location.zip ? { postalCode: org.location.zip } : {}),
+        ...(org.postal_address.street ? { streetAddress: org.postal_address.street } : {}),
+        addressLocality: org.postal_address.city,
+        addressRegion: org.postal_address.state,
+        ...(org.postal_address.zip ? { postalCode: org.postal_address.zip } : {}),
         addressCountry: 'US',
       },
     })} />

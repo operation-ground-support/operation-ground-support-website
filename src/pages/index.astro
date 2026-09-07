@@ -45,9 +45,7 @@ const hours = org.dropOff.hours
          Something like: what is collected, who it goes to, how often, and from where. The mission
          statement above is the formal one; this is the one that tells a stranger what happens. */
       <p class="lede">
-        We collect clothing, food, hygiene supplies, school supplies, and household goods, and give
-        them to neighbors who need them — from the basement of {org.location.partner} in
-        {' '}{org.location.neighborhood}.
+       We support partners with community hubs across Dallas to deliver zero-barrier direct relief, lead collaborative homelessness summits, and build holistic stabilization, to empower our unhoused and food-insecure neighbors with dignity.
       </p>
     )
   }
@@ -92,8 +90,7 @@ const hours = org.dropOff.hours
   <section class="find">
     <h2>Where to find us</h2>
     <p>
-      {org.location.partner}, {org.location.within}
-      {org.location.street && <>, {org.location.street}, {org.location.city}, {org.location.state} {org.location.zip}</>}.
+      TODO not sure if we just point at the events, and rely on the information in the part of "Upcoming" projected above
     </p>
     {
       hours.length > 0 && (

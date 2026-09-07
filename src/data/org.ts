@@ -94,21 +94,15 @@ export const org = {
   /** The number published on the current site; it reaches the Grace UMC office during hours. */
   phone: '214-824-2533',
 
-  location: {
-    /** The host congregation. The relationship should be characterized on the About page. */
-    partner: 'Grace United Methodist Church',
-    partnerUrl: null as string | null,
-    /** Where in the building, in the words a first-time visitor needs. */
-    within: 'basement',
-    neighborhood: 'Old East Dallas',
-    street: '4105 Junius St',
+  postal_address: {
+    street: '(postal address TODO)',
     city: 'Dallas',
     state: 'TX',
     zip: '75246',
     mapUrl: 'https://www.google.com/maps/search/?api=1&query=4105+Junius+St+Dallas+TX+75246',
   },
 
-  /**
+  /** TODO
    * Drop-off logistics, in the order a person standing in the parking lot needs them.
    * Transcribed from the current Squarespace site. TODO: confirm these are still accurate,
    * and confirm whether holidays or church events close the door.

@@ -1,10 +1,6 @@
 ---
 /**
  * Contact details, shared by `/contact` and `/es/contacto`.
- *
- * Kept short on purpose. On the current site this page repeats the drop-off logistics from the
- * Donate page nearly verbatim; here the logistics live on Give and Get help, and this page is
- * just how to reach a person.
  */
 import { org } from '../data/org'
 import type { Locale } from '../i18n/routes'
@@ -18,10 +14,10 @@ const es = locale === 'es'
 
 const t = {
   lede: {
-    en: 'Email is read daily. The phone reaches the church office during open hours.',
+    en: 'TODO Email is read daily. The phone reaches the church office during open hours.',
     es: 'El correo se revisa todos los días. El teléfono llega a la oficina de la iglesia durante el horario de atención.',
   },
-  address: { en: 'Address', es: 'Dirección' },
+  address: { en: 'Postal Address', es: 'Dirección' },
   hours: { en: 'Open hours', es: 'Horario' },
   press: { en: 'Press and partnerships', es: 'Prensa y colaboraciones' },
   pressBody: {
@@ -43,11 +39,10 @@ const pick = <T,>(pair: { en: T; es: T }): T => (es ? pair.es : pair.en)
 <section class="section">
   <h2>{pick(t.address)}</h2>
   <p class="address">
-    {org.location.partner}<br />
-    {org.location.street && <>{org.location.street}<br /></>}
-    {org.location.city}, {org.location.state} {org.location.zip}
+    {org.postal_address.street && <>{org.postal_address.street}<br /></>}
+    {org.postal_address.city}, {org.postal_address.state} {org.postal_address.zip}
   </p>
-  {org.location.mapUrl && <p><a href={org.location.mapUrl} rel="noopener">{es ? 'Ver en el mapa' : 'Open in maps'}</a></p>}
+  {org.postal_address.mapUrl && <p><a href={org.postal_address.mapUrl} rel="noopener">{es ? 'Ver en el mapa' : 'Open in maps'}</a></p>}
 </section>
 
 <section class="section">

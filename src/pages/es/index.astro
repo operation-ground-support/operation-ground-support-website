@@ -24,11 +24,10 @@ const locale = 'es' as const
   lastReviewed="2026-08-27"
 >
   <p class="eyebrow">Old East Dallas</p>
-  <h1 class="statement">Ropa, comida y artículos de primera necesidad, sin costo, para nuestros vecinos.</h1>
+  <h1 class="statement">(TODO this needs to be updated to match the English one) Ropa, comida y artículos de primera necesidad, sin costo, para nuestros vecinos.</h1>
 
   <p class="lede">
-    Recibimos donaciones y las entregamos a quien las necesite, en el sótano de
-    {' '}{org.location.partner}, en {org.location.neighborhood}.
+    Recibimos donaciones y las entregamos a quien las necesite, en el sótano de.
   </p>
 
   <Doors locale={locale} />
@@ -41,9 +40,6 @@ const locale = 'es' as const
 
   <section class="section">
     <h2>Dónde estamos</h2>
-    <p>
-      {org.location.partner}, {org.location.street}, {org.location.city}, {org.location.state} {org.location.zip}.
-    </p>
     <dl class="hours">
       {org.dropOff.hours.map((h) => (
         <div>
