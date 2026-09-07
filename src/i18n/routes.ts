@@ -15,7 +15,16 @@ export type Locale = (typeof LOCALES)[number]
 
 export const DEFAULT_LOCALE: Locale = 'en'
 
-export const PAGE_KEYS = ['home', 'getHelp', 'give', 'volunteer', 'about', 'updates', 'contact'] as const
+export const PAGE_KEYS = [
+  'home',
+  'getHelp',
+  'donate',
+  'dropOff',
+  'volunteer',
+  'about',
+  'updates',
+  'contact',
+] as const
 export type PageKey = (typeof PAGE_KEYS)[number]
 
 /**
@@ -30,15 +39,36 @@ export type PageKey = (typeof PAGE_KEYS)[number]
 export const routes: Record<PageKey, Record<Locale, string | null>> = {
   home: { en: '/', es: '/es' },
   getHelp: { en: '/get-help', es: '/es/ayuda' },
-  give: { en: '/give', es: null },
+  // `donate` is money and `dropOff` is goods. They are separate pages because they are separate
+  // acts with separate audiences: giving money is one click from anywhere, while dropping off
+  // goods needs an address, hours, and a list of what is short.
+  //
+  // They must not both be called some synonym of "give". A visitor cannot guess which of "Give"
+  // and "Donate" holds the payment form, and on a nonprofit site "Donate" overwhelmingly means
+  // money — so the goods page takes the concrete verb the organization already uses for it.
+  donate: { en: '/donate', es: null },
+  dropOff: { en: '/drop-off', es: null },
   volunteer: { en: '/volunteer', es: null },
   about: { en: '/about', es: null },
   updates: { en: '/updates', es: null },
   contact: { en: '/contact', es: '/es/contacto' },
 }
 
-/** Order of the main navigation. Deliberately seven items; resist an eighth. */
-export const NAV_ORDER: PageKey[] = ['getHelp', 'give', 'volunteer', 'about', 'updates', 'contact']
+export const NAV_ORDER: PageKey[] = [
+  'getHelp',
+  'dropOff',
+  'about',
+  'updates',
+  'contact',
+  'volunteer',
+  'donate',
+]
+
+// only have these two emphasized in the way they are
+export const NAV_EMPHASIS: Partial<Record<PageKey, 'solid' | 'outline'>> = {
+  donate: 'solid',
+  volunteer: 'outline',
+}
 
 export function path(key: PageKey, locale: Locale): string | null {
   return routes[key][locale]

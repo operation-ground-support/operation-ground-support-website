@@ -12,7 +12,8 @@ import type { Locale } from './routes'
 
 const en = {
   'nav.getHelp': 'Get help',
-  'nav.give': 'Give',
+  'nav.donate': 'Donate',
+  'nav.dropOff': 'Drop off',
   'nav.volunteer': 'Volunteer',
   'nav.about': 'About',
   'nav.updates': 'Updates',
@@ -54,14 +55,16 @@ const en = {
   'a11y.mainNav': 'Main navigation',
   'a11y.transparencyBar': 'Organizational transparency',
 
-  'cta.give': 'Donate goods',
+  'cta.donate': 'Donate money',
+  'cta.dropOff': 'Drop off goods',
   'cta.volunteer': 'Volunteer',
   'cta.getHelp': 'I need help',
 } as const
 
 const es: Record<keyof typeof en, string> = {
   'nav.getHelp': 'Buscar ayuda',
-  'nav.give': 'Donar',
+  'nav.donate': 'Donar',
+  'nav.dropOff': 'Dejar donaciones',
   'nav.volunteer': 'Voluntariado',
   'nav.about': 'Quiénes somos',
   'nav.updates': 'Novedades',
@@ -102,7 +105,8 @@ const es: Record<keyof typeof en, string> = {
   'a11y.mainNav': 'Navegación principal',
   'a11y.transparencyBar': 'Transparencia de la organización',
 
-  'cta.give': 'Donar artículos',
+  'cta.donate': 'Donar dinero',
+  'cta.dropOff': 'Dejar artículos',
   'cta.volunteer': 'Ser voluntario',
   'cta.getHelp': 'Necesito ayuda',
 }
@@ -111,7 +115,7 @@ export const ui = { en, es } as const
 
 export type UiKey = keyof typeof en
 
-/** `const t = useTranslations(locale)` then `t('nav.give')`. */
+/** `const t = useTranslations(locale)` then `t('nav.donate')`. */
 export function useTranslations(locale: Locale) {
   return function t(key: UiKey): string {
     return ui[locale][key]

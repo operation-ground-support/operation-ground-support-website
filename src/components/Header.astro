@@ -10,7 +10,7 @@
  * When the SVG lands, replace the <a class="wordmark"> contents and nothing else changes.
  */
 import { useTranslations } from '../i18n/ui'
-import { NAV_ORDER, navLink, path, type Locale, type PageKey } from '../i18n/routes'
+import { NAV_EMPHASIS, NAV_ORDER, navLink, path, type Locale, type PageKey } from '../i18n/routes'
 
 interface Props {
   locale: Locale
@@ -23,7 +23,8 @@ const t = useTranslations(locale)
 const navLabels: Record<PageKey, ReturnType<typeof t>> = {
   home: t('nav.getHelp'), // unused; home is the wordmark
   getHelp: t('nav.getHelp'),
-  give: t('nav.give'),
+  donate: t('nav.donate'),
+  dropOff: t('nav.dropOff'),
   volunteer: t('nav.volunteer'),
   about: t('nav.about'),
   updates: t('nav.updates'),
@@ -37,7 +38,11 @@ const navLabels: Record<PageKey, ReturnType<typeof t>> = {
 // Fallback links get `hreflang` but deliberately not `lang`: the label stays in the reader's
 // language, so claiming the anchor's own text is English would make a screen reader pronounce
 // "Voluntariado" with English phonetics. Only the destination differs.
-const items = NAV_ORDER.map((key) => ({ ...navLink(key, locale), label: navLabels[key] }))
+const items = NAV_ORDER.map((key) => ({
+  ...navLink(key, locale),
+  label: navLabels[key],
+  emphasis: NAV_EMPHASIS[key],
+}))
 
 const homeHref = path('home', locale) ?? '/'
 ---
@@ -56,6 +61,7 @@ const homeHref = path('home', locale) ?? '/'
             <li>
               <a
                 href={item.href}
+                class:list={[item.emphasis && `nav__action nav__action--${item.emphasis}`]}
                 aria-current={item.key === pageKey ? 'page' : undefined}
                 hreflang={item.isFallback ? item.lang : undefined}
               >
@@ -114,6 +120,7 @@ const homeHref = path('home', locale) ?? '/'
   nav ul {
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
     gap: var(--space-m);
     list-style: none;
     margin: 0;
@@ -121,21 +128,90 @@ const homeHref = path('home', locale) ?? '/'
     font-size: var(--text-sm);
   }
 
-  nav a {
+  /* The buttons carry their own padding, so the standard nav gap leaves the pair looking adrift
+     from each other. Pull the second one back toward the first. */
+  nav li:has(.nav__action) + li:has(.nav__action) {
+    margin-inline-start: calc(var(--space-m) * -0.4);
+  }
+
+  /*
+   * The underline treatment belongs to the plain text links only, and the `:not()` is load-bearing.
+   *
+   * Astro scopes `nav a` to `nav[data-astro-cid] a[data-astro-cid]` — specificity (0,2,2) — while
+   * `.nav__action--outline[data-astro-cid]` is only (0,2,0). The generic rule therefore *wins*,
+   * and its `border-block-end: 2px solid transparent` erased the buttons' bottom border, leaving
+   * the outline open at the bottom.
+   *
+   * It looked correct on the current page by pure coincidence: `[aria-current]` made this rule
+   * paint that edge `--accent`, which matches what the button wanted anyway — though still at 2px
+   * against 1px on the other three sides.
+   */
+  nav a:not(.nav__action) {
     color: var(--ink-muted);
     text-decoration: none;
     padding-block: var(--space-3xs);
     border-block-end: 2px solid transparent;
   }
 
-  nav a:hover {
+  nav a:not(.nav__action):hover {
     color: var(--ink);
     border-block-end-color: var(--rule-strong);
   }
 
-  nav a[aria-current='page'] {
+  nav a:not(.nav__action)[aria-current='page'] {
     color: var(--ink);
     border-block-end-color: var(--accent);
+  }
+
+  /* Donate and Volunteer, rendered as the same solid/outline pair used by `.button` in
+     global.css. Sized to the nav's own type scale so they read as emphasised links rather than
+     as a marketing call-to-action bar bolted onto the masthead. */
+  .nav__action {
+    /* Inline boxes do not let vertical padding or borders affect line-box height, so the list
+       item reserved no room for the button's own box. */
+    display: inline-block;
+    /* `text-decoration: none` used to arrive from the `nav a` rule above; now that the buttons are
+       excluded from it, they need their own — otherwise the global link underline reappears. */
+    text-decoration: none;
+    padding: var(--space-3xs) var(--space-xs);
+    border: 1px solid var(--accent);
+    border-radius: var(--radius);
+    font-weight: 500;
+    line-height: 1.5;
+    transition: background 120ms ease, color 120ms ease;
+  }
+
+  .nav__action--solid {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--paper);
+  }
+
+  .nav__action--solid:hover,
+  .nav__action--solid[aria-current='page'] {
+    background: var(--accent-deep);
+    border-color: var(--accent-deep);
+    color: var(--paper);
+  }
+
+  .nav__action--outline {
+    background: transparent;
+    color: var(--accent);
+    border-color: var(--rule-strong);
+  }
+
+  .nav__action--outline:hover,
+  .nav__action--outline[aria-current='page'] {
+    background: var(--accent-wash);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+
+  /* Inside a solid button the badge has to borrow the button's foreground, or it disappears. */
+  .nav__action--solid .nav__badge {
+    color: color-mix(in srgb, var(--paper) 78%, transparent);
+    border-color: color-mix(in srgb, var(--paper) 45%, transparent);
   }
 
   /* Marks a link whose page exists only in English. Small and quiet — it is an advisory, not a
@@ -151,7 +227,7 @@ const homeHref = path('home', locale) ?? '/'
     vertical-align: 0.12em;
   }
 
-  /* No hamburger. Six short links wrap onto two lines on a phone, which is less machinery and
+  /* No hamburger. Seven short links wrap onto two lines on a phone, which is less machinery and
      one fewer thing that can break than a JavaScript menu. */
   @media (max-width: 40rem) {
     .masthead__inner {

@@ -40,7 +40,9 @@ The site is type-led on purpose. Do not introduce:
 - a full-bleed hero, or any text set over a photograph
 - icon triptychs or three-up feature cards
 - a carousel, a parallax section, or an autoplaying video (actually, we may include two or three of these things, but there is a limited specialness budget)
-- a second button style, or rounded "card" containers
+- a third button treatment — solid (`.button`) and outline (`.button--quiet`) are the whole
+  vocabulary, and the nav and the homepage doors both reuse it
+- rounded "card" containers
 - a photo slot that nobody has a photograph for — use `PhotoSlot.astro`, which shows a shot brief
   in dev and renders nothing in production
 
@@ -65,9 +67,12 @@ re-derive `--accent` and `--accent-deep` from the mark and change nothing else.
   `navLink()` and marked "EN". Serving English under an `/es/` path would put English text inside
   `<html lang="es">`. Get help is the one page that must always be a real translation, never a
   fallback.
-- **Do not add an eighth top-level nav item.** Seven pages is the budget. Thin content spread wide
-  looks far worse than rich content kept narrow, and this organization does not yet have enough
-  content to fill what it has.
+- **The navigation is full at seven items.** Do not add an eighth. Thin content spread wide looks
+  far worse than rich content kept narrow, and this organization does not yet have enough content
+  to fill what it has.
+- **`donate` is money, `dropOff` is goods.** Never name them both some synonym of "give"
+- **Only two nav items are emphasised** (`NAV_EMPHASIS` in `routes.ts`): Donate solid, Volunteer
+  outline, reusing the existing `.button` / `.button--quiet` pair.
 - **`src/content/` is the non-developer's territory.** Anything edited weekly belongs there, not in
   a `.astro` file. A git-backed CMS will be pointed at that directory.
 

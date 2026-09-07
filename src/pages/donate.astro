@@ -1,0 +1,151 @@
+---
+/**
+ * Donate — money.
+ *
+ * A placeholder until a processor exists. `org.donate.url` is `null`, so there is currently no
+ * way to give money on this site at all, and that is one of the first things a grant reviewer
+ * checks. The page is built now so the route, the navigation, and the copy are settled, and
+ * turning it on later is a one-line change in `src/data/org.ts`.
+ *
+ * Deliberately not filled with placeholder giving tiers ($25 / $50 / $100). Suggested amounts
+ * only work when someone has costed out what they buy, and inventing that conversion is exactly
+ * the kind of unverifiable claim this site exists to avoid.
+ */
+import Base from '../layouts/Base.astro'
+import Todo from '../components/Todo.astro'
+import { org } from '../data/org'
+import { path } from '../i18n/routes'
+
+const locale = 'en' as const
+---
+
+<Base
+  title="Donate"
+  description={`Give money to ${org.name}, a 501(c)(3) serving neighbors in Old East Dallas.`}
+  locale={locale}
+  pageKey="donate"
+  lastReviewed="2026-09-07"
+>
+  <h1>Donate</h1>
+
+  {
+    org.donate.url ? (
+      <>
+        <p class="lede">
+          {org.donate.conversion ??
+            'Your gift buys what the shelves are short of that week.'}
+        </p>
+        <p class="cta">
+          <a class="button" href={org.donate.url} rel="noopener">
+            Donate{org.donate.platform ? ` via ${org.donate.platform}` : ''}
+          </a>
+        </p>
+      </>
+    ) : (
+      <>
+        <p class="lede">
+          We are setting up online giving. In the meantime, goods can be dropped off at the church
+          during open hours, and you can email us to arrange a gift.
+        </p>
+        <p class="cta">
+          <a class="button" href={`mailto:${org.email}?subject=Donation`}>Email us about giving</a>
+          <a class="button button--quiet" href={path('dropOff', locale)!}>Drop off goods instead</a>
+        </p>
+
+        <Todo label="This page is a placeholder">
+          Set <code>org.donate.platform</code>, <code>org.donate.url</code>, and
+          {' '}<code>org.donate.conversion</code> in <code>src/data/org.ts</code>. The whole page
+          switches over — no markup changes.
+          <br /><br />
+          Zeffy takes 0% and is the usual pick at this size; Givebutter is the common default if
+          you want donor management built in. Either one is a same-day setup, and until one exists
+          there is literally no way to give money here, which a reviewer notices immediately.
+        </Todo>
+      </>
+    )
+  }
+
+  <section class="section">
+    <h2>Where the money goes</h2>
+    {
+      org.donate.conversion ? (
+        <p>{org.donate.conversion}</p>
+      ) : (
+        <Todo label="Needs a real number">
+          Write one sentence converting a gift into goods — "$25 fills one grocery bag", or
+          whatever is true. Only publish it once somebody has actually costed it out; a made-up
+          conversion is the kind of figure a funder probes and then discounts everything else on
+          the page.
+        </Todo>
+      )
+    }
+    <p class="note">
+      Cash gifts cover the things donations rarely include and the pantry is always short of:
+      diapers, hygiene products, and food to fill gaps between drives.
+      {/* TODO: confirm with the board that this is accurate before launch. */}
+    </p>
+  </section>
+
+  <section class="section">
+    <h2>Other ways to give</h2>
+    <ul class="ways">
+      <li><a href={path('dropOff', locale)!}>Drop off goods</a> during open hours.</li>
+      <li><a href={path('volunteer', locale)!}>Volunteer</a> a shift sorting or packing.</li>
+      {org.registryUrl && (
+        <li><a href={org.registryUrl} rel="noopener">Ship from our wish list.</a></li>
+      )}
+      <li>
+        Run a collection drive at your congregation, school, or workplace — email
+        {' '}<a href={`mailto:${org.email}`}>{org.email}</a> and we will tell you what is short.
+      </li>
+    </ul>
+  </section>
+
+  <section class="section">
+    <h2>Is this tax-deductible?</h2>
+    {
+      org.ein ? (
+        <p>
+          Yes. {org.name} is a 501(c)(3) nonprofit; our EIN is {org.ein}.
+          {org.determinationLetter && (
+            <> Our <a href={org.determinationLetter}>IRS determination letter</a> is public.</>
+          )}
+        </p>
+      ) : (
+        <Todo label="Cannot answer this yet">
+          Fill in <code>org.ein</code> and link the determination letter. "Is my gift deductible"
+          is the question a donor asks right before they decide, and right now the site cannot
+          answer it.
+        </Todo>
+      )
+    }
+  </section>
+</Base>
+
+<style>
+  .cta {
+    margin-block-start: var(--space-l);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-s);
+  }
+
+  .section {
+    margin-block-start: var(--space-xl);
+  }
+
+  .ways {
+    margin-block-start: var(--space-s);
+    padding-inline-start: var(--space-m);
+  }
+
+  .ways li + li {
+    margin-block-start: var(--space-2xs);
+  }
+
+  .note {
+    margin-block-start: var(--space-s);
+    color: var(--ink-muted);
+    font-size: var(--text-sm);
+  }
+</style>

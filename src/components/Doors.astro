@@ -25,11 +25,18 @@ const t = useTranslations(locale)
 
 // As in the nav, a door whose page is not translated still opens — onto the English page, marked
 // as such. "I need help" is the one that must never be a fallback, and it is fully translated.
-// `hreflang` without `lang`, for the reason given in Header.astro.
+// Four doors now that money and goods are separate acts. `hreflang` without `lang`, for the
+// reason given in Header.astro.
+//
+// The two solid doors are the two the organization most needs a stranger to walk through — "I
+// need help" because that is the service obligation and nobody currently addresses it, and
+// "Donate money" because it is the one act with no logistics in the way. Emphasis matches the
+// navigation so the same action does not look primary in one place and secondary in another.
 const doors = [
-  { ...navLink('getHelp', locale), label: t('cta.getHelp') },
-  { ...navLink('give', locale), label: t('cta.give') },
-  { ...navLink('volunteer', locale), label: t('cta.volunteer') },
+  { ...navLink('getHelp', locale), label: t('cta.getHelp'), solid: true },
+  { ...navLink('donate', locale), label: t('cta.donate'), solid: true },
+  { ...navLink('dropOff', locale), label: t('cta.dropOff'), solid: false },
+  { ...navLink('volunteer', locale), label: t('cta.volunteer'), solid: false },
 ]
 ---
 
@@ -38,6 +45,7 @@ const doors = [
     doors.map((door) => (
       <li>
         <a
+          class:list={[door.solid && 'is-solid']}
           href={door.href}
           hreflang={door.isFallback ? door.lang : undefined}
         >
@@ -82,15 +90,20 @@ const doors = [
     background: var(--accent-wash);
   }
 
-  /* The first door is the one for people who need something. It carries the weight. */
-  .doors li:first-child a {
+  .doors a.is-solid {
     background: var(--accent);
     border-color: var(--accent);
     color: var(--paper);
   }
 
-  .doors li:first-child a:hover {
+  .doors a.is-solid:hover {
     background: var(--accent-deep);
+    border-color: var(--accent-deep);
+  }
+
+  .doors a.is-solid .doors__badge {
+    color: color-mix(in srgb, var(--paper) 78%, transparent);
+    border-color: color-mix(in srgb, var(--paper) 45%, transparent);
   }
 
   .doors__badge {

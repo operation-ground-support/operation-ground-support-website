@@ -1,31 +1,39 @@
 ---
 /**
- * Give — goods, money, and wish list on one page.
+ * Drop off — physical goods only. Money lives on `/donate`.
  *
- * The current site splits drop-off logistics across a Donate page and a Contact page that repeat
- * each other nearly verbatim, and has no way to give money at all. One page, three ways to give,
- * logistics stated once.
+ * The split is by *act*, not by generosity: dropping off goods needs an address, hours, and a
+ * list of what is short, and giving money needs none of those. Keeping them together meant the
+ * page had to serve a person in a car and a person on a phone at the same time, and did neither
+ * well. The old Squarespace site had the opposite problem — drop-off logistics repeated nearly
+ * verbatim across two pages, and no way to give money at all.
+ *
+ * This page is named for the verb a donor would use. It is deliberately not called "Give", which
+ * would be indistinguishable from "Donate" in the navigation.
  */
 import Base from '../layouts/Base.astro'
 import NeedsList from '../components/NeedsList.astro'
 import PhotoSlot from '../components/PhotoSlot.astro'
-import Todo from '../components/Todo.astro'
 import { org } from '../data/org'
+import { path } from '../i18n/routes'
 
 const locale = 'en' as const
 ---
 
 <Base
-  title="Give"
-  description="Drop off clothing, food, hygiene supplies, and household goods at Grace United Methodist Church in Old East Dallas, or give money to Operation Ground Support."
+  title="Drop off"
+  description="Drop off clothing, food, hygiene supplies, and household goods at Grace United Methodist Church in Old East Dallas."
   locale={locale}
-  pageKey="give"
+  pageKey="dropOff"
   lastReviewed="2026-08-27"
 >
-  <h1>Give</h1>
+  <h1>Drop off</h1>
   <p class="lede">
     Goods can be dropped off during the hours below. Everything collected goes directly to
     neighbors; nothing is resold.
+  </p>
+  <p class="aside">
+    To give money instead, see <a href={path('donate', locale)!}>Donate</a>.
   </p>
 
   <NeedsList locale={locale} as="h2" />
@@ -56,28 +64,6 @@ const locale = 'en' as const
   <PhotoSlot
     brief="The back door and the doorbell, shot from where a donor stands holding a box. This is a wayfinding photo, so frame it wide enough to recognise the building."
   />
-
-  <section class="section">
-    <h2>Giving money</h2>
-    {
-      org.donate.url ? (
-        <>
-          <p>
-            {org.donate.conversion ??
-              'Money is used to buy what the shelves are short of, which is usually diapers, hygiene products, and food.'}
-          </p>
-          <p><a class="button" href={org.donate.url} rel="noopener">Donate{org.donate.platform ? ` via ${org.donate.platform}` : ''}</a></p>
-        </>
-      ) : (
-        <Todo label="Not set up yet">
-          Set up a donation processor and put its URL in <code>org.donate.url</code>. Zeffy takes 0%
-          and is the usual choice for a small organization; Givebutter is the common default if you
-          want built-in donor management. Until this exists there is no way to give money on the
-          site, which is one of the things a funder checks first.
-        </Todo>
-      )
-    }
-  </section>
 
   {
     org.registryUrl && (
@@ -141,6 +127,12 @@ const locale = 'en' as const
   }
 
   .note {
+    margin-block-start: var(--space-s);
+    color: var(--ink-muted);
+    font-size: var(--text-sm);
+  }
+
+  .aside {
     margin-block-start: var(--space-s);
     color: var(--ink-muted);
     font-size: var(--text-sm);
