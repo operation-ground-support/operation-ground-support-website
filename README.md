@@ -110,4 +110,5 @@ carry GPS coordinates; publishing them from this address would be a real disclos
 
 `dist/` is plain HTML and works unchanged on Cloudflare Pages, Netlify, GitHub Pages, or a bare
 bucket. See [docs/operations.md](docs/operations.md) for the DNS sequence, the scheduled rebuild,
-and the account-ownership checklist.
+and the account-ownership checklist, and [docs/dns.md](docs/dns.md) for the email-authentication
+records and what still needs the Workspace administrator.

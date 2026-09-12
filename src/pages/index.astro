@@ -25,6 +25,11 @@ const updates = (await getCollection('updates', ({ data }) => !data.draft && dat
   .slice(0, 2)
 
 const hours = org.dropOff.hours
+
+/* Split around the tax status so it can be held on one line. Splitting rather than hardcoding
+   means this degrades to plain text if `org.mission` is ever reworded without the token. */
+const STATUS = '501(c)(3)'
+const missionParts = org.mission.split(STATUS)
 ---
 
 <Base
@@ -35,17 +40,24 @@ const hours = org.dropOff.hours
   lastReviewed="2026-08-27"
 >
   <p class="eyebrow">Old East Dallas</p>
-  <h1 class="statement">{org.mission}</h1>
+  <h1 class="statement">
+    {
+      missionParts.map((part, i) => (
+        <Fragment>
+          {i > 0 && <span class="nowrap">{STATUS}</span>}
+          {part}
+        </Fragment>
+      ))
+    }
+  </h1>
 
   {
     org.lede ? (
       <p class="lede">{org.lede}</p>
     ) : (
-      /* TODO: write the plain-language sentence for `org.lede` and get the board to approve it.
-         Something like: what is collected, who it goes to, how often, and from where. The mission
-         statement above is the formal one; this is the one that tells a stranger what happens. */
+      /* NOTE: The only thing I wanted to add to this lede is to add on "with dignity". The specific context given to me by Anne Winters is that it is very common for homeless or food-insecure people to be embarrased, and we want to treat them with some dignity. But in a short lede at the beginning of the website, it can be interpreted differently, and also it is ambiguous how this already long sentence flows */
       <p class="lede">
-       We support partners with community hubs across Dallas to deliver zero-barrier direct relief, lead collaborative homelessness summits, and build holistic stabilization, to empower our unhoused and food-insecure neighbors with dignity.
+       We support partners with community hubs across Dallas to deliver zero-barrier direct relief, lead collaborative homelessness summits, and build holistic stabilization, for our unhoused and food-insecure neighbors.
       </p>
     )
   }
@@ -110,13 +122,23 @@ const hours = org.dropOff.hours
 
 <style>
   /* The opening statement. Serif, large, tight — and capped in width so it stays a sentence
-     someone reads rather than a banner they skim past. */
+     someone reads rather than a banner they skim past. Four lines is the target: past that it
+     stops reading as a sentence and starts reading as a wall. If `--measure` moves, re-check
+     the line count here, because `ch` is relative to the font size and not to the column. */
   .statement {
-    font-size: var(--text-display);
-    line-height: 1.08;
-    letter-spacing: -0.02em;
+    font-size: var(--text-3xl);
+    line-height: 1.14;
+    letter-spacing: -0.015em;
     margin-block-start: var(--space-2xs);
-    max-width: 18ch;
+    max-width: 28ch;
+    text-wrap: balance;
+  }
+
+  /* Parentheses are line-break opportunities, so `501(c)(3)` will happily split across two
+     lines at display sizes. This keeps it whole without putting invisible characters into a
+     string that people copy and paste. */
+  .nowrap {
+    white-space: nowrap;
   }
 
   .lede {

@@ -7,13 +7,12 @@ individual steps — do one thing at a time so that when something breaks you kn
 
 Two things that are worth doing regardless of what happens to this site.
 
-**Email authentication.** As of the last check the domain had no SPF record, no DMARC record, and
-no DKIM at Google's default selector. The only TXT record was a site-verification string. That
-means anyone can send mail that appears to come from `@operation-ground-support.org`, and
-legitimate mail is likelier to be filtered. For an organization that emails donors and asks for
-money, being spoofable is a live risk — "urgent donation appeal" phishing from a nonprofit's own
-domain is a known pattern. Turning on DKIM in the Workspace admin console and adding SPF and DMARC
-records is about thirty minutes and costs nothing. Do it while DNS is still in a known-good state.
+**Email authentication.** Anyone can send mail that appears to come from
+`@operation-ground-support.org` unless the domain publishes records saying who may. For an
+organization that emails donors and asks for money, being spoofable is a live risk — "urgent
+donation appeal" phishing from a nonprofit's own domain is a known pattern. SPF and DMARC are now
+published; DKIM still needs someone with Google Workspace admin access. See `dns.md`, which also
+carries the schedule for tightening the DMARC policy and the one trap that breaks SPF later.
 
 **Google for Nonprofits.** Verified US 501(c)(3)s get Google Workspace free, which may be most or
 all of the ~$15/month currently being paid. Verification runs through Goodstack and typically takes
@@ -29,9 +28,10 @@ Squarespace (`198.185.159.144/145`, `198.49.23.144/145`), `www` is a CNAME to
 `ext-sq.squarespace.com`, and mail goes to Google Workspace.
 
 Nameservers say where DNS is *managed*, not who the domain is *registered* with. Google sold its
-registrar business to Squarespace in 2023, so the registrar is probably Squarespace Domains now.
-Confirm under Domains in the Squarespace account and cross-check at `lookup.icann.org`. The
-registrar is where nameserver changes happen, so this has to be known before anything else.
+registrar business to Squarespace in 2023, and `whois` confirms the registrar is now Squarespace
+Domains LLC — the `googledomains.com` nameservers are inherited infrastructure, not a second
+vendor. The registrar is where nameserver changes happen; records themselves are edited in the
+Squarespace domain dashboard.
 
 ## Cutover, as three separate operations
 
