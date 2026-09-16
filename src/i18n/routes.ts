@@ -73,8 +73,8 @@ export const routes: Record<PageKey, Record<Locale, string | null>> = {
 export const NAV_ORDER: PageKey[] = [
   'getHelp',
   'dropOff',
-  'about',
   'updates',
+  'about',
   'contact',
   'volunteer',
   'donate',

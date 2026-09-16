@@ -26,8 +26,6 @@ const posts = (await getCollection('updates', ({ data }) => !data.draft)).sort(
   lastReviewed="2026-08-27"
 >
   <h1>Updates</h1>
-  <p class="lede">Short notes on distributions, drives, and what the shelves look like.</p>
-
   {
     posts.length > 0 ? (
       <ul class="posts">

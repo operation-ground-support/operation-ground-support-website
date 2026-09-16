@@ -29,7 +29,9 @@ const { locale, limit = 6 } = Astro.props
 const t = useTranslations(locale)
 
 const now = Date.now()
-const all = (await getCollection('events')).sort((a, b) => a.data.start.getTime() - b.data.start.getTime())
+const all = (await getCollection('events', ({ data }) => !data.draft)).sort(
+  (a, b) => a.data.start.getTime() - b.data.start.getTime(),
+)
 
 const upcoming = all.filter((e) => (e.data.end ?? e.data.start).getTime() >= now).slice(0, limit)
 const past = all.filter((e) => (e.data.end ?? e.data.start).getTime() < now).reverse().slice(0, 4)
@@ -123,12 +125,30 @@ function timeLabel(start: Date, end?: Date): string {
     margin: var(--space-m) 0 0;
   }
 
+  /* 6.5rem was set before any real event existed, and it is about half a character too narrow for
+     the strings this actually renders: "Sep 26, 2026" wrapped after the comma and
+     "10:00 AM-1:00 PM" broke across two lines. Widened to fit both. Below 34rem the date moves
+     above the title instead, because holding a fixed column that wide on a phone would squeeze
+     the description into a four-word ribbon. */
   .events__list li {
     display: grid;
-    grid-template-columns: 6.5rem 1fr;
+    grid-template-columns: 8.25rem 1fr;
     gap: var(--space-m);
     padding-block: var(--space-s);
     border-block-start: 1px solid var(--rule);
+  }
+
+  @media (max-width: 34rem) {
+    .events__list li {
+      grid-template-columns: 1fr;
+      gap: var(--space-2xs);
+    }
+
+    .events__list time {
+      display: flex;
+      gap: var(--space-2xs);
+      align-items: baseline;
+    }
   }
 
   .events__date {

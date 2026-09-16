@@ -116,6 +116,14 @@ const events = defineCollection({
     description: localized.optional(),
     /** External sign-up link, if this event needs one. */
     signUpUrl: z.string().optional(),
+    /**
+     * Keep a file in the repo without publishing it. Same field and same meaning as `updates`.
+     *
+     * Two uses: an event being drafted before it is confirmed, and the permanent `_EXAMPLE_`
+     * reference files, which must never render — an example event on the live site sends someone
+     * to a distribution that is not happening.
+     */
+    draft: z.boolean().default(false),
   }),
 })
 

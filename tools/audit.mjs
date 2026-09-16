@@ -107,7 +107,14 @@ if (untranslated.length === 0) {
 
 // 4 -----------------------------------------------------------------------------------------
 console.log(bold('\nNeeds list'))
-const needsFiles = (await readdir('src/content/needs')).filter((f) => /\.ya?ml$/.test(f)).sort()
+// `_EXAMPLE_` reference files are excluded deliberately. `_` sorts after every digit, so an
+// example file would win `.at(-1)`, `new Date('_EXAMPLE_...')` would be Invalid Date, and the
+// staleness comparison against NaN is always false — the check would print "NaN days old" in
+// green and never warn again. A proof-of-life check that silently stops checking is worse than
+// not having one.
+const needsFiles = (await readdir('src/content/needs'))
+  .filter((f) => /\.ya?ml$/.test(f) && !/_EXAMPLE_/i.test(f))
+  .sort()
 const newest = needsFiles.at(-1)
 if (!newest) {
   console.log(`  ${red('none')} — the homepage has nothing to show`)
@@ -115,6 +122,11 @@ if (!newest) {
 } else {
   const date = new Date(newest.replace(/\.ya?ml$/, ''))
   const age = daysSince(date)
+  if (Number.isNaN(age)) {
+    // Belt and braces: any filename that is not a date at all, rather than failing open.
+    console.log(`  ${red(newest)} — filename is not a date, so freshness cannot be checked`)
+    problems += 1
+  } else {
   const label = `${age} day${age === 1 ? "" : "s"} old`
   const verdict = age > NEEDS_STALE_AFTER_DAYS ? red(label) : green(label)
   console.log(`  ${newest} — ${verdict}`)
@@ -122,6 +134,32 @@ if (!newest) {
     console.log(dim('          This is the site\'s proof of life. Copy it to a new dated file and update it.'))
     problems += 1
   }
+  }
+}
+
+// 5 -----------------------------------------------------------------------------------------
+// `_EXAMPLE_` files are kept permanently as reference, so their presence is not the problem. The
+// problem is one of them losing `draft: true` and rendering as if it were real, which for an
+// event means sending someone to a distribution that is not happening. That is worth failing the
+// build over rather than warning about, because the warning would be indistinguishable from the
+// routine noise of a fixture that is supposed to be there.
+console.log(bold('\nReference files'))
+const exampleEvents = (await readdir('src/content/events')).filter((f) => /_EXAMPLE_/i.test(f))
+const live = []
+for (const f of exampleEvents) {
+  const body = await readFile(path.join('src/content/events', f), 'utf8')
+  if (!/^draft:\s*true\s*$/m.test(body)) live.push(f)
+}
+if (exampleEvents.length === 0) {
+  console.log(dim('  none'))
+} else if (live.length === 0) {
+  console.log(green(`  ${exampleEvents.length} example file(s), all \`draft: true\``))
+} else {
+  for (const f of live) {
+    console.log(`  ${red('publishing')} src/content/events/${f}`)
+  }
+  console.log(dim('          An example file is missing `draft: true` and will render as a real event.'))
+  problems += live.length
 }
 
 console.log('')
