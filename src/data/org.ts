@@ -40,6 +40,18 @@ export interface Metric {
   asOf: string
 }
 
+export interface Program {
+  /** Short name, used as the heading. */
+  name: string
+  /** Two sentences at most — this is a list someone scans, not a page they read. */
+  description: string
+  /**
+   * What kind of work it is, or who it runs through. Named partners double as verifiable
+   * evidence: "Partner: North Texas Food Bank" is a claim a funder can check, which is the point.
+   */
+  tag: string
+}
+
 export interface Filing {
   year: number
   /** Path under /public, e.g. "/filings/form-990-2025.pdf", or an external URL. */
@@ -56,6 +68,15 @@ export const org = {
     'Operation Ground Support is a 501(c)(3) nonprofit organization dedicated to serving our neighbors in Dallas.',
 
   /**
+   * The formal tax classification, for the bottom of the homepage. 509(a)(2) is the public-support
+   * test for organizations funded mainly by program revenue and contributions, as distinct from
+   * 509(a)(1); stating it tells a grant reviewer the status was actually determined rather than
+   * assumed. TODO: Spanish, in the end-of-project translation pass.
+   */
+  taxStatus:
+    'Operation Ground Support is a 501(c)(3) tax-exempt public charity, classified under IRC Section 509(a)(2).',
+
+  /**
    * An alternate one-line positioning statement
    */
   tagline: {
@@ -63,20 +84,87 @@ export const org = {
     es: 'Recolectamos y repartimos donaciones en Old East Dallas.',
   } as Localized,
 
+  /* NOTE: The only thing I wanted to add to this lede is to add on "with dignity". The specific context given to me by Anne Winters is that it is very common for homeless or food-insecure people to be embarrased, and we want to treat them with some dignity. But in a short lede at the beginning of the website, it can be interpreted differently, and also it is ambiguous how this already long sentence flows */
+  lede: "We support partners with community hubs across Dallas to deliver zero-barrier direct relief, lead collaborative homelessness summits, and build holistic stabilization, for our unhoused and food-insecure neighbors.",
+
   /**
-   * A plainer, more concrete restatement used as the homepage lede. The mission statement above
-   * is the formal one; this is the one that tells a stranger what actually happens.
-   * TODO: confirm this wording with the board before launch.
+   * What the organization actually does, in the order it was given by the board.
+   *
+   * This is the section that answers the question a funder asks after "is this real": *what do
+   * you do, specifically*. Keep each one concrete enough to picture. A program that stops running
+   * gets deleted from this list rather than left standing — a stale program list is the same
+   * failure as a stale impact number, discovered the same way.
    */
-  lede: null as string | null,
+  programs: [
+    {
+      name: 'Food Bank Referrals',
+      description:
+        "We connect people facing hunger directly to food banks and pantries near them, cutting through confusion about where to go and what's available.",
+      tag: 'Referral network',
+    },
+    {
+      name: 'Stocking Local Pantries',
+      description:
+        'We keep food pantries supplied so their staff and volunteers can stay focused on the ground — serving people face to face — instead of chasing down inventory.',
+      tag: 'Supply, not just referral',
+    },
+    {
+      name: 'NTFB Food Box Distribution',
+      description:
+        'Through our partnership with the North Texas Food Bank, we receive and distribute food boxes directly to families and individuals across the community.',
+      tag: 'Partner: North Texas Food Bank',
+    },
+    {
+      name: 'Community Meal Prep',
+      description:
+        "Excess donated produce and food don't go to waste — our volunteers turn them into prepared meals that go straight back out to people who need them.",
+      tag: 'Rescue and prepare',
+    },
+    {
+      name: 'Homelessness Summits',
+      description:
+        'We host summits that bring together service providers, city agencies, and neighbors to confront homelessness in Dallas head-on and coordinate real solutions.',
+      tag: 'Convening and coordination',
+    },
+    {
+      name: 'Community Feeding Events',
+      description:
+        'Regular on-the-ground events that put warm meals directly into the hands of people in our community — no paperwork, no barriers.',
+      tag: 'Direct service',
+    },
+    {
+      name: 'Clothing Distribution',
+      description:
+        'Donated clothing is sorted and distributed to individuals and families who need it, with a focus on dignity and choice.',
+      tag: 'Direct service',
+    },
+    {
+      name: 'Fresh Produce, Catering and Perishables',
+      description:
+        'We accept and redistribute fresh produce, surplus catering, bread, milk, and other perishable food donations from local businesses, farms, and events — moving them out fast before anything goes to waste.',
+      tag: 'Food rescue',
+    },
+    {
+      name: 'EETZ Food Rescue App',
+      description:
+        'We coordinate real-time pickup and delivery of surplus food through the EETZ app, matching what is available right now with who needs it before it spoils.',
+      tag: 'Powered by EETZ',
+    },
+    {
+      name: 'Inventory Management',
+      description:
+        'Every donation is tracked through the Operation Ground Support Inventory Management app, built with Noble Truth IT — giving us real-time visibility into what is on hand and where it needs to go next.',
+      tag: 'Powered by Noble Truth IT',
+    },
+  ] as Program[],
 
   // ---------------------------------------------------------------------------------------------
   // Legitimacy. These are the fields a grant reviewer looks for first, and all of them are
   // currently missing from the live site.
   // ---------------------------------------------------------------------------------------------
 
-  /** Federal EIN, formatted "12-3456789". TODO: from the IRS determination letter. */
-  ein: null as string | null,
+  /** Federal EIN, formatted "12-3456789". Lights up the transparency bar and the footer. */
+  ein: '42-1818184',
   /** Path under /public to a scan of the IRS 501(c)(3) determination letter. TODO. */
   determinationLetter: null as string | null,
   /** Candid/GuideStar profile URL. Free to claim; grantmakers check it directly. TODO. */

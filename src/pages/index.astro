@@ -9,7 +9,7 @@
  */
 import Base from '../layouts/Base.astro'
 import Doors from '../components/Doors.astro'
-import NeedsList from '../components/NeedsList.astro'
+import Programs from '../components/Programs.astro'
 import MetricRow from '../components/MetricRow.astro'
 import EventList from '../components/EventList.astro'
 import PhotoSlot from '../components/PhotoSlot.astro'
@@ -26,10 +26,17 @@ const updates = (await getCollection('updates', ({ data }) => !data.draft && dat
 
 const hours = org.dropOff.hours
 
-/* Split around the tax status so it can be held on one line. Splitting rather than hardcoding
-   means this degrades to plain text if `org.mission` is ever reworded without the token. */
-const STATUS = '501(c)(3)'
-const missionParts = org.mission.split(STATUS)
+/* Parentheses are line-break opportunities, so `501(c)(3)` and `509(a)(2)` will happily split
+   across two lines — badly at display size, and confusingly at any size, because half a tax code
+   is not a thing. Splitting on the pattern rather than on a hardcoded token means a reworded
+   sentence degrades to plain text instead of silently losing the guard, and it covers both codes
+   in one pass. A `<span>` rather than U+2060 word joiners: funders copy and paste these
+   sentences, and invisible characters in a pasted tax status are a hazard nobody would look for. */
+/* No `g` flag, deliberately: `split` honours a capture group without it, and `RegExp.test` on a
+   global regex advances `lastIndex` between calls, so alternate tax codes would silently go
+   unwrapped. */
+const TAX_CODE = /(\d{3}\([a-z]\)\(\d+\))/
+const splitTaxCodes = (text: string) => text.split(TAX_CODE)
 ---
 
 <Base
@@ -42,35 +49,19 @@ const missionParts = org.mission.split(STATUS)
   <p class="eyebrow">Old East Dallas</p>
   <h1 class="statement">
     {
-      missionParts.map((part, i) => (
-        <Fragment>
-          {i > 0 && <span class="nowrap">{STATUS}</span>}
-          {part}
-        </Fragment>
-      ))
+      splitTaxCodes(org.mission).map((part) =>
+        TAX_CODE.test(part) ? <span class="nowrap">{part}</span> : part,
+      )
     }
   </h1>
 
-  {
-    org.lede ? (
-      <p class="lede">{org.lede}</p>
-    ) : (
-      /* NOTE: The only thing I wanted to add to this lede is to add on "with dignity". The specific context given to me by Anne Winters is that it is very common for homeless or food-insecure people to be embarrased, and we want to treat them with some dignity. But in a short lede at the beginning of the website, it can be interpreted differently, and also it is ambiguous how this already long sentence flows */
-      <p class="lede">
-       We support partners with community hubs across Dallas to deliver zero-barrier direct relief, lead collaborative homelessness summits, and build holistic stabilization, for our unhoused and food-insecure neighbors.
-      </p>
-    )
-  }
+  <p class="lede">{org.lede}</p>
 
   <Doors locale={locale} />
 
   <MetricRow locale={locale} />
 
-  <div class="band full">
-    <div class="layout">
-      <NeedsList locale={locale} />
-    </div>
-  </div>
+  <Programs />
 
   <PhotoSlot
     width="wide"
@@ -118,9 +109,42 @@ const missionParts = org.mission.split(STATUS)
     }
     <p><a href={path('contact', locale)!}>Directions and drop-off instructions</a></p>
   </section>
+
+  <section class="legal">
+    <h2 class="eyebrow">Tax status</h2>
+    <p>
+      {
+        splitTaxCodes(org.taxStatus).map((part) =>
+          TAX_CODE.test(part) ? <span class="nowrap">{part}</span> : part,
+        )
+      }
+    </p>
+    {org.ein && <p class="legal__ein">EIN: <span class="nowrap">{org.ein}</span></p>}
+  </section>
 </Base>
 
 <style>
+  /* The tax status, last thing before the footer. Set small and quiet on purpose: a reviewer who
+     wants it will find it, and nobody else should have to read past it. The EIN is also in the
+     transparency bar and the footer — repetition is the point, since a reviewer arriving on this
+     page should not have to go looking. */
+  .legal {
+    margin-block-start: var(--space-2xl);
+    padding-block-start: var(--space-m);
+    border-block-start: 1px solid var(--rule);
+    color: var(--ink-muted);
+    font-size: var(--text-sm);
+  }
+
+  .legal p {
+    margin-block-start: var(--space-2xs);
+    max-width: var(--measure);
+  }
+
+  .legal__ein {
+    font-variant-numeric: tabular-nums;
+  }
+
   /* The opening statement. Serif, large, tight — and capped in width so it stays a sentence
      someone reads rather than a banner they skim past. Four lines is the target: past that it
      stops reading as a sentence and starts reading as a wall. If `--measure` moves, re-check

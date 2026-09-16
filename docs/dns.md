@@ -39,16 +39,32 @@ As of 2026-09-15:
 | --- | --- | --- |
 | SPF | `@` | live |
 | DMARC | `_dmarc` | live, monitoring only |
-| DKIM | `google._domainkey` | published and propagated — see the caveat below |
+| DKIM | `google._domainkey` | live, and confirmed signing |
 
-The DKIM record is a valid 2048-bit RSA public key, correctly split across two TXT strings, and all
-four authoritative nameservers and every public resolver checked return it identically.
+All three are passing *and aligning* on live mail. A test message sent 2026-09-15 from
+`info@operation-ground-support.org` to an unrelated provider was received with:
 
-**A published record is not the same as signing.** DNS is only half of DKIM: until someone with
-Workspace admin access returns to Apps → Gmail → Authenticate email and clicks **Start
-authentication**, Google is not signing anything and the key sits unused. There is no way to see
-that from DNS — the check is either the admin console showing authentication as active, or a test
-message to a mailbox elsewhere whose headers show `dkim=pass`.
+```
+dmarc=pass (p=none dis=none) header.from=operation-ground-support.org
+spf=pass                     smtp.mailfrom=operation-ground-support.org
+dkim=pass (2048-bit key)     header.d=operation-ground-support.org
+```
+
+Alignment is the part that matters and the part people miss. SPF and DKIM can both pass while
+DMARC still fails, if they pass for some *other* domain than the one in the visible `From:` line —
+that is precisely the hole DMARC exists to close. Here all three name the same domain, so the
+domain is genuinely protected rather than merely configured.
+
+The DKIM signature to read is the one with `d=operation-ground-support.org; s=google`. Google also
+adds an `X-Google-Dkim-Signature` with `d=1e100.net`; that is Google signing as *itself* and it
+appears whether or not this domain's DKIM was ever set up, so it proves nothing. Seeing the
+domain's own `d=` is what confirms the admin completed **Start authentication** — the DNS record
+alone never shows that.
+
+**What this does not prove.** It tests one sending path: a person in Gmail, through Google's SMTP.
+Any future sender — a donation processor, a form handler, a mailing-list tool — is unproven until
+it appears in a DMARC report passing. That is the whole reason the policy stays at `p=none` for an
+observation window instead of tightening today.
 
 ### SPF — live
 
@@ -175,10 +191,9 @@ find every legitimate sender *before* asking receivers to reject anything.
 
 1. **2026-09-12** — SPF and DMARC `p=none` published. *(done)*
 1. **2026-09-15** — DKIM public key published and verified in DNS. *(done)*
-1. **Confirm signing is switched on** — the admin clicks **Start authentication**, then
-   check a test message's headers for `dkim=pass`. Nothing below this line means much
-   until that is true.
-1. **Once signing is confirmed** — read the aggregate reports weekly. The question being answered is: is
+1. **2026-09-15** — signing confirmed on live mail: SPF, DKIM and DMARC all pass and align.
+   *(done)*
+1. **Now** — read the aggregate reports weekly. The question being answered is: is
    everything that legitimately sends mail as this domain passing SPF or DKIM? Expect surprises;
    form handlers, calendar invites, and mailing-list tools all turn up here.
 1. **From 2026-10-10, once a full clean fortnight has passed** — move to
