@@ -13,7 +13,6 @@ import Programs from '../components/Programs.astro'
 import TaxCode from '../components/TaxCode.astro'
 import MetricRow from '../components/MetricRow.astro'
 import EventList from '../components/EventList.astro'
-import PhotoSlot from '../components/PhotoSlot.astro'
 import { org } from '../data/org'
 import { path } from '../i18n/routes'
 import { getCollection } from 'astro:content'
@@ -43,16 +42,14 @@ const hours = org.dropOff.hours
 
   <Doors locale={locale} />
 
+  {/* Above the programs on purpose. Someone who already knows this organization comes back to
+      find out when the next distribution is, and a dated list of real events is more convincing
+      to a first-time reader than any description of what the organization does. */}
+  <EventList locale={locale} />
+
   <MetricRow locale={locale} />
 
   <Programs />
-
-  <PhotoSlot
-    width="wide"
-    brief="The one photograph on this page. Shoot the shelves — stocked or bare, both are honest — or boxes staged for a distribution. No faces. Natural light, shot straight-on rather than at an angle."
-  />
-
-  <EventList locale={locale} />
 
   {
     updates.length > 0 && (

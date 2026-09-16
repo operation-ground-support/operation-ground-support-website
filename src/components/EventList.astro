@@ -109,6 +109,14 @@ function timeLabel(start: Date, end?: Date): string {
 </script>
 
 <style>
+  /* The section had no top margin of its own and inherited whatever happened to precede it. That
+     read as correct only by accident: on both pages the element above it was a dev-only
+     `PhotoSlot`, so the production build collapsed the gap and ran the heading into the block
+     above. Matches the `--space-2xl` rhythm the homepage's other top-level sections use. */
+  .events {
+    margin-block-start: var(--space-2xl);
+  }
+
   .events__list {
     list-style: none;
     padding: 0;
