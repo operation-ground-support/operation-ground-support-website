@@ -1,5 +1,6 @@
 {
   "name": "operation-ground-support-website",
+  "license": "MIT",
   "type": "module",
   "private": true,
   "scripts": {

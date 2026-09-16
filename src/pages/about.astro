@@ -15,7 +15,9 @@ import Base from '../layouts/Base.astro'
 import MetricRow from '../components/MetricRow.astro'
 import PhotoSlot from '../components/PhotoSlot.astro'
 import Todo from '../components/Todo.astro'
+import TaxCode from '../components/TaxCode.astro'
 import { org } from '../data/org'
+import { pick } from '../i18n/routes'
 
 const locale = 'en' as const
 const people = [
@@ -84,16 +86,27 @@ const people = [
         </section>
       ))
     ) : (
-      <section class="section">
-        <h2>Board</h2>
-        <Todo label="Most important gap on the site">
-          Fill in <code>org.board</code> with names and roles. A 501(c)(3) with no identifiable
-          people anywhere on its website is the single loudest red flag in grant diligence, and it
-          is the cheapest one to fix. Roles alone are fine if someone does not want a bio.
-        </Todo>
-      </section>
+      /* Dev-only in its entirety. `Todo` renders nothing in production, so without this guard the
+         built page shipped a bare `<h2>Board</h2>` over empty space — an empty shell, which is
+         exactly what this file's own rule says a missing fact must never produce. The gap stays
+         visible where it belongs: in `just dev` and in `just audit`. */
+      import.meta.env.DEV && (
+        <section class="section">
+          <h2>Board</h2>
+          <Todo label="Most important gap on the site">
+            Fill in <code>org.board</code> with names and roles. A 501(c)(3) with no identifiable
+            people anywhere on its website is the single loudest red flag in grant diligence, and
+            it is the cheapest one to fix. Roles alone are fine if someone does not want a bio.
+          </Todo>
+        </section>
+      )
     )
   }
+
+  <section class="section">
+    <h2>Tax status</h2>
+    <p><TaxCode text={pick(org.taxStatus, locale)} /></p>
+  </section>
 
   <section class="section">
     <h2>Money and governance</h2>

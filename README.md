@@ -106,6 +106,23 @@ These are not stylistic preferences. Each one is something a grant reviewer chec
 `just add-photo <source> <name>` resizes a photograph and strips its EXIF metadata. Phone photos
 carry GPS coordinates; publishing them from this address would be a real disclosure.
 
+## Licensing
+
+Two licenses, because the repo holds two different kinds of thing.
+
+- **Code** — MIT (`LICENSE`).
+- **Written content** — CC BY 4.0 (`LICENSE-CONTENT`): page text, needs lists, updates, and the
+  organizational facts in `src/data/org.ts`. The intent is that another small nonprofit can lift
+  the intake wording or the structure of the needs list without asking.
+
+`LICENSE-CONTENT` carves out four things that are not the organization's to give away: the name and
+logo (trademarks), photographs of identifiable people (a volunteer's release covers publication by
+this organization, not arbitrary third-party reuse), the typefaces (SIL OFL, fetched at build and
+embedded in `dist/`), and third-party material inside content files.
+
+There is deliberately no "all rights reserved" notice. It has been legally inert in the US since
+Berne took effect in 1989, and it would contradict the grant the footer actually makes.
+
 ## Deploying
 
 `dist/` is plain HTML and works unchanged on Cloudflare Pages, Netlify, GitHub Pages, or a bare

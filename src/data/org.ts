@@ -71,10 +71,14 @@ export const org = {
    * The formal tax classification, for the bottom of the homepage. 509(a)(2) is the public-support
    * test for organizations funded mainly by program revenue and contributions, as distinct from
    * 509(a)(1); stating it tells a grant reviewer the status was actually determined rather than
-   * assumed. TODO: Spanish, in the end-of-project translation pass.
+   * assumed. Shown on the Contact page, which is bilingual, so this is a `Localized`; the
+   * Spanish is a literal rendering of a legal statement and should still be read in the final
+   * translation pass.
    */
-  taxStatus:
-    'Operation Ground Support is a 501(c)(3) tax-exempt public charity, classified under IRC Section 509(a)(2).',
+  taxStatus: {
+    en: 'Operation Ground Support is a 501(c)(3) tax-exempt public charity, classified under IRC Section 509(a)(2).',
+    es: 'Operation Ground Support es una organización benéfica pública exenta de impuestos según la sección 501(c)(3), clasificada bajo la Sección 509(a)(2) del Código de Rentas Internas.',
+  } as Localized,
 
   /**
    * An alternate one-line positioning statement

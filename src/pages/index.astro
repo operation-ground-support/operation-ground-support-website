@@ -10,6 +10,7 @@
 import Base from '../layouts/Base.astro'
 import Doors from '../components/Doors.astro'
 import Programs from '../components/Programs.astro'
+import TaxCode from '../components/TaxCode.astro'
 import MetricRow from '../components/MetricRow.astro'
 import EventList from '../components/EventList.astro'
 import PhotoSlot from '../components/PhotoSlot.astro'
@@ -26,17 +27,6 @@ const updates = (await getCollection('updates', ({ data }) => !data.draft && dat
 
 const hours = org.dropOff.hours
 
-/* Parentheses are line-break opportunities, so `501(c)(3)` and `509(a)(2)` will happily split
-   across two lines — badly at display size, and confusingly at any size, because half a tax code
-   is not a thing. Splitting on the pattern rather than on a hardcoded token means a reworded
-   sentence degrades to plain text instead of silently losing the guard, and it covers both codes
-   in one pass. A `<span>` rather than U+2060 word joiners: funders copy and paste these
-   sentences, and invisible characters in a pasted tax status are a hazard nobody would look for. */
-/* No `g` flag, deliberately: `split` honours a capture group without it, and `RegExp.test` on a
-   global regex advances `lastIndex` between calls, so alternate tax codes would silently go
-   unwrapped. */
-const TAX_CODE = /(\d{3}\([a-z]\)\(\d+\))/
-const splitTaxCodes = (text: string) => text.split(TAX_CODE)
 ---
 
 <Base
@@ -47,13 +37,7 @@ const splitTaxCodes = (text: string) => text.split(TAX_CODE)
   lastReviewed="2026-08-27"
 >
   <p class="eyebrow">Old East Dallas</p>
-  <h1 class="statement">
-    {
-      splitTaxCodes(org.mission).map((part) =>
-        TAX_CODE.test(part) ? <span class="nowrap">{part}</span> : part,
-      )
-    }
-  </h1>
+  <h1 class="statement"><TaxCode text={org.mission} /></h1>
 
   <p class="lede">{org.lede}</p>
 
@@ -109,42 +93,9 @@ const splitTaxCodes = (text: string) => text.split(TAX_CODE)
     }
     <p><a href={path('contact', locale)!}>Directions and drop-off instructions</a></p>
   </section>
-
-  <section class="legal">
-    <h2 class="eyebrow">Tax status</h2>
-    <p>
-      {
-        splitTaxCodes(org.taxStatus).map((part) =>
-          TAX_CODE.test(part) ? <span class="nowrap">{part}</span> : part,
-        )
-      }
-    </p>
-    {org.ein && <p class="legal__ein">EIN: <span class="nowrap">{org.ein}</span></p>}
-  </section>
 </Base>
 
 <style>
-  /* The tax status, last thing before the footer. Set small and quiet on purpose: a reviewer who
-     wants it will find it, and nobody else should have to read past it. The EIN is also in the
-     transparency bar and the footer — repetition is the point, since a reviewer arriving on this
-     page should not have to go looking. */
-  .legal {
-    margin-block-start: var(--space-2xl);
-    padding-block-start: var(--space-m);
-    border-block-start: 1px solid var(--rule);
-    color: var(--ink-muted);
-    font-size: var(--text-sm);
-  }
-
-  .legal p {
-    margin-block-start: var(--space-2xs);
-    max-width: var(--measure);
-  }
-
-  .legal__ein {
-    font-variant-numeric: tabular-nums;
-  }
-
   /* The opening statement. Serif, large, tight — and capped in width so it stays a sentence
      someone reads rather than a banner they skim past. Four lines is the target: past that it
      stops reading as a sentence and starts reading as a wall. If `--measure` moves, re-check
@@ -156,13 +107,6 @@ const splitTaxCodes = (text: string) => text.split(TAX_CODE)
     margin-block-start: var(--space-2xs);
     max-width: 28ch;
     text-wrap: balance;
-  }
-
-  /* Parentheses are line-break opportunities, so `501(c)(3)` will happily split across two
-     lines at display sizes. This keeps it whole without putting invisible characters into a
-     string that people copy and paste. */
-  .nowrap {
-    white-space: nowrap;
   }
 
   .lede {

@@ -1,0 +1,35 @@
+---
+/**
+ * Renders a sentence, holding any US tax code in it on one line.
+ *
+ * Parentheses are line-break opportunities, so `501(c)(3)` and `509(a)(2)` will happily split
+ * across two lines — badly at display size, and confusingly at any size, because half a tax code
+ * is not a thing. This wraps each one in a `nowrap` span.
+ *
+ * A span rather than U+2060 word joiners, deliberately: funders copy and paste these sentences
+ * into applications and board minutes, and invisible characters in a pasted tax status are a
+ * hazard nobody would think to look for.
+ *
+ * Matching a pattern rather than a hardcoded token means a reworded sentence degrades to plain
+ * text instead of silently losing the guard, and that one rule covers every code without anyone
+ * remembering to add the next one.
+ */
+interface Props {
+  text: string
+}
+
+const { text } = Astro.props
+
+/* No `g` flag, deliberately: `split` honours a capture group without it, while `RegExp.test` on a
+   global regex advances `lastIndex` between calls — which would leave alternate codes unwrapped,
+   and look like a rendering glitch rather than a bug. */
+const TAX_CODE = /(\d{3}\([a-z]\)\(\d+\))/
+---
+
+{text.split(TAX_CODE).map((part) => (TAX_CODE.test(part) ? <span class="nowrap">{part}</span> : part))}
+
+<style>
+  .nowrap {
+    white-space: nowrap;
+  }
+</style>

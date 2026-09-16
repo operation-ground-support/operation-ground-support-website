@@ -51,6 +51,7 @@ const en = {
   'footer.contact': 'Contact',
   'footer.transparency': 'Transparency',
   'footer.lastUpdated': 'Site last updated',
+  'footer.license': 'Text on this site is CC BY 4.0',
 
   'a11y.mainNav': 'Main navigation',
   'a11y.transparencyBar': 'Organizational transparency',
@@ -100,6 +101,7 @@ const es: Record<keyof typeof en, string> = {
   'footer.contact': 'Contacto',
   'footer.transparency': 'Transparencia',
   'footer.lastUpdated': 'Sitio actualizado por última vez',
+  'footer.license': 'Los textos de este sitio son CC BY 4.0',
 
   'a11y.mainNav': 'Navegación principal',
   'a11y.transparencyBar': 'Transparencia de la organización',

@@ -25,7 +25,6 @@ const latestFiling = org.filings.length > 0 ? org.filings[0] : null
     <div class="footer__col">
       <p class="footer__name">{org.name}</p>
       <p class="footer__muted">{pick(org.tagline, locale)}</p>
-      {org.ein && <p class="footer__muted">{t('bar.ein')} {org.ein}</p>}
     </div>
 
     <div class="footer__col">
@@ -50,7 +49,16 @@ const latestFiling = org.filings.length > 0 ? org.filings[0] : null
         {org.annualReport && <li><a href={org.annualReport}>Annual report</a></li>}
         {path('about', locale) && <li><a href={path('about', locale)!}>{t('nav.about')}</a></li>}
       </ul>
+      {org.ein && <p class="footer__ein">{t('bar.ein')} {org.ein}</p>}
     </div>
+  </div>
+
+  <div class="footer__inner footer__legal">
+    <p>
+      <a href="https://creativecommons.org/licenses/by/4.0/" rel="license noopener">
+        {t('footer.license')}
+      </a>
+    </p>
   </div>
 </footer>
 
@@ -60,6 +68,24 @@ const latestFiling = org.filings.length > 0 ? org.filings[0] : null
     border-block-start: 1px solid var(--rule);
     font-size: var(--text-sm);
     padding-block: var(--space-xl);
+  }
+
+  .footer__ein {
+    margin-block-start: var(--space-xs);
+    color: var(--ink-muted);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* The licence line, under the three columns. No copyright notice above it on purpose: the
+     rights are granted here, and "all rights reserved" would contradict the grant as well as
+     being a dead formality — it has meant nothing in US law since Berne took effect in 1989. */
+  .footer__legal {
+    margin-block-start: var(--space-l);
+    padding-block-start: var(--space-m);
+    border-block-start: 1px solid var(--rule);
+    display: block;
+    font-size: var(--text-xs);
+    color: var(--ink-faint);
   }
 
   .footer__inner {
