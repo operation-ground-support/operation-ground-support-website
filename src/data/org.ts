@@ -199,8 +199,7 @@ export const org = {
   // ---------------------------------------------------------------------------------------------
 
   email: 'info@operation-ground-support.org',
-  /** The number published on the current site; it reaches the Grace UMC office during hours. */
-  phone: '214-824-2533',
+  phone: '972-325-6470',
 
   postal_address: {
     street: '(postal address TODO)',
