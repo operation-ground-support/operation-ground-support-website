@@ -4,7 +4,7 @@
  */
 import { org } from '../data/org'
 import { useTranslations } from '../i18n/ui'
-import { path, type Locale } from '../i18n/routes'
+import { path, pick, type Locale } from '../i18n/routes'
 
 interface Props {
   locale: Locale
@@ -24,7 +24,7 @@ const latestFiling = org.filings.length > 0 ? org.filings[0] : null
   <div class="footer__inner">
     <div class="footer__col">
       <p class="footer__name">{org.name}</p>
-      <p class="footer__muted">{t('footer.tagline')}</p>
+      <p class="footer__muted">{pick(org.tagline, locale)}</p>
       {org.ein && <p class="footer__muted">{t('bar.ein')} {org.ein}</p>}
     </div>
 

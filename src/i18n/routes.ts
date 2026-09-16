@@ -15,6 +15,22 @@ export type Locale = (typeof LOCALES)[number]
 
 export const DEFAULT_LOCALE: Locale = 'en'
 
+/**
+ * A value that exists once per locale.
+ *
+ * This is the same shape `ui.ts` uses for interface strings and the same shape `org.ts` uses for
+ * facts that happen to be prose. This keeps a language from being half-added.
+ *
+ * Use it for content that must be *said* differently per locale. Do not use it for a fact that is
+ * the same in every language — an EIN, a phone number, a URL — which stays a bare value.
+ */
+export type Localized<T = string> = Record<Locale, T>
+
+/** Take the active locale's side of a `Localized` value. */
+export function pick<T>(value: Localized<T>, locale: Locale): T {
+  return value[locale]
+}
+
 export const PAGE_KEYS = [
   'home',
   'getHelp',

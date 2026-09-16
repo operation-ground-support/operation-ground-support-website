@@ -32,6 +32,8 @@
           exiftool
           # `svgo` minifies the logo SVGs once they exist
           svgo
+          # `just share` packs the offline copy of the site into something emailable
+          zip
         ];
       in
       {

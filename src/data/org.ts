@@ -12,7 +12,15 @@
  * Facts currently marked TODO are the ones that were missing from the Squarespace site and are
  * the actual reason the funding application read as thin. Filling them in matters more than
  * anything about the design.
+ *
+ * What belongs here versus in `i18n/ui.ts`: this file holds things that would change if the
+ * organization changed. `ui.ts` holds things that would change if the site were redesigned. The
+ * EIN *value* is a fact and lives here; the word "EIN" that labels it in the transparency bar is
+ * furniture and lives there. When a fact is prose and so has to be said differently per language,
+ * it is a `Localized` — the same type `ui.ts` uses, so the two files are one idea in two places
+ * rather than two formats.
  */
+import type { Localized } from '../i18n/routes'
 
 export interface Person {
   name: string
@@ -43,9 +51,17 @@ export const org = {
   /** Used where the full name will not fit, e.g. a favicon or a tight mobile header. */
   shortName: 'OGS',
 
-  /** Verbatim from the current site. Change deliberately — this is the sentence funders quote. */
+  /** Main statement */
   mission:
     'Operation Ground Support is a 501(c)(3) nonprofit organization dedicated to serving our neighbors in Dallas.',
+
+  /**
+   * An alternate one-line positioning statement
+   */
+  tagline: {
+    en: "The bridge between need and what's already there to meet it.",
+    es: 'Recolectamos y repartimos donaciones en Old East Dallas.',
+  } as Localized,
 
   /**
    * A plainer, more concrete restatement used as the homepage lede. The mission statement above
@@ -117,7 +133,7 @@ export const org = {
         days: { en: 'Friday', es: 'Viernes' },
         time: { en: '9:00am to noon', es: '9:00 a 12:00' },
       },
-    ] as { days: { en: string; es: string }; time: { en: string; es: string } }[],
+    ] as { days: Localized; time: Localized }[],
     instructions: [
       'Park in the lot behind the church building.',
       'Enter through the back door of Grace United Methodist Church, which opens onto that lot.',
@@ -165,19 +181,19 @@ export const org = {
 
   intake: {
     /** Who can receive goods. e.g. "Anyone who needs them. We do not have a service area." */
-    whoCanReceive: null as { en: string; es: string } | null,
+    whoCanReceive: null as Localized | null,
     /** Whether identification is required, and what happens if someone has none. */
-    idRequired: null as { en: string; es: string } | null,
+    idRequired: null as Localized | null,
     /** Whether income or need has to be documented. */
-    proofOfNeed: null as { en: string; es: string } | null,
+    proofOfNeed: null as Localized | null,
     /** Whether anyone is asked about immigration status. */
-    immigrationStatus: null as { en: string; es: string } | null,
+    immigrationStatus: null as Localized | null,
     /** What, if anything, is written down, who can see it, and how long it is kept. */
-    recordsKept: null as { en: string; es: string } | null,
+    recordsKept: null as Localized | null,
     /** How often a household may come. */
-    howOften: null as { en: string; es: string } | null,
+    howOften: null as Localized | null,
     /** Whether an appointment is needed, or whether people may simply arrive during hours. */
-    appointment: null as { en: string; es: string } | null,
+    appointment: null as Localized | null,
   },
 } as const satisfies Record<string, unknown>
 

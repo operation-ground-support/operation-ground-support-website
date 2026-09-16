@@ -63,6 +63,14 @@ build:
 preview: build
   npm run preview
 
+# A copy of the site that works from a folder, with no server: `dist-offline/` plus a zip of it.
+# For sending the whole site to a board member or a funder to look through offline.
+share: build
+  node tools/offline.mjs
+  rm -f operation-ground-support-site.zip
+  cd dist-offline && zip -qr ../operation-ground-support-site.zip .
+  @echo "  operation-ground-support-site.zip — unzip it and open index.html"
+
 # Type-check the site, including `.astro` files and content frontmatter
 check:
   npm run check
@@ -140,7 +148,7 @@ optimize-svg FILE:
 
 # Remove build output and caches
 clean:
-  rm -rf dist .astro node_modules/.astro
+  rm -rf dist dist-offline operation-ground-support-site.zip .astro node_modules/.astro
 
 # Print the dev shell's PATH, e.g. for pointing an editor's tooling at it
 sh_path:

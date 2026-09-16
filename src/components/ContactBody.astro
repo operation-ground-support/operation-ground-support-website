@@ -3,7 +3,7 @@
  * Contact details, shared by `/contact` and `/es/contacto`.
  */
 import { org } from '../data/org'
-import type { Locale } from '../i18n/routes'
+import { pick, type Locale } from '../i18n/routes'
 
 interface Props {
   locale: Locale
@@ -25,11 +25,9 @@ const t = {
     es: 'Periodistas, congregaciones y organizaciones que quieran organizar una colecta: use la misma dirección e indíquelo en el asunto.',
   },
 }
-
-const pick = <T,>(pair: { en: T; es: T }): T => (es ? pair.es : pair.en)
 ---
 
-<p class="lede">{pick(t.lede)}</p>
+<p class="lede">{pick(t.lede, locale)}</p>
 
 <ul class="contact">
   <li><a href={`mailto:${org.email}`}>{org.email}</a></li>
@@ -37,7 +35,7 @@ const pick = <T,>(pair: { en: T; es: T }): T => (es ? pair.es : pair.en)
 </ul>
 
 <section class="section">
-  <h2>{pick(t.address)}</h2>
+  <h2>{pick(t.address, locale)}</h2>
   <p class="address">
     {org.postal_address.street && <>{org.postal_address.street}<br /></>}
     {org.postal_address.city}, {org.postal_address.state} {org.postal_address.zip}
@@ -46,20 +44,20 @@ const pick = <T,>(pair: { en: T; es: T }): T => (es ? pair.es : pair.en)
 </section>
 
 <section class="section">
-  <h2>{pick(t.hours)}</h2>
+  <h2>{pick(t.hours, locale)}</h2>
   <dl class="hours">
     {org.dropOff.hours.map((h) => (
       <div>
-        <dt>{pick(h.days)}</dt>
-        <dd>{pick(h.time)}</dd>
+        <dt>{pick(h.days, locale)}</dt>
+        <dd>{pick(h.time, locale)}</dd>
       </div>
     ))}
   </dl>
 </section>
 
 <section class="section">
-  <h2>{pick(t.press)}</h2>
-  <p>{pick(t.pressBody)}</p>
+  <h2>{pick(t.press, locale)}</h2>
+  <p>{pick(t.pressBody, locale)}</p>
 </section>
 
 <style>

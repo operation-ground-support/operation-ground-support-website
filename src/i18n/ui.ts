@@ -1,14 +1,15 @@
 /**
- * Interface strings — navigation, labels, buttons, footer chrome.
+ * Interface strings — navigation, labels, buttons, footer chrome. This file is limited to furniture.
  *
  * Page *prose* does not live here; it lives in the page files and in `src/content/`. This is only
  * for the repeated furniture, where duplicating the English into every page would guarantee the
  * two languages drift apart.
  *
- * `Record<Locale, typeof en>` means a missing Spanish key is a type error rather than a silently
- * English word in the middle of a Spanish page.
+ * `Localized<typeof en>` means a missing Spanish key is a type error rather than a silently
+ * English word in the middle of a Spanish page. Note what it does *not* catch: that the two sides
+ * actually say the same thing.
  */
-import type { Locale } from './routes'
+import type { Locale, Localized } from './routes'
 
 const en = {
   'nav.getHelp': 'Get help',
@@ -47,7 +48,6 @@ const en = {
   'metrics.asOf': 'as of',
   'metrics.basis': 'How we count this',
 
-  'footer.tagline': 'The bridge between need and what\'s already there to meet it.',
   'footer.contact': 'Contact',
   'footer.transparency': 'Transparency',
   'footer.lastUpdated': 'Site last updated',
@@ -97,7 +97,6 @@ const es: Record<keyof typeof en, string> = {
   'metrics.asOf': 'al',
   'metrics.basis': 'Cómo lo contamos',
 
-  'footer.tagline': 'Recolectamos y repartimos donaciones en Old East Dallas.',
   'footer.contact': 'Contacto',
   'footer.transparency': 'Transparencia',
   'footer.lastUpdated': 'Sitio actualizado por última vez',
@@ -111,7 +110,7 @@ const es: Record<keyof typeof en, string> = {
   'cta.getHelp': 'Necesito ayuda',
 }
 
-export const ui = { en, es } as const
+export const ui = { en, es } as const satisfies Localized<Record<string, string>>
 
 export type UiKey = keyof typeof en
 

@@ -1,6 +1,9 @@
 # Astro build output and cache
 /dist
 /.astro
+# `just share` — the offline copy and the zip of it
+/dist-offline
+/operation-ground-support-site.zip
 # npm
 /node_modules
 /.npm-cache
