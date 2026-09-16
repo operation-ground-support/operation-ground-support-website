@@ -33,13 +33,22 @@ and the people this organization serves are exactly the people least able to abs
 
 ## What is in place
 
-As of 2026-09-12:
+As of 2026-09-15:
 
 | Record | Host | Status |
 | --- | --- | --- |
 | SPF | `@` | live |
 | DMARC | `_dmarc` | live, monitoring only |
-| DKIM | `google._domainkey` | **not yet — needs the Workspace admin** |
+| DKIM | `google._domainkey` | published and propagated — see the caveat below |
+
+The DKIM record is a valid 2048-bit RSA public key, correctly split across two TXT strings, and all
+four authoritative nameservers and every public resolver checked return it identically.
+
+**A published record is not the same as signing.** DNS is only half of DKIM: until someone with
+Workspace admin access returns to Apps → Gmail → Authenticate email and clicks **Start
+authentication**, Google is not signing anything and the key sits unused. There is no way to see
+that from DNS — the check is either the admin console showing authentication as active, or a test
+message to a mailbox elsewhere whose headers show `dkim=pass`.
 
 ### SPF — live
 
@@ -165,19 +174,23 @@ per-domain, not per-account.
 find every legitimate sender *before* asking receivers to reject anything.
 
 1. **2026-09-12** — SPF and DMARC `p=none` published. *(done)*
-2. **Once DKIM is live** — read the aggregate reports weekly. The question being answered is: is
+1. **2026-09-15** — DKIM public key published and verified in DNS. *(done)*
+1. **Confirm signing is switched on** — the admin clicks **Start authentication**, then
+   check a test message's headers for `dkim=pass`. Nothing below this line means much
+   until that is true.
+1. **Once signing is confirmed** — read the aggregate reports weekly. The question being answered is: is
    everything that legitimately sends mail as this domain passing SPF or DKIM? Expect surprises;
    form handlers, calendar invites, and mailing-list tools all turn up here.
-3. **From 2026-10-10, once a full clean fortnight has passed** — move to
+1. **From 2026-10-10, once a full clean fortnight has passed** — move to
    `p=quarantine; pct=100`. Failing mail goes to spam rather than the inbox. Still reversible in
    minutes.
-4. **Roughly a month after that, if nothing broke** — move to `p=reject`.
+1. **Roughly a month after that, if nothing broke** — move to `p=reject`.
 
 **Do not skip to `p=reject`.** The failure mode is a small organization silently no longer
 delivering its own donation receipts, and discovering it only when someone complains. The whole
 reason this is staged is that the reports tell you what breaks before it breaks.
 
-Revisit step 3 whenever a new sending service is added. A new mail source under `p=reject` with no
+Revisit the `p=quarantine` step whenever a new sending service is added. A new mail source under `p=reject` with no
 SPF include and no DKIM key is mail that vanishes.
 
 ## Verifying from the command line

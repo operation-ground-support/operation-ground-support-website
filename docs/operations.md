@@ -11,8 +11,10 @@ Two things that are worth doing regardless of what happens to this site.
 `@operation-ground-support.org` unless the domain publishes records saying who may. For an
 organization that emails donors and asks for money, being spoofable is a live risk — "urgent
 donation appeal" phishing from a nonprofit's own domain is a known pattern. SPF and DMARC are now
-published; DKIM still needs someone with Google Workspace admin access. See `dns.md`, which also
-carries the schedule for tightening the DMARC policy and the one trap that breaks SPF later.
+published, and the DKIM public key is now in DNS — but signing is not on until a Workspace admin
+clicks **Start authentication** in the Gmail settings, which is not visible from DNS. See `dns.md`,
+which also carries the schedule for tightening the DMARC policy and the one trap that breaks SPF
+later.
 
 **Google for Nonprofits.** Verified US 501(c)(3)s get Google Workspace free, which may be most or
 all of the ~$15/month currently being paid. Verification runs through Goodstack and typically takes

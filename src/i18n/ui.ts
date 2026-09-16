@@ -47,7 +47,7 @@ const en = {
   'metrics.asOf': 'as of',
   'metrics.basis': 'How we count this',
 
-  'footer.tagline': 'Dedicated to serving our neighbors in Dallas.',
+  'footer.tagline': 'The bridge between need and what\'s already there to meet it.',
   'footer.contact': 'Contact',
   'footer.transparency': 'Transparency',
   'footer.lastUpdated': 'Site last updated',
