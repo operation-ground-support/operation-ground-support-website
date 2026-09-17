@@ -299,7 +299,7 @@ export const REQUIRED_FOR_FUNDERS: { path: string; why: string }[] = [
   { path: 'founded', why: 'State the founding year. Being new is fine; being undated is not.' },
   { path: 'board', why: 'List board members by name and role. No named people is the single loudest diligence red flag.' },
   { path: 'metrics', why: 'Publish at least one number that someone actually counted, with its basis and date.' },
-  { path: 'location.street', why: 'A real street address makes the organization locatable.' },
+  { path: 'postal_address.street', why: 'A real street address makes the organization locatable.' },
   { path: 'donate.url', why: 'Set up a real donation processor (Zeffy takes 0%) and link it.' },
   { path: 'lede', why: 'Write the plain-language homepage sentence and get the board to approve it.' },
   { path: 'intake.idRequired', why: 'Answer whether ID is required. People skip a trip they cannot afford over this.' },

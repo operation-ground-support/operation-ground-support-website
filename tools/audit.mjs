@@ -36,10 +36,24 @@ function get(obj, dotted) {
   return dotted.split('.').reduce((acc, key) => (acc == null ? acc : acc[key]), obj)
 }
 
+/**
+ * A placeholder counts as missing.
+ *
+ * Copy like `(postal address TODO)` is deliberate — it marks where a fact goes, in place, so it is
+ * obvious on the page what is still owed. But it is a non-empty string, so every truthiness test
+ * in the codebase reads it as an answer. That is how `(postal address TODO)` ended up published as
+ * this organization's machine-readable street address, next to a real EIN.
+ *
+ * Treating the marker as the absence it represents is what lets the placeholders stay in the copy
+ * without the tooling believing them.
+ */
+const PLACEHOLDER = /\b(TODO|FIXME)\b/i
+
 function isMissing(value) {
   if (value == null) return true
   if (Array.isArray(value) && value.length === 0) return true
   if (typeof value === 'string' && value.trim() === '') return true
+  if (typeof value === 'string' && PLACEHOLDER.test(value)) return true
   return false
 }
 
