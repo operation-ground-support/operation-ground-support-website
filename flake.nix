@@ -34,6 +34,10 @@
           svgo
           # `just share` packs the offline copy of the site into something emailable
           zip
+          # `just deploy-preview` uploads `dist/` to Cloudflare Pages. Build-time only, like node:
+          # the deployed artifact is still a folder of static files, and the site does not depend
+          # on anything Cloudflare provides at runtime.
+          wrangler
         ];
       in
       {

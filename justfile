@@ -71,6 +71,56 @@ share: build
   cd dist-offline && zip -qr ../operation-ground-support-site.zip .
   @echo "  operation-ground-support-site.zip — unzip it and open index.html"
 
+# The name of the Cloudflare Pages project, which is also its hostname:
+# https://operation-ground-support.pages.dev
+cf_project := "operation-ground-support"
+
+# One-time setup for `deploy-preview`. Opens a browser to log in to Cloudflare.
+deploy-setup:
+  wrangler login
+  wrangler pages project create {{cf_project}} --production-branch=main
+
+# A copy of the site at a Cloudflare address, for showing to a board member or a funder while the
+# real domain still points at Squarespace. It touches no DNS record and no mail record.
+#
+# Deliberately a manual upload rather than Cloudflare's GitHub integration: the production site
+# should be published through the review gate on `main` (see docs/operations.md), not from
+# whatever happens to be in someone's working tree. That gate is the whole governance model, and
+# a one-command deploy from a laptop quietly routes around it. This recipe is for the staging
+# copy, which nobody's domain points at.
+
+# Build and upload the staging site, and print the URL to send people
+deploy-preview: build
+  #!/usr/bin/env bash
+  set -euo pipefail
+
+  # Upload a copy rather than `dist/` itself, so the noindex header below cannot ride along into a
+  # production deploy. `dist/` stays exactly what every other host would be handed.
+  rm -rf dist-preview
+  cp -r dist dist-preview
+
+  # Keep the staging copy out of search results. Cloudflare adds this header to *preview*
+  # deployments automatically but not to the project's main `.pages.dev` address, which is the
+  # stable link this recipe produces — so it has to be set here.
+  #
+  # A header and not `Disallow: /` in robots.txt, which is the intuitive fix and the wrong one:
+  # disallowing crawling stops a crawler from ever fetching the page, so it never sees the
+  # instruction not to index it, and the URL can still turn up in results with no description.
+  # Allowing the crawl and answering with `noindex` is what actually keeps it out. `_headers` is
+  # read by Cloudflare Pages and by Netlify, and ignored as a stray file anywhere else.
+  printf '%s\n' '/*' '  X-Robots-Tag: noindex, nofollow' > dist-preview/_headers
+
+  # `--branch=main` matches the project's production branch, which is what earns the short stable
+  # hostname; any other branch name would publish to a one-off preview URL instead.
+  wrangler pages deploy dist-preview \
+    --project-name={{cf_project}} \
+    --branch=main \
+    --commit-dirty=true
+
+  echo
+  echo "  Staging site: https://{{cf_project}}.pages.dev"
+  echo "  Not indexed by search engines. Not the live site."
+
 # Type-check the site, including `.astro` files and content frontmatter
 check:
   npm run check
@@ -148,7 +198,7 @@ optimize-svg FILE:
 
 # Remove build output and caches
 clean:
-  rm -rf dist dist-offline operation-ground-support-site.zip .astro node_modules/.astro
+  rm -rf dist dist-offline dist-preview operation-ground-support-site.zip .astro node_modules/.astro
 
 # Print the dev shell's PATH, e.g. for pointing an editor's tooling at it
 sh_path:

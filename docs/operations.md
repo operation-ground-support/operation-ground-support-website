@@ -35,6 +35,79 @@ Domains LLC — the `googledomains.com` nameservers are inherited infrastructure
 vendor. The registrar is where nameserver changes happen; records themselves are edited in the
 Squarespace domain dashboard.
 
+## The staging site
+
+There is a copy of the site at **https://operation-ground-support.pages.dev**, on Cloudflare Pages.
+It exists to be a link you can send someone — a board member reviewing copy, a funder who asked to
+see progress — without waiting for the domain cutover below.
+
+```sh
+nix develop -c just deploy-setup     # once, ever: logs in and creates the project
+nix develop -c just deploy-preview   # every time after that
+```
+
+It is deliberately separate from everything that is currently working:
+
+- **It touches no DNS record**, so the A records still point at Squarespace and the live site is
+  unaffected. The cutover stays a decision made later, on purpose.
+- **It touches no mail record.** SPF, DKIM, and DMARC are answered by Google Cloud DNS and this
+  does not go near them. Hosting and mail are separate systems that happen to share a domain name,
+  and the only thing that couples them is the zone file, which this never opens.
+- **It is not published from `main`.** The upload comes from a working tree, which is the right
+  trade for a staging copy and the wrong one for the live site — see Governance below.
+
+### Keeping it out of search results
+
+A second copy of a nonprofit's site, indexed under a Cloudflare address, is a live credibility
+problem: someone searching the organization's name finds a draft, and cannot tell it from the real
+thing. So `just deploy-preview` writes a `_headers` file into the upload:
+
+```
+/*
+  X-Robots-Tag: noindex, nofollow
+```
+
+Two details worth knowing before changing this.
+
+Cloudflare adds that header automatically to *preview* deployments — the per-commit URLs — but not
+to the project's main `.pages.dev` address, which is the stable link this produces. So it is not
+redundant.
+
+And it is a header rather than `Disallow: /` in `robots.txt`, which is the intuitive fix and the
+wrong one. Disallowing stops a crawler from fetching the page at all, so it never reads the
+instruction not to index it, and the URL can still appear in results as a bare link. Allowing the
+crawl and answering with `noindex` is what actually removes it.
+
+The file is written into `dist-preview/`, a copy, never into `dist/`. A `noindex` header that
+followed the build into the production deploy would be invisible and would quietly delist the real
+site.
+
+### Giving it a friendlier address
+
+`preview.operation-ground-support.org` works without moving DNS to Cloudflare, and without the
+cutover below:
+
+1. Cloudflare dashboard → the Pages project → **Custom domains** → **Set up a domain**, and enter
+   the subdomain. **Do this first.** Adding the CNAME without registering the domain here produces
+   a 522 error rather than a working site, and it is not obvious why.
+2. Squarespace → DNS Settings → Custom Records: `CNAME`, host `preview`, value
+   `operation-ground-support.pages.dev`.
+
+That is one added record and nothing removed, so the blast radius is the subdomain and nothing
+else. This only works for a subdomain — an apex domain on Cloudflare Pages requires the zone to be
+on Cloudflare, which is step 1 of the cutover.
+
+### Why Pages and not Workers
+
+Cloudflare's own documentation now says to start new projects on Workers rather than Pages. For
+this site the older product is still the right one, for a specific reason: a Workers custom domain
+requires the domain to be an active Cloudflare zone, while Pages accepts a subdomain whose DNS
+lives anywhere. That is exactly the difference between "add one CNAME at Squarespace" and "move
+the nameservers first" — and the whole point of the staging site is to not need the cutover yet.
+
+Pages remains available on all plans and nothing here depends on it. The deployable artifact is
+still a folder of static files; `wrangler` is a build-time tool in the flake, like `node`.
+
 ## Cutover, as three separate operations
 
 Never do more than one of these at a time.
@@ -53,6 +126,10 @@ Lower TTLs to 300 seconds a day before step 1 so a mistake rolls back in minutes
 zone file first — that export is the undo button.
 
 ## Hosting
+
+This is the *production* path, for after the cutover. It is separate from the staging site above,
+and it should stay separate: a deploy that publishes the live site belongs behind the review gate
+on `main`, not behind a command anyone can run from a laptop.
 
 Cloudflare Pages, connected to the GitHub repo:
 

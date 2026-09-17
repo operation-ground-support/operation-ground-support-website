@@ -4,6 +4,8 @@
 # `just share` — the offline copy and the zip of it
 /dist-offline
 /operation-ground-support-site.zip
+# `just deploy-preview` — the staging copy, with the noindex header added
+/dist-preview
 # npm
 /node_modules
 /.npm-cache
