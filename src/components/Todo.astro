@@ -1,24 +1,26 @@
 ---
 /**
- * A dev-only marker for content that is missing.
+ * A marker for content that is missing.
  *
- * Renders as a visible block during `just dev` and renders nothing in a production build. The
- * site therefore never ships a placeholder, but whoever is working on a page sees exactly what is
- * missing, in the place it belongs, rather than in a checklist somewhere else.
+ * Renders as a visible block during `just dev` and on the staging site, and renders nothing in a
+ * production build. The live site therefore never ships a placeholder, but whoever is working on
+ * a page sees exactly what is missing, in the place it belongs, rather than in a checklist
+ * somewhere else. See `SHOW_MARKERS` for which build is which.
  *
  * `just audit` prints the same gaps for the fields it can see from `org.ts`.
  */
+import { SHOW_MARKERS } from '../lib/markers'
+
 interface Props {
   /** Short label, e.g. "Answer needed". */
   label?: string
 }
 
 const { label = 'To do' } = Astro.props
-const isDev = import.meta.env.DEV
 ---
 
 {
-  isDev && (
+  SHOW_MARKERS && (
     <div class="todo" data-todo>
       <span class="eyebrow">{label}</span>
       <div><slot /></div>

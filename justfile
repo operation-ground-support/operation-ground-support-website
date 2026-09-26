@@ -23,8 +23,9 @@ default:
 install:
   npm ci
 
-# Placeholder markers (`Todo` and `PhotoSlot`) are visible in the dev server and invisible in a
-# production build, so `just dev` shows the worklist in place, in context.
+# Placeholder markers (`Todo` and `PhotoSlot`) are visible in the dev server and on the staging
+# site, and invisible in a production build, so the worklist shows in place, in context. The rule
+# for which build is which lives in `src/lib/markers.ts`.
 
 # Live-reloading dev server on http://localhost:4321
 dev *ARGS:
@@ -90,14 +91,20 @@ deploy-setup:
 # copy, which nobody's domain points at.
 
 # Build and upload the staging site, and print the URL to send people
-deploy-preview: build
+deploy-preview:
   #!/usr/bin/env bash
   set -euo pipefail
 
-  # Upload a copy rather than `dist/` itself, so the noindex header below cannot ride along into a
-  # production deploy. `dist/` stays exactly what every other host would be handed.
+  # Built with the worklist markers on — `Todo` blocks, `PhotoSlot` frames, the Board gap — which
+  # an ordinary build strips. The staging site is shown to the people being asked to supply those
+  # facts, so the markers are the most useful thing on it. See `src/lib/markers.ts`.
+  #
+  # Straight into `dist-preview/` via `--outDir`, never into `dist/`. Sharing an output directory
+  # would mean an ordinary `just build` could be followed by a production deploy of whatever the
+  # last preview left sitting there, and the markers name internal gaps in an organization's grant
+  # diligence. `dist/` stays exactly what every other host would be handed.
   rm -rf dist-preview
-  cp -r dist dist-preview
+  PUBLIC_SHOW_MARKERS=1 npm run build -- --outDir dist-preview
 
   # Keep the staging copy out of search results. Cloudflare adds this header to *preview*
   # deployments automatically but not to the project's main `.pages.dev` address, which is the
