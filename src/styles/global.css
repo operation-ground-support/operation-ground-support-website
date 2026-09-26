@@ -265,6 +265,11 @@ hr {
   grid-column: full;
 }
 
+/* A top-level block on a page. Was declared identically in six files. */
+.section {
+  margin-block-start: var(--space-xl);
+}
+
 /* Vertical rhythm inside a flow of prose. */
 .flow > * + * {
   margin-block-start: var(--space-s);
@@ -308,7 +313,10 @@ main {
   transform: translateY(0);
 }
 
-/* The one button style. A second one would immediately raise the question of which is primary. */
+/* The button pair — solid for the primary act, `--quiet` for the secondary — and the whole of the
+ * button vocabulary. The homepage doors use these classes directly; the nav redraws the same pair
+ * at its own smaller size in `Header.astro`. A third treatment would immediately raise the
+ * question of which one is primary. */
 .button {
   display: inline-block;
   padding: var(--space-xs) var(--space-m);
@@ -356,8 +364,8 @@ main {
   border: 0;
 }
 
-/* Marks content that is a placeholder for a real fact. Visible in `astro dev` only — the build
- * strips it via a media query that never matches in production. See `Todo.astro`. */
+/* The dashed box around a `Todo` marker. A production build never emits a `[data-todo]` element,
+ * so there this rule styles nothing; which builds do emit one is decided in `src/lib/markers.ts`. */
 [data-todo] {
   outline: 1px dashed var(--alert);
   outline-offset: 2px;

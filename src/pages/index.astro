@@ -13,6 +13,7 @@ import Programs from '../components/Programs.astro'
 import TaxCode from '../components/TaxCode.astro'
 import MetricRow from '../components/MetricRow.astro'
 import EventList from '../components/EventList.astro'
+import Hours from '../components/Hours.astro'
 import { org } from '../data/org'
 import { path } from '../i18n/routes'
 import { getCollection } from 'astro:content'
@@ -23,9 +24,6 @@ const locale = 'en' as const
 const updates = (await getCollection('updates', ({ data }) => !data.draft && data.lang === 'en'))
   .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
   .slice(0, 2)
-
-const hours = org.dropOff.hours
-
 ---
 
 <Base
@@ -76,18 +74,7 @@ const hours = org.dropOff.hours
     <p>
       TODO not sure if we just point at the events, and rely on the information in the part of "Upcoming" projected above
     </p>
-    {
-      hours.length > 0 && (
-        <dl class="hours">
-          {hours.map((h) => (
-            <div>
-              <dt>{h.days.en}</dt>
-              <dd>{h.time.en}</dd>
-            </div>
-          ))}
-        </dl>
-      )
-    }
+    <Hours locale={locale} />
     <p><a href={path('contact', locale)!}>Directions and drop-off instructions</a></p>
   </section>
 </Base>
@@ -141,26 +128,5 @@ const hours = org.dropOff.hours
     color: var(--ink-muted);
     font-size: var(--text-sm);
     margin-block-start: var(--space-3xs);
-  }
-
-  .hours {
-    margin-block: var(--space-s);
-    display: grid;
-    gap: var(--space-3xs) var(--space-m);
-    grid-template-columns: max-content 1fr;
-    font-variant-numeric: tabular-nums;
-  }
-
-  .hours > div {
-    display: contents;
-  }
-
-  .hours dt {
-    font-weight: 500;
-  }
-
-  .hours dd {
-    margin: 0;
-    color: var(--ink-muted);
   }
 </style>

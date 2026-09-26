@@ -53,10 +53,14 @@ no hydration; the only JavaScript that reaches a visitor is the twenty lines in 
 astro.config.mjs        site config: i18n, fonts, integrations
 integrations/           build-time guards (see below)
 tools/audit.mjs         `just audit`
+tools/offline.mjs       `just share`: the site as a folder that opens without a server
 src/
   data/org.ts           every organizational fact, in one place
   i18n/routes.ts        the route table; untranslated pages are an explicit `null`
   i18n/ui.ts            interface strings, en + es
+  i18n/content.ts       reading possibly-translated text out of content files
+  lib/markers.ts        which builds show the worklist markers (dev, staging — never production)
+  lib/placeholder.ts    the rule that "(… TODO)" copy is a gap, not a fact
   content.config.ts     schemas for the content collections
   content/
     needs/              dated "what we need right now" lists   ← edited weekly

@@ -35,14 +35,22 @@ interface Props {
 }
 
 const { src, alt, caption, credit, width = 'content', eager = false } = Astro.props
+
+/*
+ * How wide the image will be drawn, so the browser fetches a file that size rather than guessing.
+ * These are `--measure` (42rem) and `--measure` plus both `--wide-track`s (82rem) from global.css,
+ * written out because `sizes` cannot read a CSS variable. Change them if those tokens change.
+ * Below that width the column fills the viewport, less a gutter that `100vw` slightly overstates.
+ */
+const sizes = width === 'wide' ? '(max-width: 88rem) 100vw, 82rem' : '(max-width: 48rem) 100vw, 42rem'
 ---
 
 <figure class={width === 'wide' ? 'photo wide' : 'photo'}>
   <Image
     src={src}
     alt={alt}
-    widths={[480, 800, 1200]}
-    sizes="(max-width: 40rem) 100vw, 44rem"
+    widths={[480, 800, 1200, 1600, 2400]}
+    sizes={sizes}
     loading={eager ? 'eager' : 'lazy'}
     decoding="async"
   />

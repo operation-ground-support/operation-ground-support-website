@@ -66,13 +66,20 @@ short.
 Set `draft: true` to keep something in the repo without publishing it. Set `lang: es` for a post
 written in Spanish.
 
+The quickest way to start one is to copy the `_EXAMPLE_` file in that folder, rename it, and delete
+its `draft: true` line when it is ready. Leave the example itself where it is — it is kept on
+purpose, and the site's checks fail if it ever loses its own `draft: true`.
+
 Do not round numbers up, and do not publish a figure nobody counted. "Roughly 40 bags in a typical
 week" is more persuasive to a funder than "thousands served", because it sounds like someone was
 counting.
 
 ## Events
 
-One file per event in `src/content/events/`. See `src/content/events/README.md` for the format.
+One file per event in `src/content/events/`. Copy the `_EXAMPLE_` file there — it has every field
+filled in and a comment on each — and delete its `draft: true` line once the event is confirmed.
+`src/content/events/README.md` has the short version.
+
 Past events move into a collapsed list automatically; leave them there, since a visible history of
 things that actually happened is worth more than an empty page.
 
@@ -83,8 +90,8 @@ in one file: `src/data/org.ts`. It has comments explaining each field.
 
 Anything currently set to `null` is a fact nobody has supplied yet, and the site hides that section
 rather than showing an empty one. Run `just audit` (or ask whoever is maintaining the site) to see
-the list. The largest gaps right now are the board roster, the EIN, and at least one counted
-number — those three are what a grant reviewer looks for first.
+the list. The largest gaps right now are the board roster, at least one counted number, and a scan
+of the IRS determination letter — those three are what a grant reviewer looks for first.
 
 ## Photographs
 

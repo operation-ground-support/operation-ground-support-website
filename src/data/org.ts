@@ -68,12 +68,11 @@ export const org = {
     'Operation Ground Support is a 501(c)(3) nonprofit organization dedicated to serving our neighbors in Dallas.',
 
   /**
-   * The formal tax classification, for the bottom of the homepage. 509(a)(2) is the public-support
-   * test for organizations funded mainly by program revenue and contributions, as distinct from
-   * 509(a)(1); stating it tells a grant reviewer the status was actually determined rather than
-   * assumed. Shown on the Contact page, which is bilingual, so this is a `Localized`; the
-   * Spanish is a literal rendering of a legal statement and should still be read in the final
-   * translation pass.
+   * The formal tax classification. 509(a)(2) is the public-support test for organizations funded
+   * mainly by program revenue and contributions, as distinct from 509(a)(1); stating it tells a
+   * grant reviewer the status was actually determined rather than assumed. Shown on the About
+   * page. A `Localized` so it is ready when About is translated; the Spanish is a literal rendering
+   * of a legal statement and should still be read in the final translation pass.
    */
   taxStatus: {
     en: 'Operation Ground Support is a 501(c)(3) tax-exempt public charity, classified under IRC Section 509(a)(2).',

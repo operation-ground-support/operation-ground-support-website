@@ -11,6 +11,7 @@
  * exist — see the long comment there for why nothing here is guessed.
  */
 import { org } from '../data/org'
+import Hours from './Hours.astro'
 import Todo from './Todo.astro'
 import { pick, type Locale } from '../i18n/routes'
 
@@ -64,42 +65,19 @@ const text = {
     es: 'Venga a la puerta trasera de la iglesia durante el horario indicado abajo. No hay ningún costo.',
   },
   hours: { en: 'When we are open', es: 'Horario' },
-  finding: { en: 'Finding the door', es: 'Cómo llegar a la puerta' },
   questions: { en: 'Common questions', es: 'Preguntas frecuentes' },
   askUs: {
     en: 'If your question is not answered here, email or call us. You do not have to give your name.',
     es: 'Si su pregunta no aparece aquí, escríbanos o llámenos. No tiene que dar su nombre.',
   },
-  directions: {
-    en: [
-      'Park in the lot behind the church building.',
-      'Go to the back door, the one that opens onto the parking lot.',
-      'If the door is locked, ring the doorbell and someone will come.',
-    ],
-    es: [
-      'Estacione en el lote detrás del edificio de la iglesia.',
-      'Vaya a la puerta trasera, la que da al estacionamiento.',
-      'Si la puerta está cerrada con llave, toque el timbre y alguien vendrá.',
-    ],
-  },
 }
-
 ---
 
 <p class="lede">{pick(text.lede, locale)}</p>
 
 <section class="section">
   <h2>{pick(text.hours, locale)}</h2>
-  <dl class="hours">
-    {
-      org.dropOff.hours.map((h) => (
-        <div>
-          <dt>{pick(h.days, locale)}</dt>
-          <dd>{pick(h.time, locale)}</dd>
-        </div>
-      ))
-    }
-  </dl>
+  <Hours locale={locale} />
 </section>
 
 <section class="section">
@@ -128,40 +106,6 @@ const text = {
 </section>
 
 <style>
-  .section {
-    margin-block-start: var(--space-xl);
-  }
-
-  .hours {
-    margin-block-start: var(--space-s);
-    display: grid;
-    gap: var(--space-3xs) var(--space-m);
-    grid-template-columns: max-content 1fr;
-    font-variant-numeric: tabular-nums;
-  }
-
-  .hours > div {
-    display: contents;
-  }
-
-  .hours dt {
-    font-weight: 500;
-  }
-
-  .hours dd {
-    margin: 0;
-    color: var(--ink-muted);
-  }
-
-  .steps {
-    margin-block-start: var(--space-s);
-    padding-inline-start: var(--space-m);
-  }
-
-  .steps li + li {
-    margin-block-start: var(--space-2xs);
-  }
-
   .qa {
     margin-block-start: var(--space-s);
   }

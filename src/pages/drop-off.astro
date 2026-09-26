@@ -13,6 +13,7 @@
  * would be indistinguishable from "Donate" in the navigation.
  */
 import Base from '../layouts/Base.astro'
+import Hours from '../components/Hours.astro'
 import NeedsList from '../components/NeedsList.astro'
 import PhotoSlot from '../components/PhotoSlot.astro'
 import { org } from '../data/org'
@@ -37,18 +38,11 @@ const locale = 'en' as const
     To give money instead, see <a href={path('donate', locale)!}>Donate</a>.
   </p>
 
-  <NeedsList locale={locale} as="h2" />
+  <NeedsList locale={locale} level="h2" />
 
   <section class="section">
     <h2>Dropping off</h2>
-    <dl class="hours">
-      {org.dropOff.hours.map((h) => (
-        <div>
-          <dt>{h.days.en}</dt>
-          <dd>{h.time.en}</dd>
-        </div>
-      ))}
-    </dl>
+    <Hours locale={locale} />
     <ol class="steps">
       {org.dropOff.instructions.map((step) => <li>{step}</li>)}
     </ol>
@@ -84,35 +78,6 @@ const locale = 'en' as const
 </Base>
 
 <style>
-  .section {
-    margin-block-start: var(--space-xl);
-  }
-
-  .hours {
-    margin-block-start: var(--space-s);
-    display: grid;
-    gap: var(--space-3xs) var(--space-m);
-    grid-template-columns: max-content 1fr;
-    font-variant-numeric: tabular-nums;
-  }
-
-  .hours > div {
-    display: contents;
-  }
-
-  .hours dt {
-    font-weight: 500;
-  }
-
-  .hours dd {
-    margin: 0;
-    color: var(--ink-muted);
-  }
-
-  .where {
-    margin-block-start: var(--space-s);
-  }
-
   .steps {
     margin-block-start: var(--space-s);
     padding-inline-start: var(--space-m);

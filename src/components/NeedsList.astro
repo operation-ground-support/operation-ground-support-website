@@ -6,32 +6,39 @@
  * apologetically: a list dated last week is proof of an active operation, and it is the reason
  * this component exists as data rather than as a static bulleted list in a page.
  */
-import { getCollection } from 'astro:content'
+import { getCollection, type CollectionEntry } from 'astro:content'
 import { useTranslations, formatDate } from '../i18n/ui'
-import { tr } from '../i18n/content'
+import { tr, type Translatable } from '../i18n/content'
 import type { Locale } from '../i18n/routes'
 
 interface Props {
   locale: Locale
-  /** Heading level to render, so this can sit under an h1 or an h2 without breaking outline. */
-  as?: 'h2' | 'h3'
+  /**
+   * Heading level to render, so this can sit under an h1 or an h2 without breaking the outline.
+   * Not called `as`: a prop by that name stops Astro wiring `Props` to `Astro.props`, and the
+   * component's props then go unchecked without any error saying so.
+   */
+  level?: 'h2' | 'h3'
 }
 
-const { locale, as = 'h2' } = Astro.props
+const { locale, level = 'h2' } = Astro.props
 const t = useTranslations(locale)
 
 const all = await getCollection('needs')
 const latest = all.sort((a, b) => b.data.date.getTime() - a.data.date.getTime())[0]
 
-/** Items are either a bare (possibly localized) string or an object with `urgent`/`note`. */
-function normalize(item: unknown) {
-  if (typeof item === 'string' || (item && typeof item === 'object' && !('name' in (item as object)))) {
-    return { name: item as any, urgent: false, note: undefined as any }
-  }
-  return item as { name: any; urgent: boolean; note?: any }
+type Item = CollectionEntry<'needs'>['data']['categories'][number]['items'][number]
+
+/**
+ * An item is either bare text — `Rice`, or `{ en: Rice, es: Arroz }` — or an object carrying
+ * `urgent` and an optional `note`. Only the second shape has a `name` key.
+ */
+function normalize(item: Item): { name: Translatable; urgent: boolean; note?: Translatable } {
+  if (typeof item === 'object' && 'name' in item) return item
+  return { name: item, urgent: false }
 }
 
-const Heading = as
+const Heading = level
 ---
 
 {

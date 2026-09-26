@@ -6,13 +6,19 @@
  * a page built in August still calls an August event upcoming in September. Two mitigations,
  * both cheap:
  *
- *   1. Every item carries its ISO timestamp in `data-start`, and a few lines of script move
- *      anything already past into the past list on load. No framework, no hydration.
+ *   1. Every item carries the ISO timestamp it ends at in `data-ends`, and a few lines of script
+ *      move anything already over into the past list on load. No framework, no hydration.
  *   2. The deploy is rebuilt on a schedule so the no-JavaScript rendering is never far off.
  *      See `docs/operations.md`.
  *
- * This is the piece Squarespace gives you natively. It is about forty lines here, which is the
- * honest price of the portability the rest of the stack buys.
+ * This is the piece Squarespace gives you natively. Doing it by hand is the honest price of the
+ * portability the rest of the stack buys.
+ *
+ * Every date and time here is rendered in Dallas time, deliberately and explicitly. `formatDate`
+ * defaults to UTC, which is right for the date-only values elsewhere on the site (`2026-08-27`
+ * is midnight UTC, and formatting it in Chicago would show the day before). An event is a moment,
+ * not a date: 7 PM in Dallas is already tomorrow in UTC, so formatting an evening event's date in
+ * UTC would print the next day beside the correct time, and someone would turn up a day late.
  */
 import { getCollection } from 'astro:content'
 import { useTranslations, formatDate } from '../i18n/ui'
@@ -28,6 +34,9 @@ interface Props {
 const { locale, limit = 6 } = Astro.props
 const t = useTranslations(locale)
 
+/** Where every event happens. See the note above on why this is passed explicitly. */
+const TZ = 'America/Chicago'
+
 const now = Date.now()
 const all = (await getCollection('events', ({ data }) => !data.draft)).sort(
   (a, b) => a.data.start.getTime() - b.data.start.getTime(),
@@ -37,7 +46,7 @@ const upcoming = all.filter((e) => (e.data.end ?? e.data.start).getTime() >= now
 const past = all.filter((e) => (e.data.end ?? e.data.start).getTime() < now).reverse().slice(0, 4)
 
 function timeLabel(start: Date, end?: Date): string {
-  const opts: Intl.DateTimeFormatOptions = { hour: 'numeric', minute: '2-digit', timeZone: 'America/Chicago' }
+  const opts: Intl.DateTimeFormatOptions = { hour: 'numeric', minute: '2-digit', timeZone: TZ }
   const fmt = (d: Date) => new Intl.DateTimeFormat(locale === 'es' ? 'es-US' : 'en-US', opts).format(d)
   return end ? `${fmt(start)}–${fmt(end)}` : fmt(start)
 }
@@ -49,9 +58,9 @@ function timeLabel(start: Date, end?: Date): string {
   <ul class="events__list" data-list="upcoming">
     {
       upcoming.map((e) => (
-        <li data-start={(e.data.end ?? e.data.start).toISOString()}>
+        <li data-ends={(e.data.end ?? e.data.start).toISOString()}>
           <time datetime={e.data.start.toISOString()}>
-            <span class="events__date">{formatDate(e.data.start, locale, { month: 'short', day: 'numeric' })}</span>
+            <span class="events__date">{formatDate(e.data.start, locale, { month: 'short', day: 'numeric', timeZone: TZ })}</span>
             <span class="events__time">{timeLabel(e.data.start, e.data.end)}</span>
           </time>
           <div>
@@ -75,7 +84,7 @@ function timeLabel(start: Date, end?: Date): string {
           {past.map((e) => (
             <li>
               <time datetime={e.data.start.toISOString()}>
-                <span class="events__date">{formatDate(e.data.start, locale, { month: 'short', day: 'numeric' })}</span>
+                <span class="events__date">{formatDate(e.data.start, locale, { month: 'short', day: 'numeric', timeZone: TZ })}</span>
               </time>
               <div>
                 <p class="events__title">{tr(e.data.title, locale)}</p>
@@ -99,9 +108,9 @@ function timeLabel(start: Date, end?: Date): string {
     if (!upcoming) continue
 
     const now = Date.now()
-    for (const item of Array.from(upcoming.querySelectorAll('li[data-start]'))) {
-      const start = item.getAttribute('data-start')
-      if (start && new Date(start).getTime() < now) {
+    for (const item of Array.from(upcoming.querySelectorAll('li[data-ends]'))) {
+      const ends = item.getAttribute('data-ends')
+      if (ends && new Date(ends).getTime() < now) {
         if (past) past.prepend(item)
         else item.remove()
       }
@@ -111,10 +120,8 @@ function timeLabel(start: Date, end?: Date): string {
 </script>
 
 <style>
-  /* The section had no top margin of its own and inherited whatever happened to precede it. That
-     read as correct only by accident: on both pages the element above it was a dev-only
-     `PhotoSlot`, so the production build collapsed the gap and ran the heading into the block
-     above. Matches the `--space-2xl` rhythm the homepage's other top-level sections use. */
+  /* Its own top margin, never borrowed from whatever precedes it: on both pages that is a
+     `PhotoSlot` or a `Todo`, which production strips. Matches the homepage's `--space-2xl`. */
   .events {
     margin-block-start: var(--space-2xl);
   }
@@ -125,11 +132,9 @@ function timeLabel(start: Date, end?: Date): string {
     margin: var(--space-m) 0 0;
   }
 
-  /* 6.5rem was set before any real event existed, and it is about half a character too narrow for
-     the strings this actually renders: "Sep 26, 2026" wrapped after the comma and
-     "10:00 AM-1:00 PM" broke across two lines. Widened to fit both. Below 34rem the date moves
-     above the title instead, because holding a fixed column that wide on a phone would squeeze
-     the description into a four-word ribbon. */
+  /* Wide enough for "Sep 26, 2026" and "10:00 AM–1:00 PM" each on one line. Below 34rem the date
+     moves above the title instead, because a fixed column that wide on a phone would squeeze the
+     description into a four-word ribbon. */
   .events__list li {
     display: grid;
     grid-template-columns: 8.25rem 1fr;
@@ -186,12 +191,5 @@ function timeLabel(start: Date, end?: Date): string {
   .events__past summary {
     cursor: pointer;
     color: var(--ink-muted);
-  }
-
-  @media (max-width: 32rem) {
-    .events__list li {
-      grid-template-columns: 1fr;
-      gap: var(--space-2xs);
-    }
   }
 </style>

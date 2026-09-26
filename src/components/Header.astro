@@ -138,13 +138,9 @@ const homeHref = path('home', locale) ?? '/'
    * The underline treatment belongs to the plain text links only, and the `:not()` is load-bearing.
    *
    * Astro scopes `nav a` to `nav[data-astro-cid] a[data-astro-cid]` — specificity (0,2,2) — while
-   * `.nav__action--outline[data-astro-cid]` is only (0,2,0). The generic rule therefore *wins*,
-   * and its `border-block-end: 2px solid transparent` erased the buttons' bottom border, leaving
-   * the outline open at the bottom.
-   *
-   * It looked correct on the current page by pure coincidence: `[aria-current]` made this rule
-   * paint that edge `--accent`, which matches what the button wanted anyway — though still at 2px
-   * against 1px on the other three sides.
+   * `.nav__action--outline[data-astro-cid]` is only (0,2,0). Without the exclusion the generic
+   * rule wins, and its `border-block-end: 2px solid transparent` erases the buttons' bottom
+   * border, leaving the outline open at the bottom.
    */
   nav a:not(.nav__action) {
     color: var(--ink-muted);
@@ -170,8 +166,7 @@ const homeHref = path('home', locale) ?? '/'
     /* Inline boxes do not let vertical padding or borders affect line-box height, so the list
        item reserved no room for the button's own box. */
     display: inline-block;
-    /* `text-decoration: none` used to arrive from the `nav a` rule above; now that the buttons are
-       excluded from it, they need their own — otherwise the global link underline reappears. */
+    /* Excluded from the `nav a` rule above, so they need their own, or the global underline shows. */
     text-decoration: none;
     padding: var(--space-3xs) var(--space-xs);
     border: 1px solid var(--accent);
@@ -206,7 +201,6 @@ const homeHref = path('home', locale) ?? '/'
     border-color: var(--accent);
     color: var(--accent);
   }
-
 
   /* Inside a solid button the badge has to borrow the button's foreground, or it disappears. */
   .nav__action--solid .nav__badge {

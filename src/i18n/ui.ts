@@ -19,7 +19,6 @@ const en = {
   'nav.about': 'About',
   'nav.updates': 'Updates',
   'nav.contact': 'Contact',
-  'nav.menu': 'Menu',
   'nav.skipToContent': 'Skip to content',
   /** Marker on a nav link whose page is only available in English. */
   'nav.inOtherLanguage': 'in English',
@@ -30,6 +29,12 @@ const en = {
   'bar.determination': '501(c)(3) letter',
   'bar.candid': 'Candid profile',
   'bar.otherLanguage': 'Español',
+  /**
+   * Hover text on the language switch when this page has no counterpart and the switch goes to the
+   * other language's home page instead. Looked up in the *target* language, since that is the
+   * language of the person clicking it — so the English entry describes a Spanish-only page.
+   */
+  'bar.switchToHome': 'This page is only in Spanish. Go to the English home page.',
 
   'needs.heading': 'What we need right now',
   'needs.updated': 'Updated',
@@ -38,7 +43,6 @@ const en = {
   'needs.empty': 'The current needs list is being updated.',
 
   'updates.heading': 'Updates',
-  'updates.readMore': 'Read more',
   'updates.none': 'No updates posted yet.',
 
   'events.heading': 'Upcoming',
@@ -46,11 +50,10 @@ const en = {
   'events.none': 'Nothing scheduled at the moment.',
 
   'metrics.asOf': 'as of',
-  'metrics.basis': 'How we count this',
 
   'footer.contact': 'Contact',
   'footer.transparency': 'Transparency',
-  'footer.lastUpdated': 'Site last updated',
+  'footer.annualReport': 'Annual report',
   'footer.license': 'Text on this site is CC BY 4.0',
 
   'a11y.mainNav': 'Main navigation',
@@ -70,7 +73,6 @@ const es: Record<keyof typeof en, string> = {
   'nav.about': 'Quiénes somos',
   'nav.updates': 'Novedades',
   'nav.contact': 'Contacto',
-  'nav.menu': 'Menú',
   'nav.skipToContent': 'Saltar al contenido',
   'nav.inOtherLanguage': 'en inglés',
   'nav.langBadge': 'EN',
@@ -80,6 +82,7 @@ const es: Record<keyof typeof en, string> = {
   'bar.determination': 'Carta 501(c)(3)',
   'bar.candid': 'Perfil de Candid',
   'bar.otherLanguage': 'English',
+  'bar.switchToHome': 'Esta página solo está en inglés. Ir al inicio en español.',
 
   'needs.heading': 'Lo que necesitamos ahora',
   'needs.updated': 'Actualizado',
@@ -88,7 +91,6 @@ const es: Record<keyof typeof en, string> = {
   'needs.empty': 'La lista de necesidades se está actualizando.',
 
   'updates.heading': 'Novedades',
-  'updates.readMore': 'Leer más',
   'updates.none': 'Todavía no hay novedades.',
 
   'events.heading': 'Próximamente',
@@ -96,11 +98,10 @@ const es: Record<keyof typeof en, string> = {
   'events.none': 'No hay nada programado por el momento.',
 
   'metrics.asOf': 'al',
-  'metrics.basis': 'Cómo lo contamos',
 
   'footer.contact': 'Contacto',
   'footer.transparency': 'Transparencia',
-  'footer.lastUpdated': 'Sitio actualizado por última vez',
+  'footer.annualReport': 'Informe anual',
   'footer.license': 'Los textos de este sitio son CC BY 4.0',
 
   'a11y.mainNav': 'Navegación principal',

@@ -46,7 +46,7 @@ const latestFiling = org.filings.length > 0 ? org.filings[0] : null
         {org.determinationLetter && <li><a href={org.determinationLetter}>{t('bar.determination')}</a></li>}
         {latestFiling && <li><a href={latestFiling.href}>{t('bar.financials')} ({latestFiling.year})</a></li>}
         {org.candidUrl && <li><a href={org.candidUrl} rel="noopener">{t('bar.candid')}</a></li>}
-        {org.annualReport && <li><a href={org.annualReport}>Annual report</a></li>}
+        {org.annualReport && <li><a href={org.annualReport}>{t('footer.annualReport')}</a></li>}
         {path('about', locale) && <li><a href={path('about', locale)!}>{t('nav.about')}</a></li>}
       </ul>
       {org.ein && <p class="footer__ein">{t('bar.ein')} {org.ein}</p>}

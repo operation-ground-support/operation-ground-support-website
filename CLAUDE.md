@@ -41,10 +41,11 @@ The site is type-led on purpose. Do not introduce:
 - icon triptychs or three-up feature cards
 - a carousel, a parallax section, or an autoplaying video (actually, we may include two or three of these things, but there is a limited specialness budget)
 - a third button treatment — solid (`.button`) and outline (`.button--quiet`) are the whole
-  vocabulary, and the nav and the homepage doors both reuse it
+  vocabulary. The homepage doors use those classes directly; the nav redraws the same pair at its
+  own smaller size in `Header.astro`
 - rounded "card" containers
 - a photo slot that nobody has a photograph for — use `PhotoSlot.astro`, which shows a shot brief
-  in dev and renders nothing in production
+  in dev and on the staging site, and renders nothing in production
 
 Photo-hungry layouts generate demand for roughly twenty images the organization does not have, and
 that pressure is what pushes small nonprofits toward stock and synthetic filler. Eight to twelve
@@ -75,8 +76,34 @@ re-derive `--accent` and `--accent-deep` from the mark and change nothing else.
   outline, reusing the existing `.button` / `.button--quiet` pair.
 - **`src/content/` is the non-developer's territory.** Anything edited weekly belongs there, not in
   a `.astro` file. A git-backed CMS will be pointed at that directory.
+- **Worklist markers are off by default.** `Todo`, `PhotoSlot`, and anything else gated on
+  `SHOW_MARKERS` (`src/lib/markers.ts`) render in `just dev` and `just deploy-preview`, never in
+  `just build`. Gate new dev-only output on that flag, not on `import.meta.env.DEV`.
+- **Placeholder copy is not a fact.** A value like `(postal address TODO)` is deliberate — it marks
+  the gap on the page — but it is a truthy string. Anything that *consumes* a fact rather than
+  displaying it (the audit, the JSON-LD in `Base.astro`) must test it with `isPlaceholder` from
+  `src/lib/placeholder.ts`, or it will publish the placeholder as the answer.
+- **`_EXAMPLE_` files are permanent references** in `events/` and `updates/`, and must stay
+  `draft: true`; `just audit` fails the build if one does not. `needs/` has no `draft` field, so
+  never keep an example there.
+
+## Things that fail silently
+
+Each of these has turned up in this repo, and none of them produces an error.
+
+- **`formatDate` renders in UTC**, which is right for date-only values (`2026-08-27`) and wrong for
+  a moment in time. Anything with a clock time — events — must pass `timeZone: 'America/Chicago'`,
+  or a 7 PM event shows tomorrow's date beside the correct time.
+- **A prop named `as`** stops Astro wiring `interface Props` to `Astro.props`. The component's props
+  then go unchecked with no error; the only symptom is a ts(6196) hint that `Props` is unused.
+- **A dev-only element as spacing.** If a section's top margin comes from the `Todo` or `PhotoSlot`
+  above it, dev looks right and production runs the heading into the block before it. Give every
+  section its own margin.
+- **`astro build --outDir` on another filesystem** (e.g. `/tmp`) fails with `EXDEV`, because Astro
+  renames files out of `.astro/`. Build inside the repo and copy.
 
 ## Known warnings
 
-`The collection "events" does not exist or is empty` during a build is expected until a real event
-file is added. It is not a defect, and it should not be silenced by inventing an event.
+None. `The collection "events" does not exist or is empty` stopped appearing once the permanent
+`_EXAMPLE_` file was added — `draft: true` keeps it off the page but it still counts as an entry.
+If the warning comes back, the example was deleted: restore it rather than inventing an event.

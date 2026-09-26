@@ -20,6 +20,7 @@ import { z } from 'astro/zod'
 /**
  * A string that may be translated. Write a plain string for English-only, or a mapping when a
  * Spanish version exists. Keeping the two next to each other is what stops them drifting apart.
+ * Read it with `tr()` from `src/i18n/content.ts`, whose `Translatable` type is this shape.
  *
  *   - Rice
  *   - { en: Rice, es: Arroz }
@@ -31,8 +32,6 @@ const localized = z.union([
     es: z.string().optional(),
   }),
 ])
-
-export type Localized = z.infer<typeof localized>
 
 /**
  * A dated snapshot of what the pantry currently needs.

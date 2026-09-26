@@ -1,10 +1,11 @@
 ---
 /**
- * Audience triage: three doors, phrased in the visitor's own voice.
+ * Audience triage: four doors, phrased in the visitor's own voice.
  *
  * A pantry homepage has audiences arriving with incompatible goals — someone who needs food,
- * someone with a car full of coats, someone with a free Saturday. Making them choose in their
- * own words is better information architecture than a single "Learn more".
+ * someone with money to give, someone with a car full of coats, someone with a free Saturday.
+ * Making them choose in their own words is better information architecture than a single
+ * "Learn more".
  *
  * Deliberately not icon cards. Icon triptychs are the strongest single tell of a template site,
  * and an icon adds nothing to "I need help" that the words do not already carry.
@@ -45,7 +46,7 @@ const doors = [
     doors.map((door) => (
       <li>
         <a
-          class:list={[door.solid && 'is-solid']}
+          class:list={['button', !door.solid && 'button--quiet']}
           href={door.href}
           hreflang={door.isFallback ? door.lang : undefined}
         >
@@ -73,39 +74,9 @@ const doors = [
     gap: var(--space-s);
   }
 
-  .doors a {
-    display: inline-block;
-    padding: var(--space-xs) var(--space-m);
-    border: 1px solid var(--rule-strong);
-    border-radius: var(--radius);
-    text-decoration: none;
-    color: var(--ink);
-    font-weight: 500;
-    background: var(--paper);
-    transition: border-color 120ms ease, background 120ms ease;
-  }
-
-  .doors a:hover {
-    border-color: var(--accent);
-    background: var(--accent-wash);
-  }
-
-  .doors a.is-solid {
-    background: var(--accent);
-    border-color: var(--accent);
-    color: var(--paper);
-  }
-
-  .doors a.is-solid:hover {
-    background: var(--accent-deep);
-    border-color: var(--accent-deep);
-  }
-
-  .doors a.is-solid .doors__badge {
-    color: color-mix(in srgb, var(--paper) 78%, transparent);
-    border-color: color-mix(in srgb, var(--paper) 45%, transparent);
-  }
-
+  /* The doors themselves are styled by the global `.button` / `.button--quiet` pair, not by a
+     third look of their own — see the comment on `.button` in global.css. Only the "EN" badge
+     is local. */
   .doors__badge {
     font-size: 0.7em;
     font-weight: 700;
@@ -115,5 +86,11 @@ const doors = [
     border-radius: var(--radius);
     padding: 0 0.25em;
     vertical-align: 0.1em;
+  }
+
+  /* Inside a solid button the badge has to borrow the button's foreground, or it disappears. */
+  .button:not(.button--quiet) .doors__badge {
+    color: color-mix(in srgb, var(--paper) 78%, transparent);
+    border-color: color-mix(in srgb, var(--paper) 45%, transparent);
   }
 </style>

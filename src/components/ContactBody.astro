@@ -3,6 +3,7 @@
  * Contact details, shared by `/contact` and `/es/contacto`.
  */
 import { org } from '../data/org'
+import Hours from './Hours.astro'
 import { pick, type Locale } from '../i18n/routes'
 
 interface Props {
@@ -10,14 +11,14 @@ interface Props {
 }
 
 const { locale } = Astro.props
-const es = locale === 'es'
 
-const t = {
+const text = {
   lede: {
     en: 'TODO Email is read daily. The phone reaches the church office during open hours.',
     es: 'El correo se revisa todos los días. El teléfono llega a la oficina de la iglesia durante el horario de atención.',
   },
   address: { en: 'Postal Address', es: 'Dirección' },
+  map: { en: 'Open in maps', es: 'Ver en el mapa' },
   hours: { en: 'Open hours', es: 'Horario' },
   press: { en: 'Press and partnerships', es: 'Prensa y colaboraciones' },
   pressBody: {
@@ -27,7 +28,7 @@ const t = {
 }
 ---
 
-<p class="lede">{pick(t.lede, locale)}</p>
+<p class="lede">{pick(text.lede, locale)}</p>
 
 <ul class="contact">
   <li><a href={`mailto:${org.email}`}>{org.email}</a></li>
@@ -35,29 +36,22 @@ const t = {
 </ul>
 
 <section class="section">
-  <h2>{pick(t.address, locale)}</h2>
+  <h2>{pick(text.address, locale)}</h2>
   <p class="address">
     {org.postal_address.street && <>{org.postal_address.street}<br /></>}
     {org.postal_address.city}, {org.postal_address.state} {org.postal_address.zip}
   </p>
-  {org.postal_address.mapUrl && <p><a href={org.postal_address.mapUrl} rel="noopener">{es ? 'Ver en el mapa' : 'Open in maps'}</a></p>}
+  {org.postal_address.mapUrl && <p><a href={org.postal_address.mapUrl} rel="noopener">{pick(text.map, locale)}</a></p>}
 </section>
 
 <section class="section">
-  <h2>{pick(t.hours, locale)}</h2>
-  <dl class="hours">
-    {org.dropOff.hours.map((h) => (
-      <div>
-        <dt>{pick(h.days, locale)}</dt>
-        <dd>{pick(h.time, locale)}</dd>
-      </div>
-    ))}
-  </dl>
+  <h2>{pick(text.hours, locale)}</h2>
+  <Hours locale={locale} />
 </section>
 
 <section class="section">
-  <h2>{pick(t.press, locale)}</h2>
-  <p>{pick(t.pressBody, locale)}</p>
+  <h2>{pick(text.press, locale)}</h2>
+  <p>{pick(text.pressBody, locale)}</p>
 </section>
 
 <style>
@@ -72,33 +66,8 @@ const t = {
     margin-block-start: var(--space-3xs);
   }
 
-  .section {
-    margin-block-start: var(--space-xl);
-  }
-
   .address {
     margin-block-start: var(--space-s);
     line-height: var(--leading-snug);
-  }
-
-  .hours {
-    margin-block-start: var(--space-s);
-    display: grid;
-    gap: var(--space-3xs) var(--space-m);
-    grid-template-columns: max-content 1fr;
-    font-variant-numeric: tabular-nums;
-  }
-
-  .hours > div {
-    display: contents;
-  }
-
-  .hours dt {
-    font-weight: 500;
-  }
-
-  .hours dd {
-    margin: 0;
-    color: var(--ink-muted);
   }
 </style>
