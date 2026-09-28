@@ -1,9 +1,10 @@
 ---
 import Base from '../layouts/Base.astro'
 import EventList from '../components/EventList.astro'
-import PhotoSlot from '../components/PhotoSlot.astro'
+import Photo from '../components/Photo.astro'
 import Todo from '../components/Todo.astro'
 import { org } from '../data/org'
+import poster from '../assets/photos/matthew-25-poster.jpg'
 
 const locale = 'en' as const
 ---
@@ -52,20 +53,13 @@ const locale = 'en' as const
     </p>
   </section>
 
-  <PhotoSlot
-    brief="Hands sorting or packing — close, from above, no faces. This is the one image on the site that shows work happening, so it is worth shooting several and keeping the sharpest."
-  />
-
   <EventList locale={locale} />
 
-  <section class="section">
-    <h2>Photographs and privacy</h2>
-    <p>
-      We do not photograph the people we serve. Volunteers are sometimes photographed for this site
-      and for updates, and we ask first — you can always say no, and it changes nothing about your
-      shift.
-    </p>
-  </section>
+  <Photo
+    src={poster}
+    alt="A printed passage from Matthew 25 on a hallway wall, beside a stained-glass-style picture of a woman and a haloed, bearded man seated at a small table with a bowl of soup between them."
+    caption="At the Grace UMC location"
+  />
 </Base>
 
 <style>

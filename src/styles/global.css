@@ -251,6 +251,9 @@ hr {
     [content-start] min(var(--measure), 100% - (var(--gutter) * 2)) [content-end]
     minmax(0, var(--wide-track)) [wide-end]
     minmax(var(--gutter), 1fr) [full-end];
+  /* `main` grows to keep the footer at the bottom of a short page. Without this, the grid shares
+     that extra height out between its rows, and on a tall screen every section drifts apart. */
+  align-content: start;
 }
 
 .layout > * {

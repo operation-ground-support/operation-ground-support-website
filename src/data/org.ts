@@ -213,12 +213,13 @@ export const org = {
   email: 'info@operation-ground-support.org',
   phone: '972-325-6470',
 
+  // TODO when we get our postal address
   postal_address: {
-    street: '(postal address TODO)',
+    street: '',
     city: 'Dallas',
     state: 'TX',
-    zip: '75246',
-    mapUrl: 'https://www.google.com/maps/search/?api=1&query=4105+Junius+St+Dallas+TX+75246',
+    zip: '',
+    mapUrl: '',
   },
 
   /** TODO
@@ -299,6 +300,17 @@ export const org = {
     appointment: null as Localized | null,
   },
 } as const satisfies Record<string, unknown>
+
+/**
+ * The postal address as display lines — `['123 Main St', 'Dallas, TX 75246']` — leaving out any
+ * part that is empty. With no street and no ZIP it is just `['Dallas, TX']`, rather than a stray
+ * comma or a blank line where the missing parts would go.
+ */
+export const addressLines: string[] = (() => {
+  const { street, city, state, zip } = org.postal_address
+  const cityLine = [[city, state].filter(Boolean).join(', '), zip].filter(Boolean).join(' ')
+  return [street, cityLine].filter(Boolean)
+})()
 
 /**
  * Fields a grant reviewer expects to find, checked by `just audit`. The message is what the

@@ -2,7 +2,7 @@
 /**
  * The footer repeats the identity facts
  */
-import { org } from '../data/org'
+import { addressLines, org } from '../data/org'
 import { useTranslations } from '../i18n/ui'
 import { path, pick, type Locale } from '../i18n/routes'
 
@@ -13,9 +13,7 @@ interface Props {
 const { locale } = Astro.props
 const t = useTranslations(locale)
 
-const address = [org.postal_address.street, `${org.postal_address.city}, ${org.postal_address.state} ${org.postal_address.zip ?? ''}`.trim()]
-  .filter(Boolean)
-  .join(' · ')
+const address = addressLines.join(' · ')
 
 const latestFiling = org.filings.length > 0 ? org.filings[0] : null
 ---
@@ -33,7 +31,7 @@ const latestFiling = org.filings.length > 0 ? org.filings[0] : null
       {org.phone && (
         <p><a href={`tel:${org.phone.replace(/[^0-9+]/g, '')}`}>{org.phone}</a></p>
       )}
-      {org.postal_address.street && (
+      {address && (
         <p class="footer__muted">
           {org.postal_address.mapUrl ? <a href={org.postal_address.mapUrl} rel="noopener">{address}</a> : address}
         </p>
