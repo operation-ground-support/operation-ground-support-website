@@ -106,38 +106,20 @@ export const org = {
     {
       name: 'Food Bank Referrals',
       description:
-        "We connect people facing hunger directly to food banks and pantries near them, cutting through confusion about where to go and what's available.",
+        "We connect people facing hunger directly to food banks and pantries near them, cutting through confusion about what's available.",
       tag: 'Referral network',
-    },
-    {
-      name: 'Stocking Local Pantries',
-      description:
-        'We keep food pantries supplied so their staff and volunteers can stay focused on the ground — serving people face to face — instead of chasing down inventory.',
-      tag: 'Supply, not just referral',
-    },
-    {
-      name: 'NTFB Food Box Distribution',
-      description:
-        'Through our partnership with the North Texas Food Bank, we receive and distribute food boxes directly to families and individuals across the community.',
-      tag: 'Partner: North Texas Food Bank',
     },
     {
       name: 'Community Meal Prep',
       description:
-        "Excess donated produce and food don't go to waste — our volunteers turn them into prepared meals that go straight back out to people who need them.",
-      tag: 'Rescue and prepare',
+        "We accept excess produce, surplus catering, and other perishable food donations from local businesses, farms, and events, that would otherwise go to waste. Our volunteers turn this into prepared meals that go straight to people who need them.",
+      tag: 'Food rescue and preparation',
     },
     {
       name: 'Homelessness Summits',
       description:
-        'We host summits that bring together service providers, city agencies, and neighbors to confront homelessness in Dallas head-on and coordinate real solutions.',
+        'We host summits that bring together service providers, city agencies, and neighbors to confront homelessness in Dallas head-on, and coordinate long term solutions.',
       tag: 'Convening and coordination',
-    },
-    {
-      name: 'Community Feeding Events',
-      description:
-        'Regular on-the-ground events that put warm meals directly into the hands of people in our community — no paperwork, no barriers.',
-      tag: 'Direct service',
     },
     {
       name: 'Clothing Distribution',
@@ -146,21 +128,33 @@ export const org = {
       tag: 'Direct service',
     },
     {
-      name: 'Fresh Produce, Catering and Perishables',
+      name: 'Community Feeding Events',
       description:
-        'We accept and redistribute fresh produce, surplus catering, bread, milk, and other perishable food donations from local businesses, farms, and events — moving them out fast before anything goes to waste.',
-      tag: 'Food rescue',
+        'Regular events put warm meals directly into the hands of people in our community, without paperwork or barriers.',
+      tag: 'Direct service',
+    },
+    {
+      name: 'Stocking Local Pantries',
+      description:
+        'We keep food pantries supplied so their staff and volunteers can stay focused on the ground.',
+      tag: 'Supply',
+    },
+    {
+      name: 'NTFB Food Box Distribution',
+      description:
+        'Through our partnership with the North Texas Food Bank, we receive and distribute food boxes directly to families and individuals across the community.',
+      tag: 'Partner: North Texas Food Bank',
     },
     {
       name: 'EETZ Food Rescue App',
       description:
-        'We coordinate real-time pickup and delivery of surplus food through the EETZ app, matching what is available right now with who needs it before it spoils.',
+        'We coordinate real-time pickup and delivery of surplus food through the EETZ app.',
       tag: 'Powered by EETZ',
     },
     {
       name: 'Inventory Management',
       description:
-        'Every donation is tracked through the Operation Ground Support Inventory Management app, built with Noble Truth IT — giving us real-time visibility into what is on hand and where it needs to go next.',
+        'Every donation is tracked through the Operation Ground Support Inventory Management app, built with Noble Truth IT. This provides information for real-time logistics and for audits.',
       tag: 'Powered by Noble Truth IT',
     },
   ] as Program[],

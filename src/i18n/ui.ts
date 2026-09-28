@@ -47,7 +47,7 @@ const en = {
 
   'events.heading': 'Upcoming',
   'events.past': 'Past',
-  'events.none': 'Nothing scheduled at the moment.',
+  'events.none': 'Nothing is scheduled at the moment.',
 
   'metrics.asOf': 'as of',
 
