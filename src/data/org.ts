@@ -25,8 +25,12 @@ import type { Localized } from '../i18n/routes'
 export interface Person {
   name: string
   role: string
-  /** Optional one-line bio. Two sentences maximum; a reviewer is scanning, not reading. */
-  bio?: string
+  /**
+   * Optional bio. A single string is one paragraph; for more, give a list with one string per
+   * paragraph. A line break typed inside a string does not show on the page. Shorter reads
+   * better: a reviewer is scanning, not reading.
+   */
+  bio?: string | string[]
 }
 
 export interface Metric {
@@ -183,7 +187,16 @@ export const org = {
   // People. "A 501(c)(3) with no identifiable people" is the loudest red flag in diligence.
   // ---------------------------------------------------------------------------------------------
 
-  board: [] as Person[],
+  board: [
+    {
+      name: 'Paula McElheney',
+      role: 'Board member',
+      bio: [
+        "With over 40 years of experience in concert planning, booking, and promotion, Paula McElheney is a seasoned music industry professional whose career spans production, promoter, and venue management roles. She got her start in 1985 co-founding Production Specialties, handling production and runner logistics for pace setters like Pace Concerts and Beaver Productions. She then transitioned into the business side of live entertainment with 462 Concerts and later AEG Live, where she was promoted to Talent Buyer in 2007.",
+        "Paula has held key executive roles managing arena and venue calendars, including Director of Booking for formerly named Chesapeake Energy, now PayCom Arena (SMG-Oklahoma City) and Director of Booking and Contracts for UT Arlington Special Event Facilities. Throughout her career, she has spearheaded contract negotiations, artist research, tour logistics, and venue scheduling for high-profile clients ranging from major sports franchises (NBA's Oklahoma City Thunder, WNBA's Dallas Wings) to legendary musical acts and touring events like Garth Brooks, Bruce Springsteen, Eagles, Bruno Mars, and Cirque du Soleil. Known for her deep industry relationships, reliability, and turnkey operational expertise, Paula continues to drive successful co-promotions and bottom-line growth across the live event sector.",
+      ],
+    },
+  ] as Person[],
   staff: [] as Person[],
 
   // ---------------------------------------------------------------------------------------------

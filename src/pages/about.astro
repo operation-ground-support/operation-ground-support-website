@@ -25,6 +25,9 @@ const people = [
   { heading: 'Board', list: org.board },
   { heading: 'Staff and volunteers', list: org.staff },
 ].filter((group) => group.list.length > 0)
+
+/** A bio is one paragraph or a list of them; see `Person` in org.ts. */
+const paragraphs = (bio?: string | string[]) => (bio === undefined ? [] : [bio].flat())
 ---
 
 <Base
@@ -80,17 +83,15 @@ const people = [
               <li>
                 <p class="person__name">{person.name}</p>
                 <p class="person__role">{person.role}</p>
-                {person.bio && <p class="person__bio">{person.bio}</p>}
+                {paragraphs(person.bio).map((paragraph) => (
+                  <p class="person__bio">{paragraph}</p>
+                ))}
               </li>
             ))}
           </ul>
         </section>
       ))
     ) : (
-      /* Gated in its entirety, on the same flag as the `Todo` inside it. Without this guard the
-         built page shipped a bare `<h2>Board</h2>` over empty space — an empty shell, which is
-         exactly what this file's own rule says a missing fact must never produce. The gap stays
-         visible where it belongs: in `just dev`, on the staging site, and in `just audit`. */
       SHOW_MARKERS && (
         <section class="section">
           <h2>Board</h2>
@@ -160,6 +161,10 @@ const people = [
     margin-block-start: var(--space-3xs);
     font-size: var(--text-sm);
     color: var(--ink-muted);
+  }
+
+  .person__bio + .person__bio {
+    margin-block-start: var(--space-2xs);
   }
 
   .filings {
