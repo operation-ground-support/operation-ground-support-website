@@ -2,13 +2,15 @@
 /**
  * Masthead and primary navigation.
  *
- * The wordmark is currently a text lockup, not an image. That is intentional until the bridge
- * logo exists as clean SVG: a 1124x114 PNG masthead is itself a small credibility tell, because
- * it means there is no vector source and no lockup system. Well-set type is a better placeholder
- * than a bad raster.
+ * The wordmark is the road-sign logo from the van magnet (`src/assets/logo/sign.svg`), which is
+ * the secondary mark while the bridge logo is still being drawn. When that lands, swap the import
+ * and the height below; nothing else here depends on which mark it is.
  *
- * When the SVG lands, replace the <a class="wordmark"> contents and nothing else changes.
+ * An <img> rather than the inline SVG component: the file is the same on every page, so the
+ * browser caches it once, and `alt` gives the home link its accessible name.
  */
+import sign from '../assets/logo/sign.svg'
+import { org } from '../data/org'
 import { useTranslations } from '../i18n/ui'
 import { NAV_EMPHASIS, NAV_ORDER, navLink, path, type Locale, type PageKey } from '../i18n/routes'
 
@@ -50,8 +52,7 @@ const homeHref = path('home', locale) ?? '/'
 <header class="masthead full">
   <div class="masthead__inner">
     <a class="wordmark" href={homeHref}>
-      <span class="wordmark__line1">Operation</span>
-      <span class="wordmark__line2">Ground Support</span>
+      <img src={sign.src} width={sign.width} height={sign.height} alt={org.name} />
     </a>
 
     <nav aria-label={t('a11y.mainNav')}>
@@ -98,23 +99,20 @@ const homeHref = path('home', locale) ?? '/'
     gap: var(--space-m);
   }
 
+  /* Sized by height so the sign lines up with the nav row. At 4rem the lettering is about 13px
+     tall, which is as small as the sign stays comfortably legible. */
   .wordmark {
-    font-family: var(--font-serif), Georgia, serif;
-    font-weight: 600;
-    font-size: var(--text-xl);
-    line-height: 1.05;
-    letter-spacing: -0.015em;
-    color: var(--ink);
-    text-decoration: none;
-    display: grid;
+    --sign-height: 4rem;
+    display: block;
+    /* The sign's corner is 42 of its 504 units, so the focus ring follows its rounded corners
+       instead of cutting across them. */
+    border-radius: calc(var(--sign-height) * 42 / 504);
   }
 
-  .wordmark__line1 {
-    font-size: 0.72em;
-    letter-spacing: 0.02em;
-    text-transform: uppercase;
-    color: var(--ink-muted);
-    font-weight: 400;
+  .wordmark img {
+    display: block;
+    height: var(--sign-height);
+    width: auto;
   }
 
   nav ul {
