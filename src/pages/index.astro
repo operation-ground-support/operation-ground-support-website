@@ -68,15 +68,6 @@ const updates = (await getCollection('updates', ({ data }) => !data.draft && dat
       </section>
     )
   }
-
-  <section class="find">
-    <h2>Where to find us</h2>
-    <p>
-      TODO not sure if we just point at the events, and rely on the information in the part of "Upcoming" projected above
-    </p>
-    <Hours locale={locale} />
-    <p><a href={path('contact', locale)!}>Directions and drop-off instructions</a></p>
-  </section>
 </Base>
 
 <style>

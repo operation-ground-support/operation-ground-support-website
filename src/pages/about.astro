@@ -43,24 +43,10 @@ const paragraphs = (bio?: string | string[]) => (bio === undefined ? [] : [bio].
   <p class="lede">{org.mission}</p>
 
   <section class="section">
-    <h2>How this works</h2>
+    <h2>Our history</h2>
     <p>
-      Donated clothing, food, hygiene supplies, school supplies, and household goods come in through
-      the back door of TODO. Volunteers sort them
-      in the basement, and neighbors who need them take them, at no cost, during open hours.
+      We began in TODO
     </p>
-    {/* TODO: two or three more sentences of history — when this started, what prompted it, and
-        who the neighbors are. Being new is fine; being undated is what reads badly. Write it
-        plainly, without the word "passionate". */}
-    {
-      !org.founded && (
-        <Todo label="History needed">
-          Add the founding year to <code>org.founded</code> and write two or three sentences here on
-          how this started and who it serves. A reviewer cannot tell whether this organization is
-          two months or ten years old, and that ambiguity reads worse than either answer.
-        </Todo>
-      )
-    }
   </section>
 
   {/* Everyone pictured must be a volunteer, staff, or board member who agreed to it — never
@@ -72,48 +58,23 @@ const paragraphs = (bio?: string | string[]) => (bio === undefined ? [] : [bio].
     caption="The board, partners, and volunteers, May 30, 2026."
   />
 
-  <MetricRow locale={locale} />
   {
-    org.metrics.length === 0 && (
-      <Todo label="Numbers needed">
-        Publish at least one number that someone actually counted, in <code>org.metrics</code> —
-        bags handed out in a typical week, households in a month, pounds of food. Include how it was
-        counted and the date. Start counting now even if you cannot publish yet; in six months you
-        will want a year of data. Do not invent a round number to fill this space.
-      </Todo>
-    )
-  }
-
-  {
-    people.length > 0 ? (
-      people.map((group) => (
-        <section class="section">
-          <h2>{group.heading}</h2>
-          <ul class="people">
-            {group.list.map((person) => (
-              <li>
-                <p class="person__name">{person.name}</p>
-                <p class="person__role">{person.role}</p>
-                {paragraphs(person.bio).map((paragraph) => (
-                  <p class="person__bio">{paragraph}</p>
-                ))}
-              </li>
-            ))}
-          </ul>
-        </section>
-      ))
-    ) : (
-      SHOW_MARKERS && (
-        <section class="section">
-          <h2>Board</h2>
-          <Todo label="Most important gap on the site">
-            Fill in <code>org.board</code> with names and roles. A 501(c)(3) with no identifiable
-            people anywhere on its website is the single loudest red flag in grant diligence, and
-            it is the cheapest one to fix. Roles alone are fine if someone does not want a bio.
-          </Todo>
-        </section>
-      )
-    )
+    people.map((group) => (
+      <section class="section">
+        <h2>{group.heading}</h2>
+        <ul class="people">
+          {group.list.map((person) => (
+            <li>
+              <p class="person__name">{person.name}</p>
+              <p class="person__role">{person.role}</p>
+              {paragraphs(person.bio).map((paragraph) => (
+                <p class="person__bio">{paragraph}</p>
+              ))}
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))
   }
 
   <section class="section">
@@ -124,21 +85,13 @@ const paragraphs = (bio?: string | string[]) => (bio === undefined ? [] : [bio].
   <section class="section">
     <h2>Money and governance</h2>
     {
-      org.ein || org.determinationLetter || org.filings.length > 0 || org.candidUrl || org.annualReport ? (
-        <ul class="filings">
-          {org.ein && <li>EIN {org.ein}</li>}
-          {org.determinationLetter && <li><a href={org.determinationLetter}>IRS 501(c)(3) determination letter</a></li>}
-          {org.filings.map((f) => <li><a href={f.href}>Form 990, {f.year}</a></li>)}
-          {org.candidUrl && <li><a href={org.candidUrl} rel="noopener">Candid profile</a></li>}
-          {org.annualReport && <li><a href={org.annualReport}>Annual report</a></li>}
-        </ul>
-      ) : (
-        <Todo label="Nothing verifiable yet">
-          Add the EIN, scan the IRS determination letter into <code>/public/filings/</code>, and
-          claim the free Candid/GuideStar profile. Right now a reviewer cannot confirm the
-          501(c)(3) claim without leaving the site, and most will not bother.
-        </Todo>
-      )
+      <ul class="filings">
+        {org.ein && <li>EIN {org.ein}</li>}
+        {org.determinationLetter && <li><a href={org.determinationLetter}>IRS 501(c)(3) determination letter</a></li>}
+        {org.filings.map((f) => <li><a href={f.href}>Form 990, {f.year}</a></li>)}
+        {org.candidUrl && <li><a href={org.candidUrl} rel="noopener">Candid profile</a></li>}
+        {org.annualReport && <li><a href={org.annualReport}>Annual report</a></li>}
+      </ul>
     }
   </section>
 

@@ -2,12 +2,11 @@
 /**
  * The dated "what we need right now" list.
  *
- * Rendered from the newest file in `src/content/needs/`. The date is shown prominently and not
- * apologetically: a list dated last week is proof of an active operation, and it is the reason
- * this component exists as data rather than as a static bulleted list in a page.
+ * Rendered from the newest file in `src/content/needs/`. The file's date is not shown on the page,
+ * but it still picks which list is current, and `just audit` warns when it goes stale.
  */
 import { getCollection, type CollectionEntry } from 'astro:content'
-import { useTranslations, formatDate } from '../i18n/ui'
+import { useTranslations } from '../i18n/ui'
 import { tr, type Translatable } from '../i18n/content'
 import type { Locale } from '../i18n/routes'
 
@@ -39,20 +38,14 @@ function normalize(item: Item): { name: Translatable; urgent: boolean; note?: Tr
 }
 
 const Heading = level
+const heading = t('needs.heading')
 ---
 
 {
   latest ? (
     <section class="needs">
-      <div class="needs__head">
-        <Heading id="needs">{t('needs.heading')}</Heading>
-        <p class="needs__date">
-          <span class="eyebrow">{t('needs.updated')}</span>{' '}
-          <time datetime={latest.data.date.toISOString().slice(0, 10)}>
-            {formatDate(latest.data.date, locale)}
-          </time>
-        </p>
-      </div>
+      {/* An empty heading would still be announced by a screen reader, so leave it out entirely. */}
+      {heading && <Heading id="needs" class="needs__head">{heading}</Heading>}
 
       <div class="needs__grid">
         {latest.data.categories.map((category) => (
@@ -88,19 +81,8 @@ const Heading = level
 
 <style>
   .needs__head {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: var(--space-2xs) var(--space-m);
     padding-block-end: var(--space-2xs);
     border-block-end: 1px solid var(--rule-strong);
-  }
-
-  .needs__date {
-    color: var(--ink-muted);
-    font-size: var(--text-sm);
-    font-variant-numeric: tabular-nums;
   }
 
   .needs__grid {

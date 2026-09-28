@@ -36,8 +36,7 @@ const en = {
    */
   'bar.switchToHome': 'This page is only in Spanish. Go to the English home page.',
 
-  'needs.heading': 'What we need right now',
-  'needs.updated': 'Updated',
+  'needs.heading': '',
   'needs.urgent': 'Most needed',
   'needs.notNeeded': 'Please hold off on',
   'needs.empty': 'The current needs list is being updated.',
@@ -46,7 +45,7 @@ const en = {
   'updates.none': 'No updates posted yet.',
 
   'events.heading': 'Upcoming',
-  'events.past': 'Past',
+  'events.past': 'Past Events',
   'events.none': 'Nothing is scheduled at the moment.',
 
   'metrics.asOf': 'as of',
@@ -85,7 +84,6 @@ const es: Record<keyof typeof en, string> = {
   'bar.switchToHome': 'Esta página solo está en inglés. Ir al inicio en español.',
 
   'needs.heading': 'Lo que necesitamos ahora',
-  'needs.updated': 'Actualizado',
   'needs.urgent': 'Lo más necesario',
   'needs.notNeeded': 'Por ahora no recibimos',
   'needs.empty': 'La lista de necesidades se está actualizando.',
