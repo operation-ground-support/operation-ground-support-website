@@ -8,7 +8,6 @@ plain HTML.
 
 ```sh
 nix develop          # node, npm, just, and the image tools
-just install         # once, and after any lockfile change
 just dev             # http://localhost:4321, live reload
 just lan # binds to every interface, so you can open it on a mobile device
 
@@ -34,7 +33,8 @@ A few mappings that make the rest of this legible:
 | Rust | here |
 | --- | --- |
 | `Cargo.toml` | `package.json` |
-| `Cargo.lock` | `package-lock.json` — commit it, `just install` respects it exactly |
+| `Cargo.lock` | `package-lock.json` — commit it, `npm ci` installs from it exactly |
+| `~/.cargo/registry` | `node_modules/` — never committed, rebuilt from the lockfile |
 | `cargo build` | `just build`, output in `dist/` instead of `target/` |
 | `cargo check` | `just check` |
 | a `struct` with `#[derive(Deserialize)]` | a zod schema in `src/content.config.ts` |

@@ -19,23 +19,37 @@ alias a := audit
 default:
   @just --list
 
-# Install dependencies exactly as locked. Run after cloning or after pulling a lockfile change.
+# Install dependencies exactly as locked. Every recipe below does this on its own when it is
+# needed, so this is only for forcing a clean reinstall.
 install:
   npm ci
+
+# Astro and everything else in `package.json` live in `node_modules/`, which is not committed and
+# not supplied by the nix shell — the same relationship as a crate and `~/.cargo/registry`. Unlike
+# cargo, npm does not fetch on demand, so a fresh clone or a new machine fails with `astro: command
+# not found`. This runs `npm ci` when `node_modules/` is missing, or older than the lockfile (after
+# a pull or a branch switch that changed it), and does nothing otherwise. npm writes
+# `node_modules/.package-lock.json` at the end of every install, which is what it is compared to.
+_deps:
+  #!/usr/bin/env bash
+  set -euo pipefail
+  if [ ! -e node_modules/.package-lock.json ] || [ package-lock.json -nt node_modules/.package-lock.json ]; then
+    npm ci
+  fi
 
 # Placeholder markers (`Todo` and `PhotoSlot`) are visible in the dev server and on the staging
 # site, and invisible in a production build, so the worklist shows in place, in context. The rule
 # for which build is which lives in `src/lib/markers.ts`.
 
 # Live-reloading dev server on http://localhost:4321
-dev *ARGS:
+dev *ARGS: _deps
   npm run dev -- {{ARGS}}
 
 # Fails on: a content file that does not match its schema, a type error, and any internal link
 # pointing at a page that does not exist.
 
 # Dev server reachable from other devices on the LAN
-lan:
+lan: _deps
   #!/usr/bin/env bash
   set -euo pipefail
   ip=$(ip -4 -o addr show scope global | awk '$2 !~ /^(docker|br-|virbr)/ {print $4}' | cut -d/ -f1 | head -n1)
@@ -45,19 +59,19 @@ lan:
   npm run dev -- --host
 
 # Stop the background dev server
-dev-stop:
+dev-stop: _deps
   npx astro dev stop
 
 # Is a dev server running, and where
-dev-status:
+dev-status: _deps
   npx astro dev status
 
 # Tail the background dev server's output
-dev-logs *ARGS:
+dev-logs *ARGS: _deps
   npx astro dev logs {{ARGS}}
 
 # Build the static site into `dist/`
-build:
+build: _deps
   npm run build
 
 # Serve the built `dist/` exactly as a host would, to check the real output
@@ -91,7 +105,7 @@ deploy-setup:
 # copy, which nobody's domain points at.
 
 # Build and upload the staging site, and print the URL to send people
-deploy-preview:
+deploy-preview: _deps
   #!/usr/bin/env bash
   set -euo pipefail
 
@@ -117,7 +131,7 @@ deploy-preview:
   # read by Cloudflare Pages and by Netlify, and ignored as a stray file anywhere else.
   printf '%s\n' '/*' '  X-Robots-Tag: noindex, nofollow' > dist-preview/_headers
 
-  # `--branch=main` matches the project's production branch, which is what earns the short stable
+  # `--branch=main` matches the projects production branch, which is what earns the short stable
   # hostname; any other branch name would publish to a one-off preview URL instead.
   wrangler pages deploy dist-preview \
     --project-name={{cf_project}} \
@@ -129,7 +143,7 @@ deploy-preview:
   echo "  Not indexed by search engines. Not the live site."
 
 # Type-check the site, including `.astro` files and content frontmatter
-check:
+check: _deps
   npm run check
 
 # Report missing facts, stale pages, and untranslated pages. See `tools/audit.mjs`.
@@ -141,49 +155,13 @@ ci: check build
   node tools/audit.mjs
 
 # Regenerate the TypeScript types for content collections after editing `src/content.config.ts`
-sync:
+sync: _deps
   npm run sync
 
 # The needs list is the single most valuable object on the site: a mission statement never gets
 # reposted, but a dated needs list gets forwarded by newsletters and neighborhood groups, and it
 # is what tells a visitor the organization is not dormant. Copy, do not edit in place — the old
 # files are the record that this has been happening.
-
-# Start a new dated needs list by copying the most recent one
-new-needs:
-  #!/usr/bin/env bash
-  set -euo pipefail
-  today=$(date +%F)
-  latest=$(ls -1 src/content/needs/*.yaml | sort | tail -n1)
-  target="src/content/needs/${today}.yaml"
-  if [ -e "$target" ]; then echo "$target already exists"; exit 1; fi
-  sed "s/^date: .*/date: ${today}/" "$latest" > "$target"
-  echo "created $target from $(basename "$latest")"
-
-# Start a new update post
-new-update TITLE:
-  #!/usr/bin/env bash
-  set -euo pipefail
-  today=$(date +%F)
-  slug=$(echo "{{TITLE}}" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g; s/^-|-$//g')
-  target="src/content/updates/${today}-${slug}.md"
-  if [ -e "$target" ]; then echo "$target already exists"; exit 1; fi
-  cat > "$target" <<MARKDOWN
-  ---
-  title: {{TITLE}}
-  date: ${today}
-  summary: One sentence, shown on the index page and in the RSS feed.
-  lang: en
-  draft: true
-  ---
-
-  Three sentences about a specific week beats an announcement. What came in, what went out, what
-  ran short.
-
-  Remove \`draft: true\` to publish.
-  MARKDOWN
-  sed -i 's/^  //' "$target"
-  echo "created $target"
 
 # Phone photos carry GPS coordinates and timestamps. For a site serving people who have reason to
 # be careful about being located, publishing that metadata is a real risk, and it is invisible
