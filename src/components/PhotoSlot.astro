@@ -13,15 +13,14 @@ import { SHOW_MARKERS } from '../lib/markers'
 
 interface Props {
   brief: string
-  width?: 'content' | 'wide'
 }
 
-const { brief, width = 'content' } = Astro.props
+const { brief } = Astro.props
 ---
 
 {
   SHOW_MARKERS && (
-    <figure class={width === 'wide' ? 'slot wide' : 'slot'}>
+    <figure class="slot wide">
       <div class="slot__frame">
         <span class="eyebrow">Photo needed</span>
         <p>{brief}</p>

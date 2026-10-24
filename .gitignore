@@ -12,3 +12,5 @@
 # Editors / OS
 .DS_Store
 *.swp
+
+src/assets/photos/

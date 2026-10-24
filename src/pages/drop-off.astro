@@ -20,7 +20,7 @@ import PhotoSlot from '../components/PhotoSlot.astro'
 import { org } from '../data/org'
 import { path } from '../i18n/routes'
 import clothingRoom from '../assets/photos/clothing-room.jpg'
-import foodTable from '../assets/photos/food-table.jpg'
+import foodBoxes from '../assets/photos/food-boxes-2.jpg'
 
 const locale = 'en' as const
 ---
@@ -48,16 +48,15 @@ const locale = 'en' as const
   </section>
 
   <Photo
-    src={clothingRoom}
-    width="wide"
-    alt="Clothing hung on racks and folded on black shelving, shoes on wire racks along both walls, and yellow tape marking aisles on the floor."
-    caption="A clothing room in Grace UMC run by one of our partners, January 2026"
+    src={foodBoxes}
+    alt="A folding table covered with groceries: melons, tomatoes, orange peppers, apples, bananas, onions, bags of potatoes and dried beans, bottles of cooking oil, and canned fruit."
+    caption="Assembling sets of goods for food boxes to send directly to families"
   />
 
   <Photo
-    src={foodTable}
-    alt="A folding table covered with groceries: melons, tomatoes, orange peppers, apples, bananas, onions, bags of potatoes and dried beans, bottles of cooking oil, and canned fruit."
-    caption="Assembling sets of goods for food boxes to send directly to families"
+    src={clothingRoom}
+    alt="Clothing hung on racks and folded on black shelving, shoes on wire racks along both walls, and yellow tape marking aisles on the floor."
+    caption="A clothing room in Grace UMC run by one of our partners, January 2026"
   />
 
   {

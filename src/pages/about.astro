@@ -19,7 +19,7 @@ import TaxCode from '../components/TaxCode.astro'
 import { org } from '../data/org'
 import { pick } from '../i18n/routes'
 import { SHOW_MARKERS } from '../lib/markers'
-import volunteers from '../assets/photos/volunteers.jpg'
+import board_corrected from '../assets/photos/board_corrected.jpg'
 import homelessnessTalk from '../assets/photos/homelessness-talk.jpg'
 
 const locale = 'en' as const
@@ -52,10 +52,10 @@ const paragraphs = (bio?: string | string[]) => (bio === undefined ? [] : [bio].
   {/* Everyone pictured must be a volunteer, staff, or board member who agreed to it — never
       someone the organization serves. See the rules in Photo.astro. */}
   <Photo
-    src={volunteers}
-    width="wide"
-    alt="Seven people standing together in a large hall with folding tables and chairs. Five wear lime-green T-shirts reading “DFW Operation Ground Support”."
-    caption="The board, partners, and volunteers, May 30, 2026."
+    src={board_corrected}
+    focus="center 30%"
+    alt="TODO fix this. Seven people standing together in a large hall with folding tables and chairs. Five wear lime-green T-shirts reading “DFW Operation Ground Support”."
+    caption="The board, May 30, 2026."
   />
 
   {

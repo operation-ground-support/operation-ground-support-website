@@ -28,24 +28,27 @@ interface Props {
   caption: string
   /** Photographer credit, if not staff. */
   credit?: string
-  /** `wide` lets the image breathe past the reading measure. Use at most once per page. */
-  width?: 'content' | 'wide'
+  /**
+   * Every photo is drawn 4:3, so one shot any other shape is cropped to fit. This says which part
+   * to keep, as a CSS `object-position`: `center 30%` keeps the band a little above the middle.
+   */
+  focus?: string
   /** Set on the single most important image on a page so it is not lazy-loaded. */
   eager?: boolean
 }
 
-const { src, alt, caption, credit, width = 'content', eager = false } = Astro.props
+const { src, alt, caption, credit, focus, eager = false } = Astro.props
 
 /*
  * How wide the image will be drawn, so the browser fetches a file that size rather than guessing.
- * These are `--measure` (42rem) and `--measure` plus both `--wide-track`s (82rem) from global.css,
- * written out because `sizes` cannot read a CSS variable. Change them if those tokens change.
- * Below that width the column fills the viewport, less a gutter that `100vw` slightly overstates.
+ * This is `--shell` (82rem) from global.css, written out because `sizes` cannot read a CSS
+ * variable. Change it if that token changes. Below that width the column fills the viewport, less
+ * a gutter that `100vw` slightly overstates.
  */
-const sizes = width === 'wide' ? '(max-width: 88rem) 100vw, 82rem' : '(max-width: 48rem) 100vw, 42rem'
+const sizes = '(max-width: 88rem) 100vw, 82rem'
 ---
 
-<figure class={width === 'wide' ? 'photo wide' : 'photo'}>
+<figure class="photo wide">
   <Image
     src={src}
     alt={alt}
@@ -53,6 +56,7 @@ const sizes = width === 'wide' ? '(max-width: 88rem) 100vw, 82rem' : '(max-width
     sizes={sizes}
     loading={eager ? 'eager' : 'lazy'}
     decoding="async"
+    style={focus && `object-position: ${focus}`}
   />
   <figcaption>
     {caption}
@@ -65,8 +69,13 @@ const sizes = width === 'wide' ? '(max-width: 88rem) 100vw, 82rem' : '(max-width
     margin-block: var(--space-l);
   }
 
+  /* Every photograph spans the full width of the page and has the same shape, so a page with three
+     of them reads as a set rather than a scrapbook. 4:3 is what a phone shoots, so almost nothing
+     is cropped; a portrait shot is, and takes a `focus`. */
   .photo :global(img) {
     width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
     /* One consistent treatment across every photograph. Consistency is most of what separates
        "phone snapshots" from "photographed by someone with a point of view". Tune once, here. */
     filter: saturate(0.92) contrast(1.02);
