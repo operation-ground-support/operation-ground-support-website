@@ -140,12 +140,6 @@ export const org = {
       tag: 'Supply',
     },
     {
-      name: 'NTFB Food Box Distribution',
-      description:
-        'Through our partnership with the North Texas Food Bank, we receive and distribute food boxes directly to families and individuals across the community.',
-      tag: 'Partner: North Texas Food Bank',
-    },
-    {
       name: 'EETZ Food Rescue App',
       description:
         'We coordinate real-time pickup and delivery of surplus food through the EETZ app.',
