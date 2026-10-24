@@ -7,8 +7,9 @@
  * rewrites those to relative paths, and maps directory-style routes onto the `index.html` that
  * actually backs them, because `file://` has no server to do that mapping.
  *
- * Nothing else about the page changes. There is no external script, iframe, or embed in this
- * site, and the fonts are self-hosted, so an offline copy is not a degraded version of it — it is
+ * Nothing else about the page changes. The fonts are self-hosted, and the one external script is
+ * the Donorbox form on the Donate page, which needs a connection; without one, that page shows its
+ * plain link to Donorbox instead. So an offline copy is not a degraded version of the site — it is
  * the same pages with the links pointed somewhere else.
  *
  * Absolute `https://` URLs are deliberately left alone: the canonical and Open Graph tags should

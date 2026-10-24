@@ -2,7 +2,6 @@
 - Donate page needs just a link (?)
 - Volunteer page
 
-
 - we will have headshots for the board members, fill up the empty space by putting images to the right of bios
 - make sure no cruft appears in the HTML of the final site
 - probably have a lawyer or someone check the licenses I had Claude generate. "LICENSE-CONTENT still mentions needs lists and drop-off instructions".
@@ -12,13 +11,4 @@
 - the Van will eventually be replaced
 
 
-Distribution or Intake?
-Drop Off needs to be renamed
-Rename it to Partners
-
-We vet all of our partners that come to us for resource support.
-
-
-
-Rhema Church
 

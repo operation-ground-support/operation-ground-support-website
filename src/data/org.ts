@@ -177,9 +177,12 @@ export const org = {
     "PF Changes", // not P.F. Chang's
     '3H',
     'Stewpot',
+    'Rhema Church',
+    'Jubilee Food Pantry',
     'Paradise Produce',
+    'Grace United Methodist Church',
     'North Texas Food Bank',
-    'Dallas College',
+    'Dallas College'
   ] as string[],
 
   /** Partners that build the software the organization runs on, rather than moving goods. */
@@ -266,14 +269,10 @@ export const org = {
   // ---------------------------------------------------------------------------------------------
 
   donate: {
-    /** e.g. "Zeffy" (0% fees) or "Givebutter". TODO: pick one and set it up. */
-    platform: null as string | null,
-    url: null as string | null,
-    /**
-     * One sentence converting a gift into goods, e.g. "$25 fills one grocery bag."
-     * Only publish this once someone has actually costed it out.
-     */
-    conversion: null as string | null,
+    /** The donation processor, named on the link that shows if its form does not load. */
+    platform: 'Donorbox' as string | null,
+    /** The hosted campaign page. The Donate page embeds this campaign's form. */
+    url: 'https://donorbox.org/operation-ground-support' as string | null,
   },
 
   /** Amazon/Target wish list or similar, if one exists. */

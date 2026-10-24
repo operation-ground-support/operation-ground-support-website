@@ -1,143 +1,78 @@
 ---
 /**
- * Donate — money.
+ * Donate — money, through the organization's Donorbox campaign.
  *
- * A placeholder until a processor exists. `org.donate.url` is `null`, so there is currently no
- * way to give money on this site at all, and that is one of the first things a grant reviewer
- * checks. The page is built now so the route, the navigation, and the copy are settled, and
- * turning it on later is a one-line change in `src/data/org.ts`.
+ * The form is Donorbox's own widget, the same embed the old Squarespace page used, so there is one
+ * campaign to manage. The preset amounts, the monthly option, and the fee checkbox are all set in
+ * the Donorbox dashboard, not here. It is the only third-party script on the site, and it loads on
+ * this page alone.
  *
- * Deliberately not filled with placeholder giving tiers ($25 / $50 / $100). Suggested amounts
- * only work when someone has costed out what they buy, and inventing that conversion is exactly
- * the kind of unverifiable claim this site exists to avoid.
+ * Inside `<dbox-widget>` is a plain link to the hosted campaign page. The widget draws into a
+ * shadow root, which hides that link once it loads; if the script is blocked or the visitor is
+ * offline, the link is what shows, so the page is never empty.
  */
 import Base from '../layouts/Base.astro'
 import Todo from '../components/Todo.astro'
 import { org } from '../data/org'
-import { path } from '../i18n/routes'
 
 const locale = 'en' as const
+
+// The campaign is the path of its hosted page: `https://donorbox.org/operation-ground-support`.
+const campaign = org.donate.url && new URL(org.donate.url).pathname.replaceAll('/', '')
 ---
 
 <Base
   title="Donate"
-  description={`Give money to ${org.name}, a 501(c)(3) serving neighbors in Old East Dallas.`}
+  description={`Give money to ${org.name}, a 501(c)(3) serving neighbors in Dallas.`}
   locale={locale}
   pageKey="donate"
-  lastReviewed="2026-09-07"
+  lastReviewed="2026-10-24"
 >
   <h1>Donate</h1>
 
   {
     org.donate.url ? (
       <>
-        <p class="lede">
-          {org.donate.conversion ??
-            'Your gift buys what the shelves are short of that week.'}
-        </p>
-        <p class="cta">
-          <a class="button" href={org.donate.url} rel="noopener">
-            Donate{org.donate.platform ? ` via ${org.donate.platform}` : ''}
-          </a>
+        <div class="form">
+          <script is:inline type="module" src="https://donorbox.org/widgets.js" async />
+          <dbox-widget campaign={campaign} type="donation_form" enable-auto-scroll="true">
+            <a class="button" href={org.donate.url} rel="noopener">
+              Donate{org.donate.platform ? ` on ${org.donate.platform}` : ''}
+            </a>
+          </dbox-widget>
+        </div>
+        {/* This describes a setting in the Donorbox dashboard: the fee checkbox on the form, which
+            is ticked by default. If that setting changes, change this paragraph with it. */}
+        <p class="note">
+          Note: Card payments carry a processing fee, and Donorbox adds a platform fee (typically ~5% in total). By default, there is a ticked option on the form to add both fees on top of your gift so that they do not come out of it.
         </p>
       </>
     ) : (
-      <>
-        <p class="lede">
-          We are setting up online giving. In the meantime, you can email us to arrange a gift.
-        </p>
-        <p class="cta">
-          <a class="button" href={`mailto:${org.email}?subject=Donation`}>Email us about giving</a>
-        </p>
-
-        <Todo label="This page is a placeholder">
-          Set <code>org.donate.platform</code>, <code>org.donate.url</code>, and
-          {' '}<code>org.donate.conversion</code> in <code>src/data/org.ts</code>. The whole page
-          switches over — no markup changes.
-          <br /><br />
-          Zeffy takes 0% and is the usual pick at this size; Givebutter is the common default if
-          you want donor management built in. Either one is a same-day setup, and until one exists
-          there is literally no way to give money here, which a reviewer notices immediately.
-        </Todo>
-      </>
+      <Todo label="No way to give money">
+        Set <code>org.donate.url</code> in <code>src/data/org.ts</code> to the Donorbox campaign
+        page.
+      </Todo>
     )
   }
-
-  <section class="section">
-    <h2>Where the money goes</h2>
-    {
-      org.donate.conversion ? (
-        <p>{org.donate.conversion}</p>
-      ) : (
-        <Todo label="Needs a real number">
-          Write one sentence converting a gift into goods — "$25 fills one grocery bag", or
-          whatever is true. Only publish it once somebody has actually costed it out; a made-up
-          conversion is the kind of figure a funder probes and then discounts everything else on
-          the page.
-        </Todo>
-      )
-    }
-    <p class="note">
-      Cash gifts cover the things donations rarely include and the pantry is always short of:
-      diapers, hygiene products, and food to fill gaps between drives.
-      {/* TODO: confirm with the board that this is accurate before launch. */}
-    </p>
-  </section>
-
-  <section class="section">
-    <h2>Other ways to give</h2>
-    <ul class="ways">
-      <li><a href={path('volunteer', locale)!}>Volunteer</a> a shift sorting or packing.</li>
-      {org.registryUrl && (
-        <li><a href={org.registryUrl} rel="noopener">Ship from our wish list.</a></li>
-      )}
-      <li>
-        Run a collection drive at your congregation, school, or workplace — email
-        {' '}<a href={`mailto:${org.email}`}>{org.email}</a> and we will tell you what is short.
-      </li>
-    </ul>
-  </section>
-
-  <section class="section">
-    <h2>Is this tax-deductible?</h2>
-    {
-      org.ein ? (
-        <p>
-          Yes. {org.name} is a 501(c)(3) nonprofit; our EIN is {org.ein}.
-          {org.determinationLetter && (
-            <> Our <a href={org.determinationLetter}>IRS determination letter</a> is public.</>
-          )}
-        </p>
-      ) : (
-        <Todo label="Cannot answer this yet">
-          Fill in <code>org.ein</code> and link the determination letter. "Is my gift deductible"
-          is the question a donor asks right before they decide, and right now the site cannot
-          answer it.
-        </Todo>
-      )
-    }
-  </section>
 </Base>
 
 <style>
-  .cta {
+  .form {
     margin-block-start: var(--space-l);
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-s);
   }
 
-  .ways {
-    margin-block-start: var(--space-s);
-    padding-inline-start: var(--space-m);
-  }
-
-  .ways li + li {
-    margin-block-start: var(--space-2xs);
+  /* While the form loads, Donorbox shows a 500px placeholder positioned over the widget, which
+     otherwise has no height yet and lets it cover the note below. Reserving that height also stops
+     the note jumping when the form arrives. `:defined` waits for the script, so the fallback link
+     does not sit above 500px of nothing when the script never comes. */
+  dbox-widget:defined {
+    display: block;
+    position: relative;
+    min-height: 500px;
   }
 
   .note {
-    margin-block-start: var(--space-s);
+    margin-block-start: var(--space-m);
     color: var(--ink-muted);
     font-size: var(--text-sm);
   }
