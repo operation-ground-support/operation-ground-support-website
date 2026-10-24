@@ -3,7 +3,7 @@
  * require touching a `.astro` file.
  *
  * The split is deliberate. Page prose is written once and edited rarely, so it lives in the page
- * components. `needs`, `updates`, and `events` change weekly and are the material that proves to
+ * components. `updates` and `events` change weekly and are the material that proves to
  * a visitor (and to a grant reviewer) that the organization is alive, so they are plain data
  * files that a non-developer can edit. When a git-backed CMS is added later, point it at
  * `src/content/` and nothing else has to move.
@@ -32,48 +32,6 @@ const localized = z.union([
     es: z.string().optional(),
   }),
 ])
-
-/**
- * A dated snapshot of what the pantry currently needs.
- *
- * This is the single most valuable object on the site. A mission statement never gets reposted;
- * a dated needs list gets forwarded by church newsletters and neighborhood groups. It is also
- * what a funder checks to see whether the organization is dormant, which is why `date` is
- * required and surfaced prominently rather than hidden.
- *
- * Add a new file each time the list changes; do not edit the old one. The homepage shows the
- * newest, and the history is a record of activity.
- */
-const needs = defineCollection({
-  loader: glob({ base: './src/content/needs', pattern: '**/*.{yaml,yml}' }),
-  schema: z.object({
-    /** The date this list was true. Filename should match, e.g. `2026-08-24.yaml`. */
-    date: z.coerce.date(),
-    categories: z
-      .array(
-        z.object({
-          name: localized,
-          items: z.array(
-            z.union([
-              localized,
-              z.object({
-                name: localized,
-                /** Marks the two or three things that are genuinely short. Not more. */
-                urgent: z.boolean().default(false),
-                note: localized.optional(),
-              }),
-            ]),
-          ),
-        }),
-      )
-      .min(1),
-    /**
-     * Things to stop bringing. Counter-intuitively this is a strong credibility signal: it shows
-     * someone is actually looking at the shelves rather than publishing a generic wish list.
-     */
-    notNeeded: z.array(localized).default([]),
-  }),
-})
 
 /**
  * Short posts. Not a blog in the sense of essays — a distribution happened, a shelf is empty, a
@@ -126,4 +84,4 @@ const events = defineCollection({
   }),
 })
 
-export const collections = { needs, updates, events }
+export const collections = { updates, events }

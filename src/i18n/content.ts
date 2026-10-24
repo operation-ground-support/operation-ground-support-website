@@ -10,15 +10,15 @@ import type { Locale } from './routes'
  * English only, or `{ en, es? }`. Mirrors the `localized` schema in `content.config.ts`.
  *
  * Deliberately not the same type as `Localized` in `routes.ts`, which requires every locale, and
- * named differently so the two cannot be mistaken for each other. The difference is the point: a
- * needs-list item nobody has translated yet should still appear, in English, whereas a nav label
+ * named differently so the two cannot be mistaken for each other. The difference is the point: an
+ * event title nobody has translated yet should still appear, in English, whereas a nav label
  * or an organizational fact with no Spanish is a gap the type checker ought to refuse.
  */
 export type Translatable = string | { en: string; es?: string }
 
 /**
  * Resolve a translatable value. Falls back to English when a translation is missing, which is the
- * right behaviour *inside* content — an untranslated ingredient name is far better than a hole in
+ * right behaviour *inside* content — an untranslated event title is far better than a hole in
  * the list. It is not the right behaviour for whole pages, which is why `routes.ts` uses an
  * explicit `null` there instead.
  */

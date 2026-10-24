@@ -4,7 +4,7 @@ import EventList from '../components/EventList.astro'
 import Photo from '../components/Photo.astro'
 import Todo from '../components/Todo.astro'
 import { org } from '../data/org'
-import poster from '../assets/photos/matthew-25-poster.jpg'
+import atGraceUmc from '../assets/photos/at-grace-umc.jpg'
 
 const locale = 'en' as const
 ---
@@ -45,9 +45,9 @@ const locale = 'en' as const
   <EventList locale={locale} />
 
   <Photo
-    src={poster}
+    src={atGraceUmc}
     alt="A printed passage from Matthew 25 on a hallway wall, beside a stained-glass-style picture of a woman and a haloed, bearded man seated at a small table with a bowl of soup between them."
-    caption="At the Grace UMC location"
+    caption="A community meal at the Grace UMC location"
   />
 </Base>
 

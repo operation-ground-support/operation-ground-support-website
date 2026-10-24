@@ -1,18 +1,13 @@
 ---
 /**
- * Audience triage: four doors, phrased in the visitor's own voice.
+ * Audience triage: doors phrased in the visitor's own voice.
  *
- * A pantry homepage has audiences arriving with incompatible goals — someone who needs food,
- * someone with money to give, someone with a car full of coats, someone with a free Saturday.
- * Making them choose in their own words is better information architecture than a single
- * "Learn more".
+ * Visitors arrive with different goals — someone with money to give, someone with a free
+ * Saturday. Making them choose in their own words is better information architecture than a
+ * single "Learn more".
  *
  * Deliberately not icon cards. Icon triptychs are the strongest single tell of a template site,
- * and an icon adds nothing to "I need help" that the words do not already carry.
- *
- * "I need help" is first. On the current site nothing at all is addressed to the people served;
- * everything speaks to donors and volunteers. Putting that door first is a service obligation,
- * and it also happens to tell a funder that this organization knows its community.
+ * and an icon adds nothing to "Donate money" that the words do not already carry.
  */
 import { useTranslations } from '../i18n/ui'
 import { navLink, type Locale } from '../i18n/routes'
@@ -25,18 +20,13 @@ const { locale } = Astro.props
 const t = useTranslations(locale)
 
 // As in the nav, a door whose page is not translated still opens — onto the English page, marked
-// as such. "I need help" is the one that must never be a fallback, and it is fully translated.
-// Four doors now that money and goods are separate acts. `hreflang` without `lang`, for the
-// reason given in Header.astro.
+// as such. `hreflang` without `lang`, for the reason given in Header.astro.
 //
-// The two solid doors are the two the organization most needs a stranger to walk through — "I
-// need help" because that is the service obligation and nobody currently addresses it, and
-// "Donate money" because it is the one act with no logistics in the way. Emphasis matches the
-// navigation so the same action does not look primary in one place and secondary in another.
+// "Donate money" is solid because it is the one act with no logistics in the way. Emphasis
+// matches the navigation so the same action does not look primary in one place and secondary in
+// another.
 const doors = [
-  { ...navLink('getHelp', locale), label: t('cta.getHelp'), solid: true },
   { ...navLink('donate', locale), label: t('cta.donate'), solid: true },
-  { ...navLink('dropOff', locale), label: t('cta.dropOff'), solid: false },
   { ...navLink('volunteer', locale), label: t('cta.volunteer'), solid: false },
 ]
 ---

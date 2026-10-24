@@ -7,45 +7,6 @@ You can edit these files on github.com directly: browse to the file, click the p
 the change, and choose "Create a new branch and start a pull request". Someone reviews it and the
 site updates itself a minute after it is merged.
 
-## The needs list — do this weekly
-
-This is the most valuable thing on the site. A mission statement never gets forwarded; a dated
-needs list gets reposted by church newsletters and neighborhood groups. It is also what someone
-checks to see whether the organization is still active, so an old date does real damage.
-
-Files live in `src/content/needs/`, one per date. **Copy the newest one to a new file named for
-today** rather than editing it — the old files are the record that this has been happening.
-
-From a terminal, `just new-needs` does the copying for you.
-
-```yaml
-date: 2026-09-14
-
-categories:
-  - name: { en: Hygiene supplies, es: Artículos de higiene }
-    items:
-      - { en: Deodorant, es: Desodorante }
-      - name: { en: Diapers, es: Pañales }
-        urgent: true
-        note: { en: "sizes 4 and 5", es: "tallas 4 y 5" }
-
-notNeeded:
-  - { en: Adult clothing, es: Ropa de adulto }
-```
-
-Three things to get right:
-
-- **Change the `date` at the top** to match the filename. This is what the site displays.
-- **Mark only two or three things `urgent: true`.** If everything is urgent, nothing is, and the
-  marker stops meaning anything to a reader.
-- **Fill in `notNeeded` when something is overflowing.** It feels like an odd thing to publish, and
-  it is one of the strongest signals on the whole site — it shows someone is actually looking at
-  the shelves rather than posting a generic wish list.
-
-Any value containing a comma must be in `"quotes"`, or the file will not parse and the site will
-refuse to build. That refusal is deliberate: a broken file stops the deploy instead of blanking a
-section of the live site.
-
 ## Updates
 
 Short posts, in `src/content/updates/`. One file each, named `YYYY-MM-DD-a-short-title.md`.
@@ -83,10 +44,14 @@ filled in and a comment on each — and delete its `draft: true` line once the e
 Past events move into a collapsed list automatically; leave them there, since a visible history of
 things that actually happened is worth more than an empty page.
 
+Any value containing a comma must be in `"quotes"`, or the file will not parse and the site will
+refuse to build. That refusal is deliberate: a broken file stops the deploy instead of blanking a
+section of the live site.
+
 ## Facts about the organization
 
-The EIN, board list, address, hours, donation link, and the answers on the Get help page all live
-in one file: `src/data/org.ts`. It has comments explaining each field.
+The EIN, board list, partners, address, and donation link all live in one file: `src/data/org.ts`.
+It has comments explaining each field.
 
 Anything currently set to `null` is a fact nobody has supplied yet, and the site hides that section
 rather than showing an empty one. Run `just audit` (or ask whoever is maintaining the site) to see

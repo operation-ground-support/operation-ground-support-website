@@ -9,8 +9,7 @@
  *   2. Pages whose `lastReviewed` date has aged out, so a stale page is greppable rather than
  *      quietly rotting. A stale site is worse in front of a funder than a plain current one.
  *   3. Pages with no Spanish translation.
- *   4. How old the current needs list is, since a dated list is the site's proof of life.
- *   5. `_EXAMPLE_` reference files that have lost `draft: true` and would publish.
+ *   4. `_EXAMPLE_` reference files that have lost `draft: true` and would publish.
  *
  * Exits non-zero for staleness and for a publishing example, not for missing facts — filling in a
  * board roster is not something a build should block on, but a page nobody has looked at in a
@@ -24,7 +23,6 @@ import { routes, PAGE_KEYS, LOCALES } from '../src/i18n/routes.ts'
 import { isPlaceholder } from '../src/lib/placeholder.ts'
 
 const STALE_AFTER_DAYS = 180
-const NEEDS_STALE_AFTER_DAYS = 21
 const strict = process.argv.includes('--strict')
 
 const bold = (s) => `\x1b[1m${s}\x1b[0m`
@@ -106,51 +104,15 @@ if (untranslated.length === 0) {
 } else {
   console.log(`  ${yellow('untranslated')} ${untranslated.join(', ')}`)
   console.log(dim('          These link to the English page, marked "EN" in the nav. Usable, not translated.'))
-  console.log(dim('          Get help must never be a fallback; the rest can wait.'))
   if (strict) problems += untranslated.length
 }
 
 // 4 -----------------------------------------------------------------------------------------
-console.log(bold('\nNeeds list'))
-// `_EXAMPLE_` reference files are excluded deliberately. `_` sorts after every digit, so an
-// example file would win `.at(-1)`, `new Date('_EXAMPLE_...')` would be Invalid Date, and the
-// staleness comparison against NaN is always false — the check would print "NaN days old" in
-// green and never warn again. A proof-of-life check that silently stops checking is worse than
-// not having one.
-const needsFiles = (await readdir('src/content/needs'))
-  .filter((f) => /\.ya?ml$/.test(f) && !/_EXAMPLE_/i.test(f))
-  .sort()
-const newest = needsFiles.at(-1)
-if (!newest) {
-  console.log(`  ${red('none')} — the homepage has nothing to show`)
-  problems += 1
-} else {
-  const date = new Date(newest.replace(/\.ya?ml$/, ''))
-  const age = daysSince(date)
-  if (Number.isNaN(age)) {
-    // Belt and braces: any filename that is not a date at all, rather than failing open.
-    console.log(`  ${red(newest)} — filename is not a date, so freshness cannot be checked`)
-    problems += 1
-  } else {
-    const label = `${age} day${age === 1 ? '' : 's'} old`
-    const verdict = age > NEEDS_STALE_AFTER_DAYS ? red(label) : green(label)
-    console.log(`  ${newest} — ${verdict}`)
-    if (age > NEEDS_STALE_AFTER_DAYS) {
-      console.log(dim("          This is the site's proof of life. Copy it to a new dated file and update it."))
-      problems += 1
-    }
-  }
-}
-
-// 5 -----------------------------------------------------------------------------------------
 // `_EXAMPLE_` files are kept permanently as reference, so their presence is not the problem. The
 // problem is one of them losing `draft: true` and rendering as if it were real — for an event,
 // sending someone to a distribution that is not happening; for an update, announcing one. That is
 // worth failing the build over rather than warning about, because the warning would be
 // indistinguishable from the routine noise of a fixture that is supposed to be there.
-//
-// `needs` is not checked: it has no `draft` field, so an example there cannot be made safe this
-// way at all. Do not keep one in that folder.
 console.log(bold('\nReference files'))
 const examples = []
 for (const dir of ['src/content/events', 'src/content/updates']) {

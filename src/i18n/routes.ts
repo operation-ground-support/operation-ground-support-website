@@ -33,9 +33,8 @@ export function pick<T>(value: Localized<T>, locale: Locale): T {
 
 export const PAGE_KEYS = [
   'home',
-  'getHelp',
+  'partners',
   'donate',
-  'dropOff',
   'volunteer',
   'about',
   'updates',
@@ -49,21 +48,13 @@ export type PageKey = (typeof PAGE_KEYS)[number]
  * a Spanish speaker cannot discover that the organization takes volunteers at all, which is worse
  * than reading about it in a second language.
  *
- * Spanish slugs are Spanish words on purpose. For the people this site serves, `/es/ayuda` is a
- * usable URL to say out loud or write down; `/es/get-help` is not.
+ * Spanish slugs are Spanish words on purpose. For a Spanish speaker, `/es/contacto` is a usable
+ * URL to say out loud or write down; `/es/contact` is not.
  */
 export const routes: Record<PageKey, Record<Locale, string | null>> = {
   home: { en: '/', es: '/es' },
-  getHelp: { en: '/get-help', es: '/es/ayuda' },
-  // `donate` is money and `dropOff` is goods. They are separate pages because they are separate
-  // acts with separate audiences: giving money is one click from anywhere, while dropping off
-  // goods needs an address, hours, and a list of what is short.
-  //
-  // They must not both be called some synonym of "give". A visitor cannot guess which of "Give"
-  // and "Donate" holds the payment form, and on a nonprofit site "Donate" overwhelmingly means
-  // money — so the goods page takes the concrete verb the organization already uses for it.
+  partners: { en: '/partners', es: null },
   donate: { en: '/donate', es: null },
-  dropOff: { en: '/drop-off', es: null },
   volunteer: { en: '/volunteer', es: null },
   about: { en: '/about', es: null },
   updates: { en: '/updates', es: null },
@@ -71,8 +62,7 @@ export const routes: Record<PageKey, Record<Locale, string | null>> = {
 }
 
 export const NAV_ORDER: PageKey[] = [
-  'getHelp',
-  'dropOff',
+  'partners',
   'updates',
   'about',
   'contact',

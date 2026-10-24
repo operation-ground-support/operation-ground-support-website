@@ -44,12 +44,10 @@ const locale = 'en' as const
     ) : (
       <>
         <p class="lede">
-          We are setting up online giving. In the meantime, goods can be dropped off at the church
-          during open hours, and you can email us to arrange a gift.
+          We are setting up online giving. In the meantime, you can email us to arrange a gift.
         </p>
         <p class="cta">
           <a class="button" href={`mailto:${org.email}?subject=Donation`}>Email us about giving</a>
-          <a class="button button--quiet" href={path('dropOff', locale)!}>Drop off goods instead</a>
         </p>
 
         <Todo label="This page is a placeholder">
@@ -89,7 +87,6 @@ const locale = 'en' as const
   <section class="section">
     <h2>Other ways to give</h2>
     <ul class="ways">
-      <li><a href={path('dropOff', locale)!}>Drop off goods</a> during open hours.</li>
       <li><a href={path('volunteer', locale)!}>Volunteer</a> a shift sorting or packing.</li>
       {org.registryUrl && (
         <li><a href={org.registryUrl} rel="noopener">Ship from our wish list.</a></li>

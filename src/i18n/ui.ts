@@ -12,9 +12,8 @@
 import type { Locale, Localized } from './routes'
 
 const en = {
-  'nav.getHelp': 'Get help',
+  'nav.partners': 'Partners',
   'nav.donate': 'Donate',
-  'nav.dropOff': 'Drop off',
   'nav.volunteer': 'Volunteer',
   'nav.about': 'About',
   'nav.updates': 'Updates',
@@ -36,11 +35,6 @@ const en = {
    */
   'bar.switchToHome': 'This page is only in Spanish. Go to the English home page.',
 
-  'needs.heading': '',
-  'needs.urgent': 'Most needed',
-  'needs.notNeeded': 'Please hold off on',
-  'needs.empty': 'The current needs list is being updated.',
-
   'updates.heading': 'Updates',
   'updates.none': 'No updates posted yet.',
 
@@ -59,15 +53,12 @@ const en = {
   'a11y.transparencyBar': 'Organizational transparency',
 
   'cta.donate': 'Donate money',
-  'cta.dropOff': 'Drop off goods',
   'cta.volunteer': 'Volunteer',
-  'cta.getHelp': 'I need help',
 } as const
 
 const es: Record<keyof typeof en, string> = {
-  'nav.getHelp': 'Buscar ayuda',
+  'nav.partners': 'Aliados',
   'nav.donate': 'Donar',
-  'nav.dropOff': 'Dejar donaciones',
   'nav.volunteer': 'Voluntariado',
   'nav.about': 'Quiénes somos',
   'nav.updates': 'Novedades',
@@ -82,11 +73,6 @@ const es: Record<keyof typeof en, string> = {
   'bar.candid': 'Perfil de Candid',
   'bar.otherLanguage': 'English',
   'bar.switchToHome': 'Esta página solo está en inglés. Ir al inicio en español.',
-
-  'needs.heading': 'Lo que necesitamos ahora',
-  'needs.urgent': 'Lo más necesario',
-  'needs.notNeeded': 'Por ahora no recibimos',
-  'needs.empty': 'La lista de necesidades se está actualizando.',
 
   'updates.heading': 'Novedades',
   'updates.none': 'Todavía no hay novedades.',
@@ -106,9 +92,7 @@ const es: Record<keyof typeof en, string> = {
   'a11y.transparencyBar': 'Transparencia de la organización',
 
   'cta.donate': 'Donar dinero',
-  'cta.dropOff': 'Dejar artículos',
   'cta.volunteer': 'Ser voluntario',
-  'cta.getHelp': 'Necesito ayuda',
 }
 
 export const ui = { en, es } as const satisfies Localized<Record<string, string>>

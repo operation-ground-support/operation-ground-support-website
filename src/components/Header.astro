@@ -23,10 +23,9 @@ const { locale, pageKey } = Astro.props
 const t = useTranslations(locale)
 
 const navLabels: Record<PageKey, ReturnType<typeof t>> = {
-  home: t('nav.getHelp'), // unused; home is the wordmark
-  getHelp: t('nav.getHelp'),
+  home: t('nav.partners'), // unused; home is the wordmark
+  partners: t('nav.partners'),
   donate: t('nav.donate'),
-  dropOff: t('nav.dropOff'),
   volunteer: t('nav.volunteer'),
   about: t('nav.about'),
   updates: t('nav.updates'),

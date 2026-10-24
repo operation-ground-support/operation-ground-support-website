@@ -154,6 +154,38 @@ export const org = {
   ] as Program[],
 
   // ---------------------------------------------------------------------------------------------
+  // Partners, listed on the Partners page. The organization is the bridge between the providers
+  // that have resources and the people on the ground doing the work, so these are its other half.
+  // They are in no particular order, which is why the page shows them without numbers. A named
+  // partner is a claim a funder can check: delete one that stops being a partner.
+  // ---------------------------------------------------------------------------------------------
+
+  partners: [
+    'Hope House',
+    'The Bridge',
+    'City of Dallas',
+    'TRAC',
+    'Resource Center',
+    'Bear Creek Community Church',
+    'Friendship House',
+    'Dallas Sandwich Sundays',
+    'Under My Umbrella',
+    'Dallas ISD Homeless Dept.',
+    'Oak Lawn United Methodist Church',
+    'Streetside Showers',
+    'Dallas Life',
+    "PF Changes", // not P.F. Chang's
+    '3H',
+    'Stewpot',
+    'Paradise Produce',
+    'North Texas Food Bank',
+    'Dallas College',
+  ] as string[],
+
+  /** Partners that build the software the organization runs on, rather than moving goods. */
+  techPartners: ['EETZ Food Rescue', 'Noble Truth IT'] as string[],
+
+  // ---------------------------------------------------------------------------------------------
   // Legitimacy. These are the fields a grant reviewer looks for first, and all of them are
   // currently missing from the live site.
   // ---------------------------------------------------------------------------------------------
@@ -229,29 +261,6 @@ export const org = {
     mapUrl: '',
   },
 
-  /** TODO
-   * Drop-off logistics, in the order a person standing in the parking lot needs them.
-   * Transcribed from the current Squarespace site. TODO: confirm these are still accurate,
-   * and confirm whether holidays or church events close the door.
-   */
-  dropOff: {
-    hours: [
-      {
-        days: { en: 'Monday\u2013Thursday', es: 'Lunes a jueves' },
-        time: { en: '9:00am to 4:00pm', es: '9:00 a 16:00' },
-      },
-      {
-        days: { en: 'Friday', es: 'Viernes' },
-        time: { en: '9:00am to noon', es: '9:00 a 12:00' },
-      },
-    ] as { days: Localized; time: Localized }[],
-    instructions: [
-      'Park in the lot behind the church building.',
-      'Enter through the back door of Grace United Methodist Church, which opens onto that lot.',
-      'If the door is locked, ring the doorbell.',
-    ] as string[],
-  },
-
   // ---------------------------------------------------------------------------------------------
   // Money. Squarespace's /cart is vestigial and should not be linked.
   // ---------------------------------------------------------------------------------------------
@@ -276,35 +285,6 @@ export const org = {
   social: {
     facebook: null as string | null,
     instagram: null as string | null,
-  },
-
-  // ---------------------------------------------------------------------------------------------
-  // Intake policy — the questions the people you serve are actually asking.
-  //
-  // These are left `null` because nobody but the board can answer them, and guessing would be
-  // worse than silence. A page that says "no ID required" when a volunteer at the door does ask
-  // for one causes someone to make a trip they could not afford; a page that says "we do not ask
-  // about immigration status" when a form records it is a safety failure, not a copy error.
-  //
-  // Answer each one as a short sentence in plain language, then again in Spanish. Until then the
-  // Get help page renders only the questions that have answers.
-  // ---------------------------------------------------------------------------------------------
-
-  intake: {
-    /** Who can receive goods. e.g. "Anyone who needs them. We do not have a service area." */
-    whoCanReceive: null as Localized | null,
-    /** Whether identification is required, and what happens if someone has none. */
-    idRequired: null as Localized | null,
-    /** Whether income or need has to be documented. */
-    proofOfNeed: null as Localized | null,
-    /** Whether anyone is asked about immigration status. */
-    immigrationStatus: null as Localized | null,
-    /** What, if anything, is written down, who can see it, and how long it is kept. */
-    recordsKept: null as Localized | null,
-    /** How often a household may come. */
-    howOften: null as Localized | null,
-    /** Whether an appointment is needed, or whether people may simply arrive during hours. */
-    appointment: null as Localized | null,
   },
 } as const satisfies Record<string, unknown>
 
@@ -333,8 +313,4 @@ export const REQUIRED_FOR_FUNDERS: { path: string; why: string }[] = [
   { path: 'postal_address.street', why: 'A real street address makes the organization locatable.' },
   { path: 'donate.url', why: 'Set up a real donation processor (Zeffy takes 0%) and link it.' },
   { path: 'lede', why: 'Write the plain-language homepage sentence and get the board to approve it.' },
-  { path: 'intake.idRequired', why: 'Answer whether ID is required. People skip a trip they cannot afford over this.' },
-  { path: 'intake.immigrationStatus', why: 'Answer whether anyone is asked about immigration status. This is a safety answer, not a copy answer.' },
-  { path: 'intake.recordsKept', why: 'Say what is written down, who sees it, and how long it is kept.' },
-  { path: 'intake.whoCanReceive', why: 'Say plainly who can receive goods.' },
 ]

@@ -63,7 +63,6 @@ src/
   lib/placeholder.ts    the rule that "(… TODO)" copy is a gap, not a fact
   content.config.ts     schemas for the content collections
   content/
-    needs/              dated "what we need right now" lists   ← edited weekly
     updates/            short posts                            ← edited weekly
     events/             distributions and drives               ← edited weekly
   layouts/Base.astro    the page shell
@@ -115,9 +114,9 @@ carry GPS coordinates; publishing them from this address would be a real disclos
 Two licenses, because the repo holds two different kinds of thing.
 
 - **Code** — MIT (`LICENSE`).
-- **Written content** — CC BY 4.0 (`LICENSE-CONTENT`): page text, needs lists, updates, and the
+- **Written content** — CC BY 4.0 (`LICENSE-CONTENT`): page text, updates, events, and the
   organizational facts in `src/data/org.ts`. The intent is that another small nonprofit can lift
-  the intake wording or the structure of the needs list without asking.
+  the page wording or the structure of the content files without asking.
 
 `LICENSE-CONTENT` carves out four things that are not the organization's to give away: the name and
 logo (trademarks), photographs of identifiable people (a volunteer's release covers publication by

@@ -29,9 +29,6 @@ rule below exists because a grant reviewer checks that specific thing.
   volunteers, or distributions are not, under any framing.
 - **Never add a photograph of a person served.** The organization works with immigrant communities
   and families affected by ICE detentions. This is a safety constraint, not a style preference.
-- **Do not answer the Get help questions on the organization's behalf.** `org.intake` is `null`
-  because only the board can say whether ID is required or whether anyone is asked about
-  immigration status. Guessing wrong causes someone to make a trip they cannot afford, or worse.
 
 ## Design constraints
 
@@ -63,15 +60,13 @@ re-derive `--accent` and `--accent-deep` from the mark and change nothing else.
 - **Do not link to a page that does not exist.** `integrations/check-internal-links.mjs` fails the
   build. This is the guard against the nav rot that afflicts hand-maintained nonprofit sites.
 - **Do not add a Spanish page by copying an English one.** Bilingual pages share a body component
-  (`GetHelpBody.astro`, `ContactBody.astro`) so the two versions cannot drift structurally.
+  (`ContactBody.astro`) so the two versions cannot drift structurally.
 - **Never enable Astro's i18n `fallback`.** Untranslated pages are linked at their English URL via
   `navLink()` and marked "EN". Serving English under an `/es/` path would put English text inside
-  `<html lang="es">`. Get help is the one page that must always be a real translation, never a
-  fallback.
+  `<html lang="es">`.
 - **The navigation is full at seven items.** Do not add an eighth. Thin content spread wide looks
   far worse than rich content kept narrow, and this organization does not yet have enough content
   to fill what it has.
-- **`donate` is money, `dropOff` is goods.** Never name them both some synonym of "give"
 - **Only two nav items are emphasised** (`NAV_EMPHASIS` in `routes.ts`): Donate solid, Volunteer
   outline, reusing the existing `.button` / `.button--quiet` pair.
 - **`src/content/` is the non-developer's territory.** Anything edited weekly belongs there, not in
@@ -84,8 +79,7 @@ re-derive `--accent` and `--accent-deep` from the mark and change nothing else.
   displaying it (the audit, the JSON-LD in `Base.astro`) must test it with `isPlaceholder` from
   `src/lib/placeholder.ts`, or it will publish the placeholder as the answer.
 - **`_EXAMPLE_` files are permanent references** in `events/` and `updates/`, and must stay
-  `draft: true`; `just audit` fails the build if one does not. `needs/` has no `draft` field, so
-  never keep an example there.
+  `draft: true`; `just audit` fails the build if one does not.
 
 ## Things that fail silently
 

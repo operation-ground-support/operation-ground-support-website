@@ -1,0 +1,67 @@
+---
+/**
+ * Partners — the organizations Operation Ground Support works between.
+ *
+ * The lists themselves live in `org.partners` and `org.techPartners`, with the other
+ * organizational facts. They are not ranked, so they render as bulleted lists, never numbered.
+ */
+import Base from '../layouts/Base.astro'
+import Photo from '../components/Photo.astro'
+import { org } from '../data/org'
+import clothingRoom from '../assets/photos/clothing-room.jpg'
+import foodBoxes from '../assets/photos/food-boxes-2.jpg'
+
+const locale = 'en' as const
+---
+
+<Base
+  title="Partners"
+  description={`The organizations ${org.name} works with across Dallas.`}
+  locale={locale}
+  pageKey="partners"
+  lastReviewed="2026-10-24"
+>
+  <h1>Partners</h1>
+  <p class="lede">
+    We are the bridge between the partners who provide resources and the people on the ground who
+    do the work.
+  </p>
+
+  <ul class="partners">
+    {org.partners.map((name) => <li>{name}</li>)}
+  </ul>
+
+  {
+    org.techPartners.length > 0 && (
+      <section class="section">
+        <h2>Tech partners</h2>
+        <ul class="partners">
+          {org.techPartners.map((name) => <li>{name}</li>)}
+        </ul>
+      </section>
+    )
+  }
+
+  <Photo
+    src={foodBoxes}
+    alt="A folding table covered with groceries: melons, tomatoes, orange peppers, apples, bananas, onions, bags of potatoes and dried beans, bottles of cooking oil, and canned fruit."
+    caption="Assembling sets of goods for food boxes to send directly to families"
+  />
+
+  <Photo
+    src={clothingRoom}
+    alt="Clothing hung on racks and folded on black shelving, shoes on wire racks along both walls, and yellow tape marking aisles on the floor."
+    caption="A clothing room in Grace UMC run by one of our partners, January 2026"
+  />
+</Base>
+
+<style>
+  .partners {
+    margin-block-start: var(--space-m);
+    padding-inline-start: var(--space-m);
+  }
+
+  .partners li + li {
+    margin-block-start: var(--space-2xs);
+  }
+</style>
