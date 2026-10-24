@@ -29,8 +29,9 @@ interface Props {
   /** Photographer credit, if not staff. */
   credit?: string
   /**
-   * Every photo is drawn 4:3, so one shot any other shape is cropped to fit. This says which part
-   * to keep, as a CSS `object-position`: `center 30%` keeps the band a little above the middle.
+   * Crop a portrait shot to 4:3 like the landscape ones, keeping this part, as a CSS
+   * `object-position`: `center 30%` keeps the band a little above the middle. Without it a
+   * portrait is shown whole, narrower (see below).
    */
   focus?: string
   /** Set on the single most important image on a page so it is not lazy-loaded. */
@@ -40,15 +41,30 @@ interface Props {
 const { src, alt, caption, credit, focus, eager = false } = Astro.props
 
 /*
- * How wide the image will be drawn, so the browser fetches a file that size rather than guessing.
- * This is `--shell` (82rem) from global.css, written out because `sizes` cannot read a CSS
- * variable. Change it if that token changes. Below that width the column fills the viewport, less
- * a gutter that `100vw` slightly overstates.
+ * Most photos fill the full 82rem column. Two kinds are drawn narrower, and centred:
+ *
+ *   - A portrait shot with no `focus` is shown whole rather than cropped, at the width that makes
+ *     it as tall as a 4:3 photo would be, so a tall picture does not take over the page.
+ *   - An original narrower than the width it would be drawn at is drawn 30% smaller, so a small
+ *     file is not stretched soft.
+ *
+ * On a screen narrower than the result, every photo fills the column.
  */
-const sizes = '(max-width: 88rem) 100vw, 82rem'
+const whole = src.height > src.width && !focus
+let scale = whole ? (3 / 4) * (src.width / src.height) : 1
+if (src.width < 82 * 16 * scale) scale *= 0.7
+const maxWidth = Math.round(82 * scale * 100) / 100
+
+/*
+ * How wide the image will be drawn, so the browser fetches a file that size rather than guessing.
+ * 82rem is `--shell` from global.css, written out because `sizes` cannot read a CSS variable.
+ * Change it if that token changes. Below that width the column fills the viewport, less a gutter
+ * that `100vw` slightly overstates.
+ */
+const sizes = `(max-width: ${maxWidth + 6}rem) 100vw, ${maxWidth}rem`
 ---
 
-<figure class="photo wide">
+<figure class:list={['photo', 'wide', whole && 'photo--whole']} style={`--photo-max: ${maxWidth}rem`}>
   <Image
     src={src}
     alt={alt}
@@ -67,11 +83,13 @@ const sizes = '(max-width: 88rem) 100vw, 82rem'
 <style>
   .photo {
     margin-block: var(--space-l);
+    width: min(100%, var(--photo-max));
+    margin-inline: auto;
   }
 
   /* Every photograph spans the full width of the page and has the same shape, so a page with three
      of them reads as a set rather than a scrapbook. 4:3 is what a phone shoots, so almost nothing
-     is cropped; a portrait shot is, and takes a `focus`. */
+     is cropped. A portrait is the exception, kept whole unless it has a `focus`. */
   .photo :global(img) {
     width: 100%;
     aspect-ratio: 4 / 3;
@@ -80,6 +98,10 @@ const sizes = '(max-width: 88rem) 100vw, 82rem'
        "phone snapshots" from "photographed by someone with a point of view". Tune once, here. */
     filter: saturate(0.92) contrast(1.02);
     background: var(--paper-sunk);
+  }
+
+  .photo--whole :global(img) {
+    aspect-ratio: auto;
   }
 
   figcaption {

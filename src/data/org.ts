@@ -278,8 +278,11 @@ export const org = {
   /** Amazon/Target wish list or similar, if one exists. */
   registryUrl: null as string | null,
 
-  /** Volunteer sign-up. Currently a Google Form on the live site. */
-  signUpUrl: null as string | null,
+  /**
+   * Volunteer sign-up: the Google Form ("Email Signup") that the old site's /sign-up page embedded.
+   * Linked directly rather than through that page, which goes away when this site replaces it.
+   */
+  signUpUrl: 'https://docs.google.com/forms/d/e/1FAIpQLSe3z53OnVcsepw2VL25Qgf-Elj3j9T2gJ0ug7ZDM8jTQpaMuA/viewform' as string | null,
 
   social: {
     facebook: null as string | null,

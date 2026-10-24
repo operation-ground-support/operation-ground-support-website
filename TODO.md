@@ -1,6 +1,5 @@
 
-- Donate page needs just a link (?)
-- Volunteer page
+- fix image alts
 
 - we will have headshots for the board members, fill up the empty space by putting images to the right of bios
 - make sure no cruft appears in the HTML of the final site
