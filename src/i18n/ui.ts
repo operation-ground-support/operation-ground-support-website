@@ -41,6 +41,8 @@ const en = {
   'events.heading': 'Upcoming',
   'events.past': 'Past Events',
   'events.none': 'Nothing is scheduled at the moment.',
+  /** Read aloud before an event's location; the page itself shows it by styling alone. */
+  'events.location': 'Location',
 
   'metrics.asOf': 'as of',
 
@@ -80,6 +82,7 @@ const es: Record<keyof typeof en, string> = {
   'events.heading': 'Próximos eventos',
   'events.past': 'Eventos anteriores',
   'events.none': 'No hay nada programado por el momento.',
+  'events.location': 'Lugar',
 
   'metrics.asOf': 'al',
 

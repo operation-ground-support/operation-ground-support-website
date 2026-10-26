@@ -65,9 +65,14 @@ function timeLabel(start: Date, end?: Date): string {
           </time>
           <div>
             <p class="events__title">{tr(e.data.title, locale)}</p>
-            {e.data.location && <p class="events__meta">{tr(e.data.location, locale)}</p>}
-            {e.data.description && <p class="events__meta">{tr(e.data.description, locale)}</p>}
-            {e.data.signUpUrl && <p><a href={e.data.signUpUrl} rel="noopener">{t('cta.volunteer')}</a></p>}
+            {e.data.location && (
+              <p class="events__where">
+                <span class="visually-hidden">{t('events.location')}: </span>
+                {tr(e.data.location, locale)}
+              </p>
+            )}
+            {e.data.description && <p class="events__desc">{tr(e.data.description, locale)}</p>}
+            {e.data.signUpUrl && <p class="events__signup"><a href={e.data.signUpUrl} rel="noopener">{t('cta.volunteer')}</a></p>}
           </div>
         </li>
       ))
@@ -173,9 +178,23 @@ function timeLabel(start: Date, end?: Date): string {
     font-weight: 500;
   }
 
-  .events__meta {
+  /* Where to go is a fact, like the date beside it, so it is set in full ink; the description is
+     commentary on it, so it stays muted, a step below. Same size for both — the difference is
+     colour, weight, and the gap between them, not a label or an icon. */
+  .events__where {
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--ink);
+  }
+
+  .events__desc {
     font-size: var(--text-sm);
     color: var(--ink-muted);
+    margin-block-start: var(--space-2xs);
+  }
+
+  .events__signup {
+    margin-block-start: var(--space-2xs);
   }
 
   .events__empty {
