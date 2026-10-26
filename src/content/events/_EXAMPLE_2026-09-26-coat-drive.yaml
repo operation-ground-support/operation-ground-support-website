@@ -1,43 +1,24 @@
-# ─────────────────────────────────────────────────────────────────────────────
-#  REFERENCE FILE — kept permanently. `draft: true` keeps it off the site.
-# ─────────────────────────────────────────────────────────────────────────────
-#
-# This exists so the events section can be seen working end to end: a real build, a real entry in
-# "Upcoming", and the automatic move into the collapsed "Past" list once the date passes. Nothing
-# here describes a real distribution.
-#
-# It is marked as an example in the *rendered* title and description, not only in these comments,
-# because comments do not survive into the built page. Someone who finds this on the live site
-# must be able to tell it is not real without reading the repository — the failure mode is a
-# person travelling to a distribution that does not exist, which for this constituency is not a
-# small thing.
-#
-# `just audit` fails if any `_EXAMPLE_` file here is missing `draft: true`, so this file cannot
-# start rendering by accident.
-#
+# ────────────────
+#  REFERENCE FILE
+# ────────────────
 #
 # TO ADD A REAL EVENT
 #
-#   1. Copy this file to `YYYY-MM-DD-short-name.yaml`. The filename is for humans; the `start`
+#   1. Copy this file to `YYYY-MM-DD-short-name.yaml`. The filename is for file explorer ordering; the `start`
 #      field below is what the site actually reads.
 #   2. Edit the fields. `title` and `start` are required; everything else is optional.
-#   3. Run `just dev` and look at the homepage. A malformed file fails the build with the field
+#   3. Remove `draft: true` when ready to publish
+#   4. Run `just dev` and look at the homepage. A malformed file fails the build with the field
 #      name in the error, rather than rendering a blank section.
-#   4. Delete this example once a real event exists.
 #
-# Use an ISO 8601 timestamp with an offset: `-05:00` during daylight saving (mid-March to early
-# November), `-06:00` the rest of the year. The offset is what stops an event drifting by an hour
-# when the clocks change.
-#
-# Every text field takes either a plain string (English only) or an `{en:, es:}` pair. Old files
-# can stay: past events collapse into "Past" on their own, and a visible history of things that
-# actually happened is worth more than an empty section.
+
+draft: true
 
 title:
   en: EXAMPLE EVENT — Fall coat and blanket drive
   es: EVENTO DE EJEMPLO — Colecta de abrigos y cobijas de otoño
 
-start: 2026-09-26T10:00:00-05:00
+start: 2026-09-26T10:00:00-05:00 # NOTE: use `-05:00` suffix during daylight saving, `-06:00` otherwise
 end: 2026-09-26T13:00:00-05:00
 
 location:
@@ -57,7 +38,3 @@ description:
     entrar. Se aceptan tallas de adulto y de niño, y la ropa usada limpia es tan útil como la nueva.
 
 signUpUrl: https://example.org/example-signup-not-a-real-link
-
-# Keeps this file out of every build. Delete this line (or set it to `false`) on a real event —
-# until you do, nothing appears on the site.
-draft: true

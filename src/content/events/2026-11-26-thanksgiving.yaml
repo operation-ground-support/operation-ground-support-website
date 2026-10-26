@@ -6,23 +6,18 @@ start: 2026-11-26T10:00:00-05:00
 end: 2026-11-26T13:00:00-05:00
 
 location:
-  en: Grace UMC parking lot, Old East Dallas
+  en: TBD, Old East Dallas
   es: Estacionamiento de Grace UMC, Old East Dallas
 
 description:
   en: >-
-    This is an example entry used to test the website — it is not a real event, and nobody should
-    travel to it. Sample text follows. Bring coats, blankets, and cold-weather layers to the tent
-    in the parking lot; volunteers will sort on the spot, so there is no need to come inside. Adult
-    and children's sizes are both welcome, and clean used items are as useful as new ones. TODO delete this before production.
+    TBD
   es: >-
     Este es un evento de ejemplo para probar el sitio web — no es un evento real y nadie debe
     presentarse. El texto siguiente es de muestra. Traiga abrigos, cobijas y ropa de invierno a la
     carpa del estacionamiento; los voluntarios los clasificarán allí mismo, así que no hace falta
     entrar. Se aceptan tallas de adulto y de niño, y la ropa usada limpia es tan útil como la nueva.
 
-signUpUrl: https://example.org/example-signup-not-a-real-link
+#signUpUrl: https://example.org/example-signup-not-a-real-link
 
-# Keeps this file out of every build. Delete this line (or set it to `false`) on a real event —
-# until you do, nothing appears on the site.
 draft: false
