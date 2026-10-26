@@ -114,17 +114,15 @@ carry GPS coordinates; publishing them from this address would be a real disclos
 
 ## Licensing
 
-Two licenses, because the repo holds two different kinds of thing.
+Kept deliberately simple, so there is nothing to maintain.
 
-- **Code** — MIT (`LICENSE`).
-- **Written content** — CC BY 4.0 (`LICENSE-CONTENT`): page text, updates, events, and the
-  organizational facts in `src/data/org.ts`. The intent is that another small nonprofit can lift
-  the page wording or the structure of the content files without asking.
-
-`LICENSE-CONTENT` carves out four things that are not the organization's to give away: the name and
-logo (trademarks), photographs of identifiable people (their consent covers publication by this
-organization, not arbitrary third-party reuse), the typefaces (SIL OFL, fetched at build and
-embedded in `dist/`), and third-party material inside content files.
+- **The website's text** — CC BY 4.0, granted by the footer on every page. That one line is the
+  whole content license: another small nonprofit can lift the page wording without asking.
+- **This repository's code and documentation** — MIT (`LICENSE`). The copyright line names the
+  contributors rather than the organization, so nobody has to sign their work over to it.
+- **Everything else on the site is not licensed** — the name and logo, and the photographs, whose
+  subjects agreed to appear here and nowhere else. `LICENSE` says so in one sentence, and the footer
+  covers only text.
 
 There is deliberately no "all rights reserved" notice. It has been legally inert in the US since
 Berne took effect in 1989, and it would contradict the grant the footer actually makes.
