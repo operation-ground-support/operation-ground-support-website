@@ -100,9 +100,11 @@ These are not stylistic preferences. Each one is something a grant reviewer chec
 2. **Never generate an image that implies an event occurred.** No AI or stock photographs of
    people, shelves, volunteers, or distributions. Generating the logo, icons, patterns, or a map is
    fine; generating evidence is not. One synthetic photo discredits every other claim on the page.
-3. **Never photograph the people served.** This is a safety question given who walks through that
-   door, not only a dignity one. Volunteers can appear with a signed release. Rooms, hands,
-   shelves, boxes, doors, and the parking lot are the visual vocabulary — and unglamorous
+3. **Photograph the people served only with their consent.** Everyone identifiable agrees to
+   appear on the public site (a child through a parent or guardian), and a comment beside the
+   photo records when that was confirmed. This is a safety question given who walks through that
+   door, not only a dignity one. Volunteers appear with their consent too. Rooms, hands, shelves,
+   boxes, doors, and the parking lot are still the main visual vocabulary — unglamorous
    specificity is more convincing than smiling-recipient photography, which reads as marketing.
 4. **`null` beats a plausible guess.** A missing fact renders as nothing and shows up in
    `just audit`. A fabricated one survives until a funder probes it.
@@ -120,8 +122,8 @@ Two licenses, because the repo holds two different kinds of thing.
   the page wording or the structure of the content files without asking.
 
 `LICENSE-CONTENT` carves out four things that are not the organization's to give away: the name and
-logo (trademarks), photographs of identifiable people (a volunteer's release covers publication by
-this organization, not arbitrary third-party reuse), the typefaces (SIL OFL, fetched at build and
+logo (trademarks), photographs of identifiable people (their consent covers publication by this
+organization, not arbitrary third-party reuse), the typefaces (SIL OFL, fetched at build and
 embedded in `dist/`), and third-party material inside content files.
 
 There is deliberately no "all rights reserved" notice. It has been legally inert in the US since

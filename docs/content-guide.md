@@ -71,5 +71,8 @@ distribution, hands sorting and packing, produce coming off a truck, soup going 
 coats on a rack, a folding table mid-setup, the van loaded for a run, a wide shot of a room with
 nobody in it.
 
-**Never photograph the people receiving goods.** Volunteers only, and ask them first. Shoot two
-hundred frames, keep twelve.
+**Photograph the people receiving goods only if they agree first** — every person who can be
+recognized, told plainly that the picture will be on the public website, and for a child, their
+parent or guardian. If someone in the frame has not agreed, crop them out or pick another shot.
+When you send a photo like that, say who agreed and when, so it can be noted beside the photo.
+Volunteers too: ask them first. Shoot two hundred frames, keep twelve.

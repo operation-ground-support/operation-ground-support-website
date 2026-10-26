@@ -262,7 +262,7 @@ export const org = {
       bio: [""],
     },
     {
-      name: 'Kelly McLaughin',
+      name: 'Kelly McLaughlin',
       role: 'Board Secretary',
       bio: [""],
     },
