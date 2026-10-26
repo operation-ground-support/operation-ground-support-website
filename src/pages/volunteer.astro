@@ -1,79 +1,14 @@
 ---
 import Base from '../layouts/Base.astro'
-import EventList from '../components/EventList.astro'
-import Photo from '../components/Photo.astro'
-import Todo from '../components/Todo.astro'
-import { org } from '../data/org'
-import atGraceUmc from '../assets/photos/at-grace-umc.jpg'
-import soupMaking from '../assets/photos/soup-making.jpg'
-
-const locale = 'en' as const
+import VolunteerBody from '../components/VolunteerBody.astro'
 ---
 
 <Base
   title="Volunteer"
   description="Make soup from surplus produce, pack food boxes, deliver donations, and sort clothing with Operation Ground Support in Dallas."
-  locale={locale}
+  locale="en"
   pageKey="volunteer"
   lastReviewed="2026-08-27"
 >
-  <h1>Volunteer</h1>
-
-  <section class="section">
-    <p>Volunteers typically:</p>
-    <ul class="tasks">
-      <li>Need no experience and no commitment beyond the shifts signed up for</li>
-      <li>Help the kitchen make soups out of surplus produce</li>
-      <li>Organize food boxes</li>
-      <li>Pick up and deliver food and other donations</li>
-      <li>Sort clothing and other items</li>
-    </ul>
-  </section>
-
-  <section class="section">
-    <h2>Signing up</h2>
-    {
-      org.signUpUrl ? (
-        <p class="cta">
-          <a class="button" href={org.signUpUrl} rel="noopener">Sign up with your email</a>
-        </p>
-      ) : (
-        <Todo label="Link needed">
-          Put the volunteer sign-up form URL in <code>org.signUpUrl</code>. The current site uses a
-          Google Form, which is fine — link it here rather than making it a separate nav item.
-        </Todo>
-      )
-    }
-  </section>
-
-  <EventList locale={locale} />
-
-  {/* Shows people being served. Everyone identifiable agreed to appear on the site (confirmed
-      2026-10-24). See the photo rules in Photo.astro. */}
-  <Photo
-    src={atGraceUmc}
-    alt="People, several with walkers, gather at a kitchen counter laid with watermelon and other food, while a man in a blue apron serves from behind it."
-    caption="A community meal at the Grace UMC location"
-  />
-
-  <Photo
-    src={soupMaking}
-    alt="Two volunteers in blue aprons stand over a cart holding dozens of quart containers of soup with handwritten labels, beside an open chest freezer already partly filled with more."
-    caption="Soup making and freezing"
-  />
+  <VolunteerBody locale="en" />
 </Base>
-
-<style>
-  .tasks {
-    margin-block-start: var(--space-s);
-    padding-inline-start: var(--space-m);
-  }
-
-  .tasks li + li {
-    margin-block-start: var(--space-2xs);
-  }
-
-  .cta {
-    margin-block-start: var(--space-m);
-  }
-</style>

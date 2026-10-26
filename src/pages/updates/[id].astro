@@ -3,6 +3,7 @@ import type { GetStaticPaths } from 'astro'
 import Base from '../../layouts/Base.astro'
 import { getCollection, render, type CollectionEntry } from 'astro:content'
 import { formatDate } from '../../i18n/ui'
+import { path, pick } from '../../i18n/routes'
 
 /** `Astro.props` on a dynamic route is untyped unless the shape is declared. */
 interface Props {
@@ -17,6 +18,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 const { post } = Astro.props as Props
 const { Content } = await render(post)
 const locale = post.data.lang
+const back = { en: 'All updates', es: 'Todas las novedades' }
 ---
 
 <Base
@@ -36,7 +38,7 @@ const locale = post.data.lang
     <h1>{post.data.title}</h1>
     <Content />
   </article>
-  <p class="back"><a href="/updates">All updates</a></p>
+  <p class="back"><a href={path('updates', locale)!}>{pick(back, locale)}</a></p>
 </Base>
 
 <style>

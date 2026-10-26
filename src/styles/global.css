@@ -16,7 +16,7 @@
 
 :root {
   /* Colour ------------------------------------------------------------------------------------
-   * Deliberately narrow: a warm paper, a soft-black ink, one structural accent, one alert accent.
+   * Deliberately narrow: a warm paper, a soft-black ink, and one structural accent.
    * When the bridge logo is finalised, re-derive --accent and --accent-deep from the mark and
    * change nothing else — every other colour is neutral on purpose so the palette can swap here.
    */
@@ -31,9 +31,6 @@
   --accent: #1f4a54; /* deep slate-teal; links, headings that carry weight */
   --accent-deep: #143239;
   --accent-wash: #e6eeef;
-
-  --alert: #9a4a1c; /* the `Todo` marker. Used sparingly or it stops meaning anything. */
-  --alert-wash: #f7ece3;
 
   /* Type ---------------------------------------------------------------------------------------
    * --font-serif and --font-sans are injected by Astro's font pipeline (see astro.config.mjs);
@@ -357,14 +354,6 @@ main {
   clip-path: inset(50%);
   white-space: nowrap;
   border: 0;
-}
-
-/* The dashed box around a `Todo` marker. A production build never emits a `[data-todo]` element,
- * so there this rule styles nothing; which builds do emit one is decided in `src/lib/markers.ts`. */
-[data-todo] {
-  outline: 1px dashed var(--alert);
-  outline-offset: 2px;
-  background: var(--alert-wash);
 }
 
 @media print {

@@ -1,0 +1,78 @@
+---
+/**
+ * Partners — the organizations Operation Ground Support works between. Shared by `/partners` and
+ * `/es/aliados`.
+ *
+ * The lists themselves live in `org.partners` and `org.techPartners`, with the other
+ * organizational facts. They are proper names, so they are the same in both languages. They are
+ * not ranked, so they render as bulleted lists, never numbered.
+ */
+import Photo from './Photo.astro'
+import { org } from '../data/org'
+import { pick, type Locale } from '../i18n/routes'
+import foodBoxes from '../assets/photos/food-boxes-2.jpg'
+import seniorCenter from '../assets/photos/at-the-dickenson-senior-center.jpg'
+
+interface Props {
+  locale: Locale
+}
+
+const { locale } = Astro.props
+
+const text = {
+  heading: { en: 'Partners', es: 'Aliados' },
+  lede: {
+    en: 'We provide our partners with the resources they need, so that they can focus on providing help on the ground. We vet all of our partners that come to us for resource support.',
+    es: 'Proporcionamos a nuestros aliados los recursos que necesitan para que puedan concentrarse en brindar ayuda directa. Evaluamos a todas las organizaciones que acuden a nosotros en busca de recursos.',
+  },
+  tech: { en: 'Tech partners', es: 'Aliados tecnológicos' },
+  boxesAlt: {
+    en: 'Four people in black T-shirts packing produce into black plastic crates along a row of tables: pineapples, broccoli, oranges, onions, zucchini, and bags of potatoes, with stocked shelves behind them.',
+    es: 'Cuatro personas con camisetas negras empacan frutas y verduras en cajas de plástico negras a lo largo de una fila de mesas: piñas, brócoli, naranjas, cebollas, calabacitas y bolsas de papas, con estantes surtidos detrás.',
+  },
+  boxesCaption: {
+    en: 'Assembling sets of goods for food boxes to send directly to families',
+    es: 'Armando los lotes de productos para las cajas de alimentos que se envían directamente a las familias',
+  },
+  seniorAlt: {
+    en: 'A server in a black T-shirt and plastic gloves stands behind stacks of foam takeout boxes while a line of older adults waits across the counter, in a room decorated in red, white, and blue.',
+    es: 'Una persona con camiseta negra y guantes de plástico sirve detrás de pilas de recipientes de unicel para llevar, mientras una fila de adultos mayores espera al otro lado del mostrador, en un salón decorado en rojo, blanco y azul.',
+  },
+  seniorCaption: { en: 'At the Dickenson Senior Center', es: 'En el Dickenson Senior Center' },
+}
+---
+
+<h1>{pick(text.heading, locale)}</h1>
+<p class="lede">{pick(text.lede, locale)}</p>
+
+<ul class="partners">
+  {org.partners.map((name) => <li>{name}</li>)}
+</ul>
+
+{
+  org.techPartners.length > 0 && (
+    <section class="section">
+      <h2>{pick(text.tech, locale)}</h2>
+      <ul class="partners">
+        {org.techPartners.map((name) => <li>{name}</li>)}
+      </ul>
+    </section>
+  )
+}
+
+<Photo src={foodBoxes} alt={pick(text.boxesAlt, locale)} caption={pick(text.boxesCaption, locale)} />
+
+{/* Shows people being served. Everyone identifiable agreed to appear on the site (confirmed
+    2026-10-24). See the photo rules in Photo.astro. */}
+<Photo src={seniorCenter} alt={pick(text.seniorAlt, locale)} caption={pick(text.seniorCaption, locale)} />
+
+<style>
+  .partners {
+    margin-block-start: var(--space-m);
+    padding-inline-start: var(--space-m);
+  }
+
+  .partners li + li {
+    margin-block-start: var(--space-2xs);
+  }
+</style>

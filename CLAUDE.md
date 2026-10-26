@@ -46,8 +46,8 @@ The site is type-led on purpose. Do not introduce:
   vocabulary. The homepage doors use those classes directly; the nav redraws the same pair at its
   own smaller size in `Header.astro`
 - rounded "card" containers
-- a photo slot that nobody has a photograph for — use `PhotoSlot.astro`, which shows a shot brief
-  in dev and on the staging site, and renders nothing in production
+- a photo slot that nobody has a photograph for — add the photograph when it exists, not a
+  placeholder for it
 
 Photo-hungry layouts generate demand for roughly twenty images the organization does not have, and
 that pressure is what pushes small nonprofits toward stock and synthetic filler. Eight to twelve
@@ -65,7 +65,7 @@ re-derive `--accent` and `--accent-deep` from the mark and change nothing else.
 - **Do not link to a page that does not exist.** `integrations/check-internal-links.mjs` fails the
   build. This is the guard against the nav rot that afflicts hand-maintained nonprofit sites.
 - **Do not add a Spanish page by copying an English one.** Bilingual pages share a body component
-  (`HomeBody.astro`, `ContactBody.astro`) so the two versions cannot drift structurally.
+  (`src/components/*Body.astro`, one per page) so the two versions cannot drift structurally.
 - **Never enable Astro's i18n `fallback`.** Untranslated pages are linked at their English URL via
   `navLink()` and marked "EN". Serving English under an `/es/` path would put English text inside
   `<html lang="es">`.
@@ -76,9 +76,8 @@ re-derive `--accent` and `--accent-deep` from the mark and change nothing else.
   outline, reusing the existing `.button` / `.button--quiet` pair.
 - **`src/content/` is the non-developer's territory.** Anything edited weekly belongs there, not in
   a `.astro` file. A git-backed CMS will be pointed at that directory.
-- **Worklist markers are off by default.** `Todo`, `PhotoSlot`, and anything else gated on
-  `SHOW_MARKERS` (`src/lib/markers.ts`) render in `just dev` and `just deploy-preview`, never in
-  `just build`. Gate new dev-only output on that flag, not on `import.meta.env.DEV`.
+- **No dev-only output.** Every build renders the same page. Missing facts hide their section
+  (and show up in `just audit`); there are no in-page worklist markers.
 - **Placeholder copy is not a fact.** A value like `(postal address TODO)` is deliberate — it marks
   the gap on the page — but it is a truthy string. Anything that *consumes* a fact rather than
   displaying it (the audit, the JSON-LD in `Base.astro`) must test it with `isPlaceholder` from
@@ -95,9 +94,9 @@ Each of these has turned up in this repo, and none of them produces an error.
   or a 7 PM event shows tomorrow's date beside the correct time.
 - **A prop named `as`** stops Astro wiring `interface Props` to `Astro.props`. The component's props
   then go unchecked with no error; the only symptom is a ts(6196) hint that `Props` is unused.
-- **A dev-only element as spacing.** If a section's top margin comes from the `Todo` or `PhotoSlot`
-  above it, dev looks right and production runs the heading into the block before it. Give every
-  section its own margin.
+- **A conditional element as spacing.** If a section's top margin comes from a block above it that
+  can disappear (an empty event list, a missing fact), the page looks right until that block goes
+  and then runs the heading into whatever is left. Give every section its own margin.
 - **`astro build --outDir` on another filesystem** (e.g. `/tmp`) fails with `EXDEV`, because Astro
   renames files out of `.astro/`. Build inside the repo and copy.
 

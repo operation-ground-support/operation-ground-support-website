@@ -139,6 +139,10 @@ Cloudflare Pages, connected to the GitHub repo:
 Netlify and GitHub Pages take the same two settings. Nothing in this project depends on a host's
 runtime, which is the point.
 
+`public/_redirects` sends the Squarespace site's old addresses (`/home`, `/contact-us`,
+`/sign-up`) to their new pages. Cloudflare Pages and Netlify read it; on GitHub Pages it is ignored
+and those links would 404.
+
 ## Scheduled rebuilds
 
 Events are sorted into upcoming and past when the site is built, so a site that has not been

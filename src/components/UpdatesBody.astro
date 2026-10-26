@@ -1,0 +1,113 @@
+---
+/**
+ * The updates index, shared by `/updates` and `/es/novedades`.
+ *
+ * Its job is to prove the organization is active. A visitor — and a grant reviewer — looks here
+ * to answer "was this site touched last week or last year". Three sentences and a date beat a
+ * polished essay posted quarterly.
+ *
+ * Posts are written in one language and not translated, so each index lists its own, and points
+ * at the other language's posts when there are any, rather than hiding that they exist.
+ */
+import { getCollection } from 'astro:content'
+import { formatDate, useTranslations } from '../i18n/ui'
+import { path, pick, type Locale } from '../i18n/routes'
+
+interface Props {
+  locale: Locale
+}
+
+const { locale } = Astro.props
+const t = useTranslations(locale)
+
+const all = (await getCollection('updates', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.date.getTime() - a.data.date.getTime(),
+)
+const posts = all.filter((post) => post.data.lang === locale)
+const other: Locale = locale === 'en' ? 'es' : 'en'
+const otherCount = all.filter((post) => post.data.lang === other).length
+
+const text = {
+  feed: { en: 'RSS feed', es: 'Canal RSS' },
+  other: { en: 'Updates in Spanish', es: 'Novedades en inglés' },
+}
+---
+
+<h1>{t('updates.heading')}</h1>
+{
+  posts.length > 0 ? (
+    <ul class="posts">
+      {posts.map((post) => (
+        <li>
+          <time datetime={post.data.date.toISOString().slice(0, 10)}>
+            {formatDate(post.data.date, locale)}
+          </time>
+          <h2><a href={`/updates/${post.id}`}>{post.data.title}</a></h2>
+          <p>{post.data.summary}</p>
+        </li>
+      ))}
+    </ul>
+  ) : (
+    <p class="empty">{t('updates.none')}</p>
+  )
+}
+
+{
+  otherCount > 0 && (
+    <p class="other">
+      <a href={path('updates', other)!} hreflang={other}>{pick(text.other, locale)}</a>
+    </p>
+  )
+}
+
+<p class="feed"><a href="/rss.xml">{pick(text.feed, locale)}</a></p>
+
+<style>
+  .posts {
+    list-style: none;
+    padding: 0;
+    margin-block-start: var(--space-xl);
+  }
+
+  .posts li {
+    padding-block: var(--space-m);
+    border-block-start: 1px solid var(--rule);
+  }
+
+  .posts time {
+    font-size: var(--text-xs);
+    color: var(--ink-faint);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .posts h2 {
+    font-size: var(--text-xl);
+    margin-block-start: var(--space-3xs);
+  }
+
+  .posts h2 a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .posts h2 a:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.18em;
+  }
+
+  .posts p {
+    margin-block-start: var(--space-2xs);
+    color: var(--ink-muted);
+  }
+
+  .empty,
+  .other {
+    margin-block-start: var(--space-l);
+    color: var(--ink-muted);
+  }
+
+  .feed {
+    margin-block-start: var(--space-2xl);
+    font-size: var(--text-sm);
+  }
+</style>

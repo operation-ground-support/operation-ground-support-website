@@ -1,0 +1,78 @@
+---
+/**
+ * Donate — money, through the organization's Donorbox campaign. Shared by `/donate` and
+ * `/es/donar`.
+ *
+ * The form is Donorbox's own widget, the same embed the old Squarespace page used, so there is one
+ * campaign to manage. The preset amounts, the monthly option, the fee checkbox, and the form's own
+ * language are all set in the Donorbox dashboard, not here. It is the only third-party script on
+ * the site, and it loads on this page alone.
+ *
+ * Inside `<dbox-widget>` is a plain link to the hosted campaign page. The widget draws into a
+ * shadow root, which hides that link once it loads; if the script is blocked or the visitor is
+ * offline, the link is what shows, so the page is never empty.
+ */
+import { org } from '../data/org'
+import { pick, type Locale } from '../i18n/routes'
+
+interface Props {
+  locale: Locale
+}
+
+const { locale } = Astro.props
+
+// The campaign is the path of its hosted page: `https://donorbox.org/operation-ground-support`.
+const campaign = org.donate.url && new URL(org.donate.url).pathname.replaceAll('/', '')
+
+const text = {
+  heading: { en: 'Donate', es: 'Donar' },
+  fallback: { en: 'Donate', es: 'Donar' },
+  on: { en: 'on', es: 'en' },
+  // This describes a setting in the Donorbox dashboard: the fee checkbox on the form, which is
+  // ticked by default. If that setting changes, change this paragraph with it.
+  note: {
+    en: 'Note: Card payments carry a processing fee, and Donorbox adds a platform fee (typically ~5% in total). By default, there is a ticked option on the form to add both fees on top of your gift so that they do not come out of it.',
+    es: 'Nota: Los pagos con tarjeta tienen una comisión de procesamiento, y Donorbox cobra además una comisión de plataforma (en total, normalmente alrededor del 5 %). De forma predeterminada, el formulario tiene marcada una opción para sumar ambas comisiones a su donación, de modo que no se descuenten de ella.',
+  },
+}
+---
+
+<h1>{pick(text.heading, locale)}</h1>
+
+{
+  org.donate.url && (
+    <>
+      <div class="form">
+        <script is:inline type="module" src="https://donorbox.org/widgets.js" async />
+        <dbox-widget campaign={campaign} type="donation_form" enable-auto-scroll="true">
+          <a class="button" href={org.donate.url} rel="noopener">
+            {pick(text.fallback, locale)}{org.donate.platform && ` ${pick(text.on, locale)} ${org.donate.platform}`}
+          </a>
+        </dbox-widget>
+      </div>
+      <p class="note">{pick(text.note, locale)}</p>
+    </>
+  )
+}
+
+<style>
+  .form {
+    margin-block-start: var(--space-l);
+  }
+
+  /* While the form loads, Donorbox shows a 500px placeholder positioned over the widget, which
+     otherwise has no height yet and lets it cover the note below. Reserving that height also stops
+     the note jumping when the form arrives. `:defined` waits for the script, so the fallback link
+     does not sit above 500px of nothing when the script never comes. */
+  dbox-widget:defined {
+    display: block;
+    position: relative;
+    min-height: 500px;
+  }
+
+  .note {
+    margin-block-start: var(--space-m);
+    color: var(--ink-muted);
+    font-size: var(--text-sm);
+  }
+</style>

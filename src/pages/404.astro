@@ -22,6 +22,11 @@ import { path } from '../i18n/routes'
   <p class="note">
     If you were looking for something specific, email <a href={`mailto:${org.email}`}>{org.email}</a>.
   </p>
+  {/* One 404 serves every missing URL, `/es/…` included, so it says the essentials in Spanish too. */}
+  <p class="note" lang="es">
+    Esta página no existe. Vaya a la <a href={path('home', 'es')!} hreflang="es">página de inicio en
+    español</a> o escríbanos a <a href={`mailto:${org.email}`}>{org.email}</a>.
+  </p>
 </Base>
 
 <style>

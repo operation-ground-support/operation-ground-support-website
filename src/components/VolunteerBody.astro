@@ -1,0 +1,104 @@
+---
+/**
+ * Volunteer, shared by `/volunteer` and `/es/voluntariado`.
+ *
+ * The sign-up form is a Google Form in English, so on the Spanish page the button says so rather
+ * than surprising someone who clicked it.
+ */
+import EventList from './EventList.astro'
+import Photo from './Photo.astro'
+import { org } from '../data/org'
+import { pick, type Locale } from '../i18n/routes'
+import atGraceUmc from '../assets/photos/at-grace-umc.jpg'
+import soupMaking from '../assets/photos/soup-making.jpg'
+
+interface Props {
+  locale: Locale
+}
+
+const { locale } = Astro.props
+
+const text = {
+  heading: { en: 'Volunteer', es: 'Voluntariado' },
+  intro: { en: 'Volunteers typically:', es: 'Por lo general, nuestros voluntarios:' },
+  tasks: {
+    en: [
+      'Need no experience and no commitment beyond the shifts signed up for',
+      'Help the kitchen make soups out of surplus produce',
+      'Organize food boxes',
+      'Pick up and deliver food and other donations',
+      'Sort clothing and other items',
+    ],
+    es: [
+      'No necesitan experiencia ni más compromiso que los turnos a los que se inscriben',
+      'Ayudan en la cocina a preparar sopas con frutas y verduras sobrantes',
+      'Organizan cajas de alimentos',
+      'Recogen y entregan alimentos y otras donaciones',
+      'Clasifican ropa y otros artículos',
+    ],
+  },
+  signUp: { en: 'Signing up', es: 'Cómo inscribirse' },
+  signUpButton: {
+    en: 'Sign up with your email',
+    es: 'Inscríbase con su correo (formulario en inglés)',
+  },
+  mealAlt: {
+    en: 'People, several with walkers, gather at a kitchen counter laid with watermelon and other food, while a man in a blue apron serves from behind it.',
+    es: 'Varias personas, algunas con andadera, se reúnen ante un mostrador de cocina con sandía y otros alimentos, mientras un hombre con delantal azul sirve desde el otro lado.',
+  },
+  mealCaption: {
+    en: 'A community meal at the Grace UMC location',
+    es: 'Una comida comunitaria en el local de Grace UMC',
+  },
+  soupAlt: {
+    en: 'Two volunteers in blue aprons stand over a cart holding dozens of quart containers of soup with handwritten labels, beside an open chest freezer already partly filled with more.',
+    es: 'Dos voluntarios con delantales azules junto a un carrito con decenas de envases de sopa de un cuarto de galón con etiquetas escritas a mano, al lado de un congelador horizontal abierto que ya tiene más.',
+  },
+  soupCaption: { en: 'Soup making and freezing', es: 'Preparación y congelación de sopa' },
+}
+---
+
+<h1>{pick(text.heading, locale)}</h1>
+
+<section class="section">
+  <p>{pick(text.intro, locale)}</p>
+  <ul class="tasks">
+    {pick(text.tasks, locale).map((task) => <li>{task}</li>)}
+  </ul>
+</section>
+
+{
+  org.signUpUrl && (
+    <section class="section">
+      <h2>{pick(text.signUp, locale)}</h2>
+      <p class="cta">
+        <a class="button" href={org.signUpUrl} rel="noopener" hreflang={locale === 'en' ? undefined : 'en'}>
+          {pick(text.signUpButton, locale)}
+        </a>
+      </p>
+    </section>
+  )
+}
+
+<EventList locale={locale} />
+
+{/* Shows people being served. Everyone identifiable agreed to appear on the site (confirmed
+    2026-10-24). See the photo rules in Photo.astro. */}
+<Photo src={atGraceUmc} alt={pick(text.mealAlt, locale)} caption={pick(text.mealCaption, locale)} />
+
+<Photo src={soupMaking} alt={pick(text.soupAlt, locale)} caption={pick(text.soupCaption, locale)} />
+
+<style>
+  .tasks {
+    margin-block-start: var(--space-s);
+    padding-inline-start: var(--space-m);
+  }
+
+  .tasks li + li {
+    margin-block-start: var(--space-2xs);
+  }
+
+  .cta {
+    margin-block-start: var(--space-m);
+  }
+</style>

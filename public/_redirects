@@ -1,0 +1,5 @@
+# The old Squarespace site's addresses, so links people saved or shared keep working after the
+# domain moves. Read by Cloudflare Pages and Netlify. `/donate` needs no entry; it kept its URL.
+/home        /            301
+/contact-us  /contact     301
+/sign-up     /volunteer   301

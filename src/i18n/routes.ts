@@ -53,11 +53,11 @@ export type PageKey = (typeof PAGE_KEYS)[number]
  */
 export const routes: Record<PageKey, Record<Locale, string | null>> = {
   home: { en: '/', es: '/es' },
-  partners: { en: '/partners', es: null },
-  donate: { en: '/donate', es: null },
-  volunteer: { en: '/volunteer', es: null },
-  about: { en: '/about', es: null },
-  updates: { en: '/updates', es: null },
+  partners: { en: '/partners', es: '/es/aliados' },
+  donate: { en: '/donate', es: '/es/donar' },
+  volunteer: { en: '/volunteer', es: '/es/voluntariado' },
+  about: { en: '/about', es: '/es/quienes-somos' },
+  updates: { en: '/updates', es: '/es/novedades' },
   contact: { en: '/contact', es: '/es/contacto' },
 }
 

@@ -1,68 +1,14 @@
 ---
-/**
- * Partners — the organizations Operation Ground Support works between.
- *
- * The lists themselves live in `org.partners` and `org.techPartners`, with the other
- * organizational facts. They are not ranked, so they render as bulleted lists, never numbered.
- */
 import Base from '../layouts/Base.astro'
-import Photo from '../components/Photo.astro'
-import { org } from '../data/org'
-import foodBoxes from '../assets/photos/food-boxes-2.jpg'
-import seniorCenter from '../assets/photos/at-the-dickenson-senior-center.jpg'
-
-const locale = 'en' as const
+import PartnersBody from '../components/PartnersBody.astro'
 ---
 
 <Base
   title="Partners"
-  description={`The organizations ${org.name} works with across Dallas.`}
-  locale={locale}
+  description="The organizations Operation Ground Support works with across Dallas."
+  locale="en"
   pageKey="partners"
   lastReviewed="2026-10-24"
 >
-  <h1>Partners</h1>
-  <p class="lede">
-    We provide our partners with the resources they need, so that they can focus on providing help on the ground. We vet all of our partners that come to us for resource support.
-  </p>
-
-  <ul class="partners">
-    {org.partners.map((name) => <li>{name}</li>)}
-  </ul>
-
-  {
-    org.techPartners.length > 0 && (
-      <section class="section">
-        <h2>Tech partners</h2>
-        <ul class="partners">
-          {org.techPartners.map((name) => <li>{name}</li>)}
-        </ul>
-      </section>
-    )
-  }
-
-  <Photo
-    src={foodBoxes}
-    alt="Four people in black T-shirts packing produce into black plastic crates along a row of tables: pineapples, broccoli, oranges, onions, zucchini, and bags of potatoes, with stocked shelves behind them."
-    caption="Assembling sets of goods for food boxes to send directly to families"
-  />
-
-  {/* Shows people being served. Everyone identifiable agreed to appear on the site (confirmed
-      2026-10-24). See the photo rules in Photo.astro. */}
-  <Photo
-    src={seniorCenter}
-    alt="A server in a black T-shirt and plastic gloves stands behind stacks of foam takeout boxes while a line of older adults waits across the counter, in a room decorated in red, white, and blue."
-    caption="At the Dickenson Senior Center"
-  />
+  <PartnersBody locale="en" />
 </Base>
-
-<style>
-  .partners {
-    margin-block-start: var(--space-m);
-    padding-inline-start: var(--space-m);
-  }
-
-  .partners li + li {
-    margin-block-start: var(--space-2xs);
-  }
-</style>

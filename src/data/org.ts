@@ -22,15 +22,17 @@
  */
 import type { Localized } from '../i18n/routes'
 
+/** Listed on the About page in both languages, so the role and bio are said once per language. */
 export interface Person {
   name: string
-  role: string
+  role: Localized
   /**
-   * Optional bio. A single string is one paragraph; for more, give a list with one string per
-   * paragraph. A line break typed inside a string does not show on the page. Shorter reads
+   * Optional bio, in English and Spanish. Each side is one string for a single paragraph, or a
+   * list with one string per paragraph. A line break typed inside a string does not show on the
+   * page. Empty strings are skipped, so `['']` is a slot waiting to be filled. Shorter reads
    * better: a reviewer is scanning, not reading.
    */
-  bio?: string | string[]
+  bio?: Localized<string | string[]>
 }
 
 /** Shown on both homepages, so the label and basis are said once per language. */
@@ -258,30 +260,28 @@ export const org = {
   board: [
     {
       name: 'Anne Winters',
-      role: 'President & Founder',
-      bio: [""],
+      role: { en: 'President & Founder', es: 'Presidenta y fundadora' },
+      bio: { en: [''], es: [''] },
     },
     {
       name: 'Kelly McLaughlin',
-      role: 'Board Secretary',
-      bio: [""],
+      role: { en: 'Board Secretary', es: 'Secretaría de la junta directiva' },
+      bio: { en: [''], es: [''] },
     },
     {
       name: 'Paula McElheney',
-      role: 'Administration',
-      bio: [
-        "",
-      ],
+      role: { en: 'Administration', es: 'Administración' },
+      bio: { en: [''], es: [''] },
     },
     {
       name: 'Lloyd MacMann',
-      role: 'Logistics',
-      bio: [""],
+      role: { en: 'Logistics', es: 'Logística' },
+      bio: { en: [''], es: [''] },
     },
     {
       name: 'Dennis Cheatum',
-      role: 'Supply Chain Management',
-      bio: [""],
+      role: { en: 'Supply Chain Management', es: 'Gestión de la cadena de suministro' },
+      bio: { en: [''], es: [''] },
     },
   ] as Person[],
   staff: [] as Person[],

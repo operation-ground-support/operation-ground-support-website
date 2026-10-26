@@ -1,118 +1,14 @@
 ---
-/**
- * About — the page that does not exist on the current site, and the structural hole that most
- * likely cost the funding application.
- *
- * Everything a grant reviewer's diligence checklist asks for lives here or in the transparency
- * bar: who runs this, is the 501(c)(3) real, what has been done, and where the money goes. Board
- * list, EIN, and one honest number would move further with a funder than any amount of redesign.
- *
- * The people sections render only when the lists in `org.ts` have someone in them. What is still
- * missing is the worklist; run `just audit`.
- */
 import Base from '../layouts/Base.astro'
-import Photo from '../components/Photo.astro'
-import TaxCode from '../components/TaxCode.astro'
-import { org } from '../data/org'
-import { pick } from '../i18n/routes'
-import board_corrected from '../assets/photos/board_corrected.jpg'
-import homelessnessSummit from '../assets/photos/homelessness-summit-4.jpg'
-
-const locale = 'en' as const
-const people = [
-  { heading: 'Board', list: org.board },
-  { heading: 'Staff and volunteers', list: org.staff },
-].filter((group) => group.list.length > 0)
-
-/**
- * A bio is one paragraph or a list of them; see `Person` in org.ts. Blank entries are skipped, so
- * `bio: [""]` can sit in org.ts waiting to be filled in without an empty paragraph on the page.
- */
-const paragraphs = (bio?: string | string[]) =>
-  bio === undefined ? [] : [bio].flat().filter((p) => p.trim() !== '')
+import AboutBody from '../components/AboutBody.astro'
 ---
 
 <Base
   title="About"
-  description={`Who runs ${org.name}, how it started, and where the money goes.`}
-  locale={locale}
+  description="Who runs Operation Ground Support, how it started, and where the money goes."
+  locale="en"
   pageKey="about"
   lastReviewed="2026-08-27"
 >
-  <h1>About</h1>
-  <p class="lede"><TaxCode text={pick(org.mission, locale)} /></p>
-
-  <section class="section">
-    <h2>Our history</h2>
-    <p>
-      We originally began as a medical support group, organized to provide support on the ground to doctors treating people with heat exhaustion. It was there that we began to realize the plight of the unhoused. There are many implications of being homeless or just food insecure, that most people are completely unaware of. There are many who are living out of their car, who have many logistical difficulties that you would never think about unless hearing about it. There are many struggling families who would be greatly helped by organized food boxes with plenty of healthy foods. Thus we began branching out.
-    </p>
-  </section>
-
-  {
-    people.map((group) => (
-      <section class="section">
-        <h2>{group.heading}</h2>
-        <ul class="people">
-          {group.list.map((person) => (
-            <li>
-              <p class="person__name">{person.name}</p>
-              <p class="person__role">{person.role}</p>
-              {paragraphs(person.bio).map((paragraph) => (
-                <p class="person__bio">{paragraph}</p>
-              ))}
-            </li>
-          ))}
-        </ul>
-      </section>
-    ))
-  }
-
-  {/* Everyone pictured must have agreed to appear on the site. See the rules in Photo.astro. */}
-  <Photo
-    src={board_corrected}
-    focus="center 30%"
-    alt="Five people in matching lime-green T-shirts reading “DFW Operation Ground Support” standing close together in a large hall with folding tables and chairs."
-    caption="The board, May 30, 2026."
-  />
-
-  <section class="section">
-    <h2>Tax status</h2>
-    <p><TaxCode text={pick(org.taxStatus, locale)} /></p>
-  </section>
-
-  <Photo
-    src={homelessnessSummit}
-    alt="Looking down from a balcony into a wood-panelled hall with stained-glass windows: two speakers stand beside a screen while an audience sits facing them on chairs and sofas, with a table of food in one corner."
-    caption="From the April 11, 2026 homelessness summit"
-  />
+  <AboutBody locale="en" />
 </Base>
-
-<style>
-  .people {
-    list-style: none;
-    padding: 0;
-    margin-block-start: var(--space-s);
-    display: grid;
-    gap: var(--space-m);
-  }
-
-  .person__name {
-    font-weight: 500;
-  }
-
-  .person__role {
-    font-size: var(--text-sm);
-    color: var(--ink-muted);
-  }
-
-  .person__bio {
-    margin-block-start: var(--space-3xs);
-    font-size: var(--text-sm);
-    color: var(--ink-muted);
-  }
-
-  .person__bio + .person__bio {
-    margin-block-start: var(--space-2xs);
-  }
-</style>

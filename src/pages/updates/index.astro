@@ -1,97 +1,14 @@
 ---
-/**
- * The updates index.
- *
- * Its job is to prove the organization is active. A visitor — and a grant reviewer — looks here
- * to answer "was this site touched last week or last year". Three sentences and a date beat a
- * polished essay posted quarterly.
- */
 import Base from '../../layouts/Base.astro'
-import { getCollection } from 'astro:content'
-import { formatDate, useTranslations } from '../../i18n/ui'
-
-const locale = 'en' as const
-const t = useTranslations(locale)
-
-const posts = (await getCollection('updates', ({ data }) => !data.draft)).sort(
-  (a, b) => b.data.date.getTime() - a.data.date.getTime(),
-)
+import UpdatesBody from '../../components/UpdatesBody.astro'
 ---
 
 <Base
   title="Updates"
   description="What Operation Ground Support has been doing lately."
-  locale={locale}
+  locale="en"
   pageKey="updates"
   lastReviewed="2026-08-27"
 >
-  <h1>Updates</h1>
-  {
-    posts.length > 0 ? (
-      <ul class="posts">
-        {posts.map((post) => (
-          <li>
-            <time datetime={post.data.date.toISOString().slice(0, 10)}>
-              {formatDate(post.data.date, locale)}
-            </time>
-            <h2><a href={`/updates/${post.id}`}>{post.data.title}</a></h2>
-            <p>{post.data.summary}</p>
-          </li>
-        ))}
-      </ul>
-    ) : (
-      <p class="empty">{t('updates.none')}</p>
-    )
-  }
-
-  <p class="feed"><a href="/rss.xml">RSS feed</a></p>
+  <UpdatesBody locale="en" />
 </Base>
-
-<style>
-  .posts {
-    list-style: none;
-    padding: 0;
-    margin-block-start: var(--space-xl);
-  }
-
-  .posts li {
-    padding-block: var(--space-m);
-    border-block-start: 1px solid var(--rule);
-  }
-
-  .posts time {
-    font-size: var(--text-xs);
-    color: var(--ink-faint);
-    font-variant-numeric: tabular-nums;
-  }
-
-  .posts h2 {
-    font-size: var(--text-xl);
-    margin-block-start: var(--space-3xs);
-  }
-
-  .posts h2 a {
-    color: inherit;
-    text-decoration: none;
-  }
-
-  .posts h2 a:hover {
-    text-decoration: underline;
-    text-underline-offset: 0.18em;
-  }
-
-  .posts p {
-    margin-block-start: var(--space-2xs);
-    color: var(--ink-muted);
-  }
-
-  .empty {
-    margin-block-start: var(--space-l);
-    color: var(--ink-muted);
-  }
-
-  .feed {
-    margin-block-start: var(--space-2xl);
-    font-size: var(--text-sm);
-  }
-</style>
