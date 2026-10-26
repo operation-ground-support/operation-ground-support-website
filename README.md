@@ -45,7 +45,8 @@ A few mappings that make the rest of this legible:
 The one genuinely unfamiliar idea is that a `.astro` file has two parts separated by `---`: the
 top half is TypeScript that runs **at build time only**, and the bottom half is the HTML it
 produces. Nothing in the top half ships to the browser. There is no client-side framework here and
-no hydration; the only JavaScript that reaches a visitor is the twenty lines in `EventList.astro`.
+no hydration; the only JavaScript that reaches a visitor is the twenty lines in `EventList.astro`,
+plus Donorbox's form widget on the Donate page alone.
 
 ## Layout
 

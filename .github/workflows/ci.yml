@@ -29,6 +29,6 @@ jobs:
         run: npm run build
 
       # Reports stale pages and the outstanding content gaps. Non-blocking for the gaps; fails if
-      # a page or the needs list has aged out.
+      # a page has aged out or an `_EXAMPLE_` file would publish.
       - name: Audit
         run: node tools/audit.mjs

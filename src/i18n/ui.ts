@@ -77,8 +77,8 @@ const es: Record<keyof typeof en, string> = {
   'updates.heading': 'Novedades',
   'updates.none': 'Todavía no hay novedades.',
 
-  'events.heading': 'Próximamente',
-  'events.past': 'Anteriores',
+  'events.heading': 'Próximos eventos',
+  'events.past': 'Eventos anteriores',
   'events.none': 'No hay nada programado por el momento.',
 
   'metrics.asOf': 'al',

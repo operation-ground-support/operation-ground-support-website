@@ -33,27 +33,29 @@ export interface Person {
   bio?: string | string[]
 }
 
+/** Shown on both homepages, so the label and basis are said once per language. */
 export interface Metric {
   /** The number itself, already formatted for display, e.g. "40" or "~1,200". */
   value: string
   /** What was counted, e.g. "bags of groceries distributed in a typical week". */
-  label: string
+  label: Localized
   /** How it was counted. Specificity is the credibility; vague metrics read as marketing. */
-  basis: string
+  basis: Localized
   /** ISO date of the most recent count backing this number. */
   asOf: string
 }
 
+/** Shown on both homepages, so every field is said once per language. */
 export interface Program {
   /** Short name, used as the heading. */
-  name: string
+  name: Localized
   /** Two sentences at most — this is a list someone scans, not a page they read. */
-  description: string
+  description: Localized
   /**
-   * What kind of work it is, or who it runs through. Named partners double as verifiable
-   * evidence: "Partner: North Texas Food Bank" is a claim a funder can check, which is the point.
+   * What kind of work it is, or who it runs through. A named partner doubles as verifiable
+   * evidence: "Powered by EETZ" is a claim a funder can check, which is the point.
    */
-  tag: string
+  tag: Localized
 }
 
 export interface Filing {
@@ -64,12 +66,12 @@ export interface Filing {
 
 export const org = {
   name: 'Operation Ground Support',
-  /** Used where the full name will not fit, e.g. a favicon or a tight mobile header. */
-  shortName: 'OGS',
 
-  /** Main statement */
-  mission:
-    'Operation Ground Support is a 501(c)(3) nonprofit organization dedicated to serving our neighbors in Dallas.',
+  /** Main statement: the homepage headline, the About lede, and the RSS feed's description. */
+  mission: {
+    en: 'Operation Ground Support is a 501(c)(3) nonprofit organization dedicated to serving our neighbors in Dallas.',
+    es: 'Operation Ground Support es una organización sin fines de lucro 501(c)(3) dedicada a servir a nuestros vecinos en Dallas.',
+  } as Localized,
 
   /**
    * The formal tax classification. 509(a)(2) is the public-support test for organizations funded
@@ -80,19 +82,22 @@ export const org = {
    */
   taxStatus: {
     en: 'Operation Ground Support is a 501(c)(3) tax-exempt public charity, classified under IRC Section 509(a)(2).',
-    es: 'Operation Ground Support es una organización benéfica pública exenta de impuestos según la sección 501(c)(3), clasificada bajo la Sección 509(a)(2) del Código de Rentas Internas.',
+    es: 'Operation Ground Support es una organización benéfica pública exenta de impuestos según la sección 501(c)(3), clasificada bajo la sección 509(a)(2) del Código de Rentas Internas.',
   } as Localized,
 
   /**
-   * An alternate one-line positioning statement
+   * An alternate one-line positioning statement, shown in the footer.
    */
   tagline: {
     en: "The bridge between need and what's already there to meet it.",
-    es: 'Recolectamos y repartimos donaciones en Old East Dallas.',
+    es: 'El puente entre la necesidad y lo que ya existe para atenderla.',
   } as Localized,
 
-  /* NOTE: The only thing I wanted to add to this lede is to add on "with dignity". The specific context given to me by Anne Winters is that it is very common for homeless or food-insecure people to be embarrased, and we want to treat them with some dignity. But in a short lede at the beginning of the website, it can be interpreted differently, and also it is ambiguous how this already long sentence flows */
-  lede: "We support partners with community hubs across Dallas to deliver zero-barrier direct relief, lead collaborative homelessness summits, and build holistic stabilization, for our unhoused and food-insecure neighbors.",
+  /* NOTE: The only thing I wanted to add to this lede is to add on "with dignity". The specific context given to me by Anne Winters is that it is very common for homeless or food-insecure people to be embarrassed, and we want to treat them with some dignity. But in a short lede at the beginning of the website, it can be interpreted differently, and also it is ambiguous how this already long sentence flows */
+  lede: {
+    en: 'We support partners with community hubs across Dallas to deliver zero-barrier direct relief, lead collaborative homelessness summits, and build holistic stabilization, for our unhoused and food-insecure neighbors.',
+    es: 'Apoyamos a organizaciones aliadas con centros comunitarios en todo Dallas para brindar ayuda directa sin barreras, encabezamos cumbres colaborativas sobre la falta de vivienda y construimos una estabilidad integral para nuestros vecinos sin hogar o con inseguridad alimentaria.',
+  } as Localized,
 
   /**
    * What the organization actually does, in the order it was given by the board.
@@ -104,52 +109,92 @@ export const org = {
    */
   programs: [
     {
-      name: 'Food Bank Referrals',
-      description:
-        "We connect people facing hunger directly to food banks and pantries near them, cutting through confusion about what's available.",
-      tag: 'Referral network',
+      name: {
+        en: 'Food Bank Referrals',
+        es: 'Referidos a bancos de alimentos',
+      },
+      description: {
+        en: "We connect people facing hunger directly to food banks and pantries near them, cutting through confusion about what's available.",
+        es: 'Conectamos directamente a las personas que pasan hambre con los bancos de alimentos y las despensas cercanas, y les aclaramos qué ayuda hay disponible.',
+      },
+      tag: { en: 'Referral network', es: 'Red de referidos' },
     },
     {
-      name: 'Community Meal Prep',
-      description:
-        "We accept excess produce, surplus catering, and other perishable food donations from local businesses, farms, and events, that would otherwise go to waste. Our volunteers turn this into prepared meals that go straight to people who need them.",
-      tag: 'Food rescue and preparation',
+      name: {
+        en: 'Community Meal Prep',
+        es: 'Preparación de comidas comunitarias',
+      },
+      description: {
+        en: 'We accept excess produce, surplus catering, and other perishable food donations from local businesses, farms, and events, that would otherwise go to waste. Our volunteers turn this into prepared meals that go straight to people who need them.',
+        es: 'Recibimos donaciones de frutas y verduras sobrantes, excedentes de catering y otros alimentos perecederos de negocios, granjas y eventos locales que de otro modo se desperdiciarían. Nuestros voluntarios los convierten en comidas preparadas que llegan directamente a quienes las necesitan.',
+      },
+      tag: { en: 'Food rescue and preparation', es: 'Rescate y preparación de alimentos' },
     },
     {
-      name: 'Homelessness Summits',
-      description:
-        'We host summits that bring together service providers, city agencies, and neighbors to confront homelessness in Dallas head-on, and coordinate long term solutions.',
-      tag: 'Convening and coordination',
+      name: {
+        en: 'Homelessness Summits',
+        es: 'Cumbres sobre la falta de vivienda',
+      },
+      description: {
+        en: 'We host summits that bring together service providers, city agencies, and neighbors to confront homelessness in Dallas head-on, and coordinate long term solutions.',
+        es: 'Organizamos cumbres que reúnen a proveedores de servicios, agencias de la ciudad y vecinos para enfrentar de lleno la falta de vivienda en Dallas y coordinar soluciones a largo plazo.',
+      },
+      tag: { en: 'Convening and coordination', es: 'Convocatoria y coordinación' },
     },
     {
-      name: 'Clothing Distribution',
-      description:
-        'Donated clothing is sorted and distributed to individuals and families who need it, with a focus on dignity and choice.',
-      tag: 'Direct service',
+      name: {
+        en: 'Clothing Distribution',
+        es: 'Distribución de ropa',
+      },
+      description: {
+        en: 'Donated clothing is sorted and distributed to individuals and families who need it, with a focus on dignity and choice.',
+        es: 'La ropa donada se clasifica y se reparte entre personas y familias que la necesitan, con énfasis en la dignidad y en que cada quien pueda elegir.',
+      },
+      tag: { en: 'Direct service', es: 'Servicio directo' },
     },
     {
-      name: 'Community Feeding Events',
-      description:
-        'Regular events put warm meals directly into the hands of people in our community, without paperwork or barriers.',
-      tag: 'Direct service',
+      name: {
+        en: 'Community Feeding Events',
+        es: 'Eventos de alimentación comunitaria',
+      },
+      description: {
+        en: 'Regular events put warm meals directly into the hands of people in our community, without paperwork or barriers.',
+        es: 'En eventos periódicos entregamos comidas calientes directamente a personas de nuestra comunidad, sin trámites ni barreras.',
+      },
+      tag: { en: 'Direct service', es: 'Servicio directo' },
     },
     {
-      name: 'Stocking Local Pantries',
-      description:
-        'We keep food pantries supplied so their staff and volunteers can stay focused on the ground.',
-      tag: 'Supply',
+      name: {
+        en: 'Stocking Local Pantries',
+        es: 'Abastecimiento de despensas locales',
+      },
+      description: {
+        en: 'We keep food pantries supplied so their staff and volunteers can stay focused on the ground.',
+        es: 'Mantenemos abastecidas las despensas de alimentos para que su personal y sus voluntarios puedan concentrarse en el trabajo de campo.',
+      },
+      tag: { en: 'Supply', es: 'Abastecimiento' },
     },
     {
-      name: 'EETZ Food Rescue App',
-      description:
-        'We coordinate real-time pickup and delivery of surplus food through the EETZ app.',
-      tag: 'Powered by EETZ',
+      name: {
+        en: 'EETZ Food Rescue App',
+        es: 'App de rescate de alimentos EETZ',
+      },
+      description: {
+        en: 'We coordinate real-time pickup and delivery of surplus food through the EETZ app.',
+        es: 'Coordinamos en tiempo real la recolección y entrega de alimentos sobrantes a través de la app EETZ.',
+      },
+      tag: { en: 'Powered by EETZ', es: 'Con tecnología de EETZ' },
     },
     {
-      name: 'Inventory Management',
-      description:
-        'Every donation is tracked through the Operation Ground Support Inventory Management app, built with Noble Truth IT. This provides information for real-time logistics and for audits.',
-      tag: 'Powered by Noble Truth IT',
+      name: {
+        en: 'Inventory Management',
+        es: 'Gestión de inventario',
+      },
+      description: {
+        en: 'Every donation is tracked through the Operation Ground Support Inventory Management app, built with Noble Truth IT. This provides information for real-time logistics and for audits.',
+        es: 'Cada donación se registra en la app de gestión de inventario de Operation Ground Support, desarrollada con Noble Truth IT. Así contamos con información para la logística en tiempo real y para las auditorías.',
+      },
+      tag: { en: 'Powered by Noble Truth IT', es: 'Con tecnología de Noble Truth IT' },
     },
   ] as Program[],
 
@@ -189,8 +234,8 @@ export const org = {
   techPartners: ['EETZ Food Rescue', 'Noble Truth IT'] as string[],
 
   // ---------------------------------------------------------------------------------------------
-  // Legitimacy. These are the fields a grant reviewer looks for first, and all of them are
-  // currently missing from the live site.
+  // Legitimacy. These are the fields a grant reviewer looks for first, and all of them were
+  // missing from the Squarespace site.
   // ---------------------------------------------------------------------------------------------
 
   /** Federal EIN, formatted "12-3456789". Lights up the transparency bar and the footer. */
@@ -275,19 +320,11 @@ export const org = {
     url: 'https://donorbox.org/operation-ground-support' as string | null,
   },
 
-  /** Amazon/Target wish list or similar, if one exists. */
-  registryUrl: null as string | null,
-
   /**
    * Volunteer sign-up: the Google Form ("Email Signup") that the old site's /sign-up page embedded.
    * Linked directly rather than through that page, which goes away when this site replaces it.
    */
   signUpUrl: 'https://docs.google.com/forms/d/e/1FAIpQLSe3z53OnVcsepw2VL25Qgf-Elj3j9T2gJ0ug7ZDM8jTQpaMuA/viewform' as string | null,
-
-  social: {
-    facebook: null as string | null,
-    instagram: null as string | null,
-  },
 } as const satisfies Record<string, unknown>
 
 /**
@@ -313,6 +350,6 @@ export const REQUIRED_FOR_FUNDERS: { path: string; why: string }[] = [
   { path: 'board', why: 'List board members by name and role. No named people is the single loudest diligence red flag.' },
   { path: 'metrics', why: 'Publish at least one number that someone actually counted, with its basis and date.' },
   { path: 'postal_address.street', why: 'A real street address makes the organization locatable.' },
-  { path: 'donate.url', why: 'Set up a real donation processor (Zeffy takes 0%) and link it.' },
+  { path: 'donate.url', why: 'Link the Donorbox campaign page so the Donate page has a form.' },
   { path: 'lede', why: 'Write the plain-language homepage sentence and get the board to approve it.' },
 ]

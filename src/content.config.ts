@@ -68,7 +68,7 @@ const events = defineCollection({
     /** ISO 8601 with an offset, e.g. `2026-09-13T10:00:00-05:00`. Offsets avoid timezone bugs. */
     start: z.coerce.date(),
     end: z.coerce.date().optional(),
-    /** Defaults to the pantry; set when an event is somewhere else. */
+    /** Where to go. Leave it out and the event shows no location at all. */
     location: localized.optional(),
     description: localized.optional(),
     /** External sign-up link, if this event needs one. */

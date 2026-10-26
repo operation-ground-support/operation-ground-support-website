@@ -2,9 +2,9 @@ Creative Commons Attribution 4.0 International (CC BY 4.0)
 
 Copyright (c) 2026 Operation Ground Support
 
-The written content of this site — page text, the needs lists, updates, event
-descriptions, and the organizational facts in `src/data/org.ts` — is licensed
-under the Creative Commons Attribution 4.0 International License.
+The written content of this site — page text, updates, event descriptions, and
+the organizational facts in `src/data/org.ts` — is licensed under the Creative
+Commons Attribution 4.0 International License.
 
     https://creativecommons.org/licenses/by/4.0/
 
@@ -15,9 +15,9 @@ indicate if changes were made.
 The full legal text is at https://creativecommons.org/licenses/by/4.0/legalcode
 and is what governs; the summary above is not a substitute for it.
 
-Why this license: another small nonprofit should be able to take the intake
-wording, the drop-off instructions, or the structure of the needs list and use
-them without asking. That is a better outcome than the text sitting unused
+Why this license: another small nonprofit should be able to take the program
+descriptions, the volunteer wording, or the structure of the content files and
+use them without asking. That is a better outcome than the text sitting unused
 behind a reserved-rights notice.
 
 
@@ -31,8 +31,7 @@ WHAT THIS LICENSE DOES NOT COVER
 2. Photographs of identifiable people. Volunteers appear by signed release, and
    a release permitting this organization to publish a photograph does not
    authorize arbitrary reuse by third parties. Photographs are excluded unless
-   a specific image is explicitly marked otherwise. Nobody served by the
-   organization is photographed at all, by policy.
+   a specific image is explicitly marked otherwise.
 
 3. The typefaces. Source Serif 4 and Public Sans are fetched at build time and
    embedded into the built site; both are licensed under the SIL Open Font

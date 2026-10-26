@@ -1,0 +1,132 @@
+---
+/**
+ * The homepage, shared by `/` and `/es`.
+ *
+ * The largest thing on this page is a sentence, not a photograph. That is the central design
+ * decision of the site: restraint reads as sophistication in this sector, a typographic opening
+ * survives the logo not being finished, and it means the page needs one good photograph instead
+ * of five.
+ *
+ * One body for both languages, like `ContactBody.astro`, so the Spanish homepage cannot fall
+ * behind the English one structurally. The prose comes from `org.ts`, already in both languages.
+ */
+import Doors from './Doors.astro'
+import Programs from './Programs.astro'
+import TaxCode from './TaxCode.astro'
+import MetricRow from './MetricRow.astro'
+import EventList from './EventList.astro'
+import { org } from '../data/org'
+import { navLink, pick, type Locale } from '../i18n/routes'
+import { getCollection } from 'astro:content'
+import { formatDate } from '../i18n/ui'
+
+interface Props {
+  locale: Locale
+}
+
+const { locale } = Astro.props
+
+const text = {
+  eyebrow: { en: 'Dallas, Texas', es: 'Dallas, Texas' },
+  recent: { en: 'Recent updates', es: 'Novedades recientes' },
+  all: { en: 'All updates', es: 'Todas las novedades' },
+}
+
+// Posts are written in one language and not auto-translated, so each homepage lists its own.
+const updates = (await getCollection('updates', ({ data }) => !data.draft && data.lang === locale))
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+  .slice(0, 2)
+
+const allUpdates = navLink('updates', locale)
+---
+
+<p class="eyebrow">{pick(text.eyebrow, locale)}</p>
+<h1 class="statement"><TaxCode text={pick(org.mission, locale)} /></h1>
+
+<p class="lede">{pick(org.lede, locale)}</p>
+
+<Doors locale={locale} />
+
+{/* Above the programs on purpose. Someone who already knows this organization comes back to
+    find out when the next distribution is, and a dated list of real events is more convincing
+    to a first-time reader than any description of what the organization does. */}
+<EventList locale={locale} />
+
+<MetricRow locale={locale} />
+
+<Programs locale={locale} />
+
+{
+  updates.length > 0 && (
+    <section class="recent">
+      <h2>{pick(text.recent, locale)}</h2>
+      <ul>
+        {updates.map((post) => (
+          <li>
+            <time datetime={post.data.date.toISOString().slice(0, 10)}>
+              {formatDate(post.data.date, locale)}
+            </time>
+            <a href={`/updates/${post.id}`}>{post.data.title}</a>
+            <p>{post.data.summary}</p>
+          </li>
+        ))}
+      </ul>
+      <p>
+        <a href={allUpdates.href} hreflang={allUpdates.isFallback ? allUpdates.lang : undefined}>
+          {pick(text.all, locale)}
+        </a>
+      </p>
+    </section>
+  )
+}
+
+<style>
+  /* The opening statement. Serif, large, tight — and capped in width so it stays a sentence
+     someone reads rather than a banner they skim past. Four lines is the target: past that it
+     stops reading as a sentence and starts reading as a wall. If `--measure` moves, re-check
+     the line count here, because `ch` is relative to the font size and not to the column. */
+  .statement {
+    font-size: var(--text-3xl);
+    line-height: 1.14;
+    letter-spacing: -0.015em;
+    margin-block-start: var(--space-2xs);
+    max-width: 28ch;
+    text-wrap: balance;
+  }
+
+  .lede {
+    margin-block-start: var(--space-m);
+  }
+
+  .recent {
+    margin-block-start: var(--space-2xl);
+  }
+
+  .recent ul {
+    list-style: none;
+    padding: 0;
+    margin-block: var(--space-m);
+  }
+
+  .recent li {
+    padding-block: var(--space-s);
+    border-block-start: 1px solid var(--rule);
+  }
+
+  .recent time {
+    display: block;
+    font-size: var(--text-xs);
+    color: var(--ink-faint);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .recent a {
+    font-weight: 500;
+  }
+
+  .recent p {
+    color: var(--ink-muted);
+    font-size: var(--text-sm);
+    margin-block-start: var(--space-3xs);
+  }
+</style>

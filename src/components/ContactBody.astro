@@ -16,19 +16,19 @@ const { locale } = Astro.props
 const text = {
   lede: {
     en: 'Note: we are waiting on getting our final postal address.',
-    es: 'El correo se revisa todos los días. El teléfono llega a la oficina de la iglesia durante el horario de atención.',
+    es: 'Nota: todavía estamos esperando nuestra dirección postal definitiva.',
   },
   address: org.postal_address.street
-    ? { en: 'Postal address', es: 'Dirección' }
+    ? { en: 'Postal address', es: 'Dirección postal' }
     : { en: 'Location', es: 'Ubicación' },
   map: { en: 'Open in maps', es: 'Ver en el mapa' },
   vanAlt: {
-    en: 'A silver minivan parked on a concrete drive beside a wooden fence, with a white rectangular sign on its sliding door reading “Operation Ground Support”.',
-    es: 'Una minivan plateada estacionada en una entrada de concreto junto a una cerca de madera, con un letrero blanco rectangular en la puerta corrediza que dice «Operation Ground Support».',
+    en: 'A silver minivan parked on a concrete drive beside a wooden fence, with a white rectangular sign on its front door reading “Operation Ground Support”.',
+    es: 'Una minivan plateada estacionada en una entrada de concreto junto a una cerca de madera, con un letrero blanco rectangular en la puerta delantera que dice «Operation Ground Support».',
   },
   vanCaption: {
-    en: '',
-    es: '',
+    en: 'Our van. The sign on its door is where the logo at the top of this page comes from.',
+    es: 'Nuestra minivan. El logotipo de la parte superior de esta página viene del letrero de su puerta.',
   },
 }
 ---

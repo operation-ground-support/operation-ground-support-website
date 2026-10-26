@@ -45,9 +45,6 @@ _deps:
 dev *ARGS: _deps
   npm run dev -- {{ARGS}}
 
-# Fails on: a content file that does not match its schema, a type error, and any internal link
-# pointing at a page that does not exist.
-
 # Dev server reachable from other devices on the LAN
 lan: _deps
   #!/usr/bin/env bash
@@ -69,6 +66,9 @@ dev-status: _deps
 # Tail the background dev server's output
 dev-logs *ARGS: _deps
   npx astro dev logs {{ARGS}}
+
+# Fails on: a content file that does not match its schema, and any internal link pointing at a
+# page that does not exist. Type errors are `just check`.
 
 # Build the static site into `dist/`
 build: _deps
@@ -109,8 +109,8 @@ deploy-preview: _deps
   #!/usr/bin/env bash
   set -euo pipefail
 
-  # Built with the worklist markers on — `Todo` blocks, `PhotoSlot` frames, the Board gap — which
-  # an ordinary build strips. The staging site is shown to the people being asked to supply those
+  # Built with the worklist markers on — `Todo` blocks and `PhotoSlot` frames — which an ordinary
+  # build strips. The staging site is shown to the people being asked to supply those
   # facts, so the markers are the most useful thing on it. See `src/lib/markers.ts`.
   #
   # Straight into `dist-preview/` via `--outDir`, never into `dist/`. Sharing an output directory
@@ -157,11 +157,6 @@ ci: check build
 # Regenerate the TypeScript types for content collections after editing `src/content.config.ts`
 sync: _deps
   npm run sync
-
-# The needs list is the single most valuable object on the site: a mission statement never gets
-# reposted, but a dated needs list gets forwarded by newsletters and neighborhood groups, and it
-# is what tells a visitor the organization is not dormant. Copy, do not edit in place — the old
-# files are the record that this has been happening.
 
 # Phone photos carry GPS coordinates and timestamps. For a site serving people who have reason to
 # be careful about being located, publishing that metadata is a real risk, and it is invisible

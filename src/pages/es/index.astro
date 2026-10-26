@@ -1,45 +1,14 @@
 ---
-/**
- * Spanish homepage.
- *
- * Shorter than the English one, because Contact is the only page translated so far. The doors
- * still open — onto the English pages, marked "EN" — so a Spanish speaker can at least discover
- * that the organization takes volunteers. As pages get translated, filling in `routes.ts` swaps
- * those links over here and in the nav with no other change.
- */
 import Base from '../../layouts/Base.astro'
-import Doors from '../../components/Doors.astro'
-
-const locale = 'es' as const
+import HomeBody from '../../components/HomeBody.astro'
 ---
 
 <Base
   title="Inicio"
-  description="Operation Ground Support reparte ropa, comida, artículos de higiene y artículos del hogar sin costo en Old East Dallas."
-  locale={locale}
+  description="Operation Ground Support es una organización 501(c)(3) de Dallas que abastece a organizaciones aliadas, rescata alimentos sobrantes y organiza cumbres sobre la falta de vivienda para vecinos sin hogar o con inseguridad alimentaria."
+  locale="es"
   pageKey="home"
   lastReviewed="2026-08-27"
 >
-  <p class="eyebrow">Old East Dallas</p>
-  <h1 class="statement">(TODO this needs to be updated to match the English one) Ropa, comida y artículos de primera necesidad, sin costo, para nuestros vecinos.</h1>
-
-  <p class="lede">
-    Recibimos donaciones y las entregamos a quien las necesite, en el sótano de.
-  </p>
-
-  <Doors locale={locale} />
+  <HomeBody locale="es" />
 </Base>
-
-<style>
-  .statement {
-    font-size: var(--text-display);
-    line-height: 1.08;
-    letter-spacing: -0.02em;
-    margin-block-start: var(--space-2xs);
-    max-width: 20ch;
-  }
-
-  .lede {
-    margin-block-start: var(--space-m);
-  }
-</style>

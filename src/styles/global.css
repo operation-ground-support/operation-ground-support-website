@@ -32,7 +32,7 @@
   --accent-deep: #143239;
   --accent-wash: #e6eeef;
 
-  --alert: #9a4a1c; /* the "most needed" marker. Used sparingly or it stops meaning anything. */
+  --alert: #9a4a1c; /* the `Todo` marker. Used sparingly or it stops meaning anything. */
   --alert-wash: #f7ece3;
 
   /* Type ---------------------------------------------------------------------------------------
@@ -346,14 +346,6 @@ main {
 .button--quiet:hover {
   background: var(--accent-wash);
   border-color: var(--accent);
-}
-
-/* A recessed full-width band. The only decorative device on the site. */
-.band {
-  background: var(--paper-sunk);
-  border-block: 1px solid var(--rule);
-  padding-block: var(--space-xl);
-  margin-block: var(--space-2xl);
 }
 
 .visually-hidden {

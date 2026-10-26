@@ -12,7 +12,7 @@ const locale = 'en' as const
 
 <Base
   title="Volunteer"
-  description="Sort donations, pack bags, and staff distributions with Operation Ground Support in Old East Dallas."
+  description="Make soup from surplus produce, pack food boxes, deliver donations, and sort clothing with Operation Ground Support in Dallas."
   locale={locale}
   pageKey="volunteer"
   lastReviewed="2026-08-27"
@@ -20,7 +20,7 @@ const locale = 'en' as const
   <h1>Volunteer</h1>
 
   <section class="section">
-    Volunteers typically:
+    <p>Volunteers typically:</p>
     <ul class="tasks">
       <li>Need no experience and no commitment beyond the shifts signed up for</li>
       <li>Help the kitchen make soups out of surplus produce</li>
@@ -34,11 +34,9 @@ const locale = 'en' as const
     <h2>Signing up</h2>
     {
       org.signUpUrl ? (
-        <>
-          <p class="cta">
-            <a class="button" href={org.signUpUrl} rel="noopener">Sign up with your email</a>
-          </p>
-        </>
+        <p class="cta">
+          <a class="button" href={org.signUpUrl} rel="noopener">Sign up with your email</a>
+        </p>
       ) : (
         <Todo label="Link needed">
           Put the volunteer sign-up form URL in <code>org.signUpUrl</code>. The current site uses a
@@ -75,17 +73,7 @@ const locale = 'en' as const
     margin-block-start: var(--space-2xs);
   }
 
-  .signup {
-    margin-block-start: var(--space-s);
-  }
-
   .cta {
     margin-block-start: var(--space-m);
-  }
-
-  .note {
-    margin-block-start: var(--space-m);
-    color: var(--ink-muted);
-    font-size: var(--text-sm);
   }
 </style>

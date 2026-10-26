@@ -44,9 +44,11 @@ filled in and a comment on each — and delete its `draft: true` line once the e
 Past events move into a collapsed list automatically; leave them there, since a visible history of
 things that actually happened is worth more than an empty page.
 
-Any value containing a comma must be in `"quotes"`, or the file will not parse and the site will
-refuse to build. That refusal is deliberate: a broken file stops the deploy instead of blanking a
-section of the live site.
+Commas are fine in a plain value. Two things are not: a colon followed by a space (`Note: bring
+coats`) and a `#` after a space, which starts a comment and silently cuts the rest of the line off.
+Put any value with either of those in `"quotes"`, or use the `>-` form the example uses for
+descriptions. A file that does not parse makes the site refuse to build, and that refusal is
+deliberate: a broken file stops the deploy instead of blanking a section of the live site.
 
 ## Facts about the organization
 
@@ -55,8 +57,8 @@ It has comments explaining each field.
 
 Anything currently set to `null` is a fact nobody has supplied yet, and the site hides that section
 rather than showing an empty one. Run `just audit` (or ask whoever is maintaining the site) to see
-the list. The largest gaps right now are the board roster, at least one counted number, and a scan
-of the IRS determination letter — those three are what a grant reviewer looks for first.
+the list. The largest gaps right now are at least one counted number, a scan of the IRS
+determination letter, and the founding year — those are what a grant reviewer looks for first.
 
 ## Photographs
 
@@ -64,10 +66,10 @@ Send the original file to whoever maintains the site rather than adding it yours
 location metadata stripped first. Phone photos record GPS coordinates, and publishing those from
 this address would matter.
 
-What is worth shooting, all of it doable in one afternoon with a phone in natural light: the stairs
-down to the basement, full shelves and empty ones, boxes staged for distribution, hands sorting and
-packing, the back door and the doorbell, the parking lot, coats on a rack, a folding table
-mid-setup, the exterior of the church, a wide shot of the room with nobody in it.
+What is worth shooting, all of it doable with a phone in natural light: boxes staged for
+distribution, hands sorting and packing, produce coming off a truck, soup going into the freezer,
+coats on a rack, a folding table mid-setup, the van loaded for a run, a wide shot of a room with
+nobody in it.
 
 **Never photograph the people receiving goods.** Volunteers only, and ask them first. Shoot two
 hundred frames, keep twelve.

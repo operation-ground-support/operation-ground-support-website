@@ -1,6 +1,5 @@
 /**
- * Whether the worklist markers render — `Todo` blocks, `PhotoSlot` frames, and the Board section
- * on the About page.
+ * Whether the worklist markers render — `Todo` blocks and `PhotoSlot` frames.
  *
  * Three cases, and the difference between the last two is the whole point of this file:
  *

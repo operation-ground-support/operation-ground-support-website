@@ -40,6 +40,10 @@ interface Props {
 
 const { src, alt, caption, credit, focus, eager = false } = Astro.props
 
+// The type requires a caption, but `''` satisfies it and ships an empty figcaption with a stray
+// rule beside it. Refuse it here, where it is still a build error rather than a visual glitch.
+if (caption.trim() === '') throw new Error(`Photo ${src.src} has an empty caption`)
+
 /*
  * Most photos fill the full 82rem column. Two kinds are drawn narrower, and centred:
  *

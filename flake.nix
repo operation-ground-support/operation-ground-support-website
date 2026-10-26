@@ -17,7 +17,7 @@
 
         # Node is only a build-time tool here. Nothing it produces is served at runtime; the
         # deployable artifact is the static `dist/` directory, so the exact Node version only has
-        # to be new enough for Astro (>=18.20.8, and Astro 5 wants >=20.3).
+        # to be new enough for Astro (Astro 7 wants >=22.12).
         nodejs = pkgs.nodejs_22;
 
         commonTools = with pkgs; [
@@ -34,7 +34,7 @@
           svgo
           # `just share` packs the offline copy of the site into something emailable
           zip
-          # `just deploy-preview` uploads `dist/` to Cloudflare Pages. Build-time only, like node:
+          # `just deploy-preview` uploads `dist-preview/` to Cloudflare Pages. Build-time only, like node:
           # the deployed artifact is still a folder of static files, and the site does not depend
           # on anything Cloudflare provides at runtime.
           wrangler

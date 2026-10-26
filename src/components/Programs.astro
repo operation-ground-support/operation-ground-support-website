@@ -2,49 +2,50 @@
 /**
  * What the organization does, as a numbered list.
  *
- * Ten items is a lot, and the obvious treatment — a grid of cards with an icon each — is the one
- * thing this site does not do. It would need ten icons nobody has drawn, it would make ten
- * different programs look like ten identical products, and it is the house style of every thin
+ * Eight items is a lot, and the obvious treatment — a grid of cards with an icon each — is the one
+ * thing this site does not do. It would need eight icons nobody has drawn, it would make eight
+ * different programs look like eight identical products, and it is the house style of every thin
  * nonprofit site this one is trying not to resemble. A numbered list says the same thing with
  * more authority: it reads as an inventory, which is what it is, and its length is the argument.
  *
- * The count in the heading is derived, not typed. An eleventh program added to `org.ts` without
- * the subheading being updated would otherwise leave "Ten ways" sitting above eleven of them —
- * the same silent staleness the rest of the build guards against.
+ * The count in the heading is derived, not typed. A ninth program added to `org.ts` without the
+ * subheading being updated would otherwise leave "Eight ways" sitting above nine of them — the
+ * same silent staleness the rest of the build guards against.
  */
 import { org } from '../data/org'
+import { pick, type Locale } from '../i18n/routes'
 
-const COUNT_WORDS = [
-  'No',
-  'One',
-  'Two',
-  'Three',
-  'Four',
-  'Five',
-  'Six',
-  'Seven',
-  'Eight',
-  'Nine',
-  'Ten',
-  'Eleven',
-  'Twelve',
-]
+interface Props {
+  locale: Locale
+}
+
+const { locale } = Astro.props
+
+const text = {
+  heading: { en: 'What We Do', es: 'Lo que hacemos' },
+  sub: { en: 'ways we bridge the gap', es: 'formas de cerrar la brecha' },
+  countWords: {
+    en: ['No', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve'],
+    es: ['Ninguna', 'Una', 'Dos', 'Tres', 'Cuatro', 'Cinco', 'Seis', 'Siete', 'Ocho', 'Nueve', 'Diez', 'Once', 'Doce'],
+  },
+}
+
 const n = org.programs.length
-const count = COUNT_WORDS[n] ?? String(n)
+const count = pick(text.countWords, locale)[n] ?? String(n)
 ---
 
 {
   org.programs.length > 0 && (
     <section class="programs wide">
-      <h2>What We Do</h2>
-      <p class="programs__sub">{count} ways we bridge the gap</p>
+      <h2>{pick(text.heading, locale)}</h2>
+      <p class="programs__sub">{count} {pick(text.sub, locale)}</p>
 
       <ol class="programs__list">
         {org.programs.map((p) => (
           <li class="programs__item">
-            <h3 class="programs__name">{p.name}</h3>
-            <p class="programs__desc">{p.description}</p>
-            <p class="programs__tag">{p.tag}</p>
+            <h3 class="programs__name">{pick(p.name, locale)}</h3>
+            <p class="programs__desc">{pick(p.description, locale)}</p>
+            <p class="programs__tag">{pick(p.tag, locale)}</p>
           </li>
         ))}
       </ol>
@@ -62,12 +63,6 @@ const count = COUNT_WORDS[n] ?? String(n)
     font-size: var(--text-xl);
     color: var(--ink-muted);
     margin-block-start: var(--space-3xs);
-  }
-
-  .programs__intro {
-    max-width: var(--measure);
-    margin-block-start: var(--space-s);
-    color: var(--ink-muted);
   }
 
   /* Two columns only when there is genuinely room for two reading measures. Below that the

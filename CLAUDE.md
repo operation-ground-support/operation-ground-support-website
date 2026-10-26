@@ -60,7 +60,7 @@ re-derive `--accent` and `--accent-deep` from the mark and change nothing else.
 - **Do not link to a page that does not exist.** `integrations/check-internal-links.mjs` fails the
   build. This is the guard against the nav rot that afflicts hand-maintained nonprofit sites.
 - **Do not add a Spanish page by copying an English one.** Bilingual pages share a body component
-  (`ContactBody.astro`) so the two versions cannot drift structurally.
+  (`HomeBody.astro`, `ContactBody.astro`) so the two versions cannot drift structurally.
 - **Never enable Astro's i18n `fallback`.** Untranslated pages are linked at their English URL via
   `navLink()` and marked "EN". Serving English under an `/es/` path would put English text inside
   `<html lang="es">`.

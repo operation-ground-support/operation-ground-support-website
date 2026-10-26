@@ -12,7 +12,7 @@
  */
 import { org } from '../data/org'
 import { useTranslations, formatDate } from '../i18n/ui'
-import type { Locale } from '../i18n/routes'
+import { pick, type Locale } from '../i18n/routes'
 
 interface Props {
   locale: Locale
@@ -30,9 +30,9 @@ const metrics = org.metrics
         <div class="metric">
           <dt class="metric__value">{m.value}</dt>
           <dd class="metric__label">
-            {m.label}
+            {pick(m.label, locale)}
             <span class="metric__basis">
-              {m.basis} · {t('metrics.asOf')} {formatDate(new Date(m.asOf), locale)}
+              {pick(m.basis, locale)} · {t('metrics.asOf')} {formatDate(new Date(m.asOf), locale)}
             </span>
           </dd>
         </div>

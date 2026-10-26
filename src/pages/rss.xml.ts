@@ -14,7 +14,7 @@ export async function GET(context: APIContext) {
 
   return rss({
     title: `${org.name} — Updates`,
-    description: org.mission,
+    description: org.mission.en,
     site: context.site!,
     items: posts.map((post) => ({
       title: post.data.title,
