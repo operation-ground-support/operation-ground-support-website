@@ -76,10 +76,10 @@ const langTitle = otherLang.isHomeFallback ? useTranslations(other)('bar.switchT
 
 <style>
   .bar {
-    background: var(--paper-sunk);
-    border-block-end: 1px solid var(--rule);
+    background: var(--kraft);
+    color: var(--kraft-ink);
+    font-family: var(--font-mono), ui-monospace, monospace;
     font-size: var(--text-xs);
-    color: var(--ink-muted);
   }
 
   .bar__inner {
@@ -103,7 +103,7 @@ const langTitle = otherLang.isHomeFallback ? useTranslations(other)('bar.switchT
   }
 
   .bar__label {
-    font-weight: 700;
+    font-weight: 500;
     letter-spacing: 0.06em;
     text-transform: uppercase;
   }

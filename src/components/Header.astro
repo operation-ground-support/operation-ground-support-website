@@ -84,7 +84,7 @@ const homeHref = path('home', locale) ?? '/'
 
 <style>
   .masthead {
-    border-block-end: 1px solid var(--rule);
+    border-block-end: 2px solid var(--ink);
   }
 
   .masthead__inner {
@@ -140,20 +140,19 @@ const homeHref = path('home', locale) ?? '/'
    * border, leaving the outline open at the bottom.
    */
   nav a:not(.nav__action) {
-    color: var(--ink-muted);
+    color: var(--ink);
+    font-family: var(--font-mono), ui-monospace, monospace;
+    font-size: var(--text-xs);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
     text-decoration: none;
     padding-block: var(--space-3xs);
     border-block-end: 2px solid transparent;
   }
 
-  nav a:not(.nav__action):hover {
-    color: var(--ink);
-    border-block-end-color: var(--rule-strong);
-  }
-
+  nav a:not(.nav__action):hover,
   nav a:not(.nav__action)[aria-current='page'] {
-    color: var(--ink);
-    border-block-end-color: var(--accent);
+    border-block-end-color: var(--signal);
   }
 
   /* Donate and Volunteer, rendered as the same solid/outline pair used by `.button` in
@@ -165,44 +164,49 @@ const homeHref = path('home', locale) ?? '/'
     display: inline-block;
     /* Excluded from the `nav a` rule above, so they need their own, or the global underline shows. */
     text-decoration: none;
-    padding: var(--space-3xs) var(--space-xs);
-    border: 1px solid var(--accent);
+    /* More below than above, for the reason given on `.button` in global.css. */
+    padding: 0.35rem 0.9rem 0.45rem;
+    border: 2px solid var(--signal);
     border-radius: var(--radius);
-    font-weight: 500;
-    line-height: 1.5;
+    font-family: var(--font-display), 'Arial Narrow', sans-serif;
+    font-size: 1rem;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
     transition: background 120ms ease, color 120ms ease;
   }
 
   .nav__action--solid {
-    background: var(--accent);
-    border-color: var(--accent);
-    color: var(--paper);
+    background: var(--signal);
+    border-color: var(--signal);
+    color: var(--signal-ink);
   }
 
   .nav__action--solid:hover,
   .nav__action--solid[aria-current='page'] {
-    background: var(--accent-deep);
-    border-color: var(--accent-deep);
-    color: var(--paper);
+    background: var(--signal-hover);
+    border-color: var(--signal-hover);
+    color: var(--signal-ink);
   }
 
   .nav__action--outline {
     background: transparent;
-    color: var(--accent);
-    border-color: var(--rule-strong);
+    color: var(--ink);
+    border-color: var(--ink);
   }
 
   .nav__action--outline:hover,
   .nav__action--outline[aria-current='page'] {
-    background: var(--accent-wash);
-    border-color: var(--accent);
-    color: var(--accent);
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--paper);
   }
 
   /* Inside a solid button the badge has to borrow the button's foreground, or it disappears. */
   .nav__action--solid .nav__badge {
-    color: color-mix(in srgb, var(--paper) 78%, transparent);
-    border-color: color-mix(in srgb, var(--paper) 45%, transparent);
+    color: color-mix(in srgb, var(--signal-ink) 78%, transparent);
+    border-color: color-mix(in srgb, var(--signal-ink) 45%, transparent);
   }
 
   /* Marks a link whose page exists only in English. Small and quiet — it is an advisory, not a

@@ -40,7 +40,9 @@ rule below exists because a grant reviewer checks that specific thing.
 The site is type-led on purpose. Do not introduce:
 
 - a full-bleed hero, or any text set over a photograph
-- icon triptychs or three-up feature cards
+- icon triptychs or three-up feature cards. The one exception is the bridge diagram in
+  `BridgeChain.astro`, allowed because it is a sequence (ordered steps joined by arrows), not a
+  set of features. Do not reuse its shape for anything that is not a sequence
 - a carousel, a parallax section, or an autoplaying video (actually, we may include two or three of these things, but there is a limited specialness budget)
 - a third button treatment — solid (`.button`) and outline (`.button--quiet`) are the whole
   vocabulary. The homepage doors use those classes directly; the nav redraws the same pair at its
@@ -54,8 +56,17 @@ that pressure is what pushes small nonprofits toward stock and synthetic filler.
 real photographs are enough for this whole site, and each one goes through `Photo.astro`, which
 requires a caption so the image has to earn its place.
 
-Colour, type, and spacing are tokens in `src/styles/global.css`. When the bridge logo is finalised,
-re-derive `--accent` and `--accent-deep` from the mark and change nothing else.
+Colour, type, and spacing are tokens in `src/styles/global.css`. The site is dark on screen and
+light in print, with no light screen theme and no toggle. The light values are under `@media print`
+at the end of that file, and a new colour token needs one there too, or it prints as near-white on
+white paper. Each accent has one job: signal orange
+for the primary act (Donate), focus rings, and the current-page mark; cobalt for links; kraft for
+the transparency bar and the bridge diagram's arrows. Text on orange is near-black, because white
+fails contrast there. How the palette relates to the coming bridge logo is in `docs/logo.md`.
+
+The fonts have fixed roles. The stencil face (`--font-headline`) sets the homepage headline and
+nothing else. Every other heading, button, and title is `--font-display` (Barlow Condensed), body
+text is `--font-sans`, and labels and metadata are `--font-mono`.
 
 ## Structural invariants
 
@@ -99,6 +110,14 @@ Each of these has turned up in this repo, and none of them produces an error.
   and then runs the heading into whatever is left. Give every section its own margin.
 - **`astro build --outDir` on another filesystem** (e.g. `/tmp`) fails with `EXDEV`, because Astro
   renames files out of `.astro/`. Build inside the repo and copy.
+- **A character outside a font's Google subset** renders in whatever system font has it. Astro
+  downloads only the subsets listed in `astro.config.mjs`, and Google's Latin subset leaves out
+  some common symbols: it has `↑` and `↓` but not `→`. This is why `BridgeChain.astro` draws its
+  arrows in SVG.
+- **A Google font with an optical-size axis** is served at its default size, which for Big
+  Shoulders Stencil is the wider small-text cut, not the display cut the headline is meant to be.
+  The `variableAxis` option in `astro.config.mjs` asks for the display end; remove it and the
+  headline quietly gets wider.
 
 ## Known warnings
 

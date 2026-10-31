@@ -1,0 +1,194 @@
+---
+/**
+ * "How the bridge works": the organization's model as a three-step diagram, on the homepage just
+ * above the programs. This is where the bridge in the tagline is actually drawn.
+ *
+ * Three boxes side by side is the shape the house rules otherwise refuse ("three-up feature
+ * cards"). It is allowed here because it is a diagram, not a set of features: the steps are in
+ * order, the arrows between them are the point, and it is an ordered list so a screen reader hears
+ * the sequence too. Do not reuse the pattern for anything that is not a sequence.
+ */
+import { pick, type Locale } from '../i18n/routes'
+
+interface Props {
+  locale: Locale
+}
+
+const { locale } = Astro.props
+
+const text = {
+  heading: { en: 'How the bridge works', es: 'Cómo funciona el puente' },
+  sub: {
+    en: 'Dallas already has food, clothing, space, and people who care. We make sure it reaches the neighbors who need it.',
+    es: 'Dallas ya cuenta con comida, ropa, espacios y personas comprometidas. Nos aseguramos de que todo eso llegue a los vecinos que lo necesitan.',
+  },
+}
+
+const steps = [
+  {
+    label: { en: 'Start here', es: 'Aquí empieza' },
+    name: { en: 'A neighbor in need', es: 'Un vecino que necesita ayuda' },
+    description: {
+      en: 'Hungry, unhoused, or short on essentials, and unsure where to turn.',
+      es: 'Con hambre, sin hogar o sin lo básico, y sin saber a quién acudir.',
+    },
+  },
+  {
+    label: { en: 'We connect', es: 'Conectamos' },
+    name: { en: 'Ground Support', es: 'Ground Support' },
+    description: {
+      en: 'Referrals, rescued food, clothing, and summits that line up help with need.',
+      es: 'Referidos, alimentos rescatados, ropa y cumbres que hacen coincidir la ayuda con la necesidad.',
+    },
+    ours: true,
+  },
+  {
+    label: { en: 'Delivered by', es: 'A cargo de' },
+    name: { en: 'Community hubs', es: 'Centros comunitarios' },
+    description: {
+      en: 'Partners across Dallas deliver zero-barrier relief and long-term stabilization.',
+      es: 'Organizaciones aliadas en todo Dallas brindan ayuda sin barreras y estabilidad a largo plazo.',
+    },
+  },
+]
+---
+
+<section class="bridge full">
+  <div class="bridge__inner">
+    <div class="bridge__head">
+      <h2>{pick(text.heading, locale)}</h2>
+      <p class="bridge__sub">{pick(text.sub, locale)}</p>
+    </div>
+
+    <ol class="bridge__steps">
+      {
+        steps.map((step, i) => (
+          <li class:list={['bridge__step', step.ours && 'bridge__step--ours']}>
+            {/* Drawn rather than typed: the display face's Google subset has no "→", so a typed
+                arrow would come from whatever system font has one. */}
+            {i > 0 && (
+              <span class="bridge__arrow" aria-hidden="true">
+                <svg viewBox="0 0 48 24" width="48" height="24">
+                  <path d="M2 12H42M31 3l11 9-11 9" />
+                </svg>
+              </span>
+            )}
+            <p class="eyebrow">{pick(step.label, locale)}</p>
+            <h3 class="bridge__name">{pick(step.name, locale)}</h3>
+            <p class="bridge__desc">{pick(step.description, locale)}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<style>
+  /* A full-width recessed band, with its contents on the same edges as the `wide` blocks around
+     it (see `--shell` in global.css). Its own top margin, like every section. */
+  .bridge {
+    margin-block-start: var(--space-2xl);
+    padding-block: var(--space-xl);
+    background: var(--paper-sunk);
+  }
+
+  .bridge__inner {
+    max-width: var(--shell);
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+  }
+
+  .bridge__head {
+    display: grid;
+    gap: var(--space-s) var(--space-xl);
+  }
+
+  /* The grid gap does the spacing, in both layouts. */
+  .bridge__sub {
+    margin: 0;
+    max-width: 52ch;
+    font-size: var(--text-lg);
+    color: var(--ink-muted);
+  }
+
+  .bridge__steps {
+    list-style: none;
+    padding: 0;
+    margin-block-start: var(--space-l);
+    display: grid;
+    gap: var(--space-xl);
+  }
+
+  /* Square, bordered, and unfilled: the one place on the site where boxes are drawn, because here
+     the boxes and the arrows between them are the diagram. */
+  .bridge__step {
+    position: relative;
+    padding: var(--space-m);
+    border: 2px solid var(--ink);
+  }
+
+  /* The organization's own step, in the colour of the primary act. */
+  .bridge__step--ours {
+    background: var(--signal);
+    border-color: var(--signal);
+    color: var(--signal-ink);
+  }
+
+  .bridge__step--ours .eyebrow,
+  .bridge__step--ours .bridge__desc {
+    color: inherit;
+  }
+
+  .bridge__name {
+    font-size: var(--text-xl);
+    margin-block-start: var(--space-2xs);
+  }
+
+  .bridge__desc {
+    margin-block-start: var(--space-xs);
+    color: var(--ink-muted);
+  }
+
+  /* Each step after the first carries the arrow into it, centred in the gap before it: pointing
+     down while the steps are stacked, and turned to point across once they sit in a row. */
+  .bridge__arrow {
+    position: absolute;
+    inset-inline: 0;
+    inset-block-end: 100%;
+    height: var(--space-xl);
+    display: grid;
+    place-items: center;
+    color: var(--kraft);
+  }
+
+  .bridge__arrow svg {
+    width: 2.5rem;
+    height: auto;
+    transform: rotate(90deg);
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 4;
+  }
+
+  @media (min-width: 56rem) {
+    .bridge__head {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+      align-items: end;
+    }
+
+    .bridge__steps {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .bridge__arrow {
+      inset-inline: auto 100%;
+      inset-block: 0;
+      width: var(--space-xl);
+      height: auto;
+    }
+
+    .bridge__arrow svg {
+      transform: none;
+    }
+  }
+</style>

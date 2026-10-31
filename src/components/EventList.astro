@@ -163,19 +163,28 @@ function timeLabel(start: Date, end?: Date): string {
 
   .events__date {
     display: block;
-    font-weight: 700;
-    font-variant-numeric: tabular-nums;
+    font-family: var(--font-mono), ui-monospace, monospace;
+    font-weight: 500;
   }
 
   .events__time {
     display: block;
+    font-family: var(--font-mono), ui-monospace, monospace;
     font-size: var(--text-xs);
     color: var(--ink-faint);
-    font-variant-numeric: tabular-nums;
   }
 
+  /* A title, so it is set like one, in the display face. */
   .events__title {
-    font-weight: 500;
+    font-family: var(--font-display), 'Arial Narrow', sans-serif;
+    font-size: var(--text-xl);
+    font-weight: 800;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+
+  .events__title + * {
+    margin-block-start: var(--space-2xs);
   }
 
   /* Where to go is a fact, like the date beside it, so it is set in full ink; the description is

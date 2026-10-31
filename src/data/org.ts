@@ -69,10 +69,10 @@ export interface Filing {
 export const org = {
   name: 'Operation Ground Support',
 
-  /** Main statement: the homepage headline, the About lede, and the RSS feed's description. */
+  /** Main statement: the first sentence of the homepage lede, the About lede, and the RSS feed's description. */
   mission: {
-    en: 'Operation Ground Support is a 501(c)(3) nonprofit organization dedicated to serving our neighbors in Dallas.',
-    es: 'Operation Ground Support es una organización sin fines de lucro 501(c)(3) dedicada a servir a nuestros vecinos en Dallas.',
+    en: 'Operation Ground Support (OGS) is a 501(c)(3) nonprofit organization dedicated to serving our neighbors in Dallas.',
+    es: 'Operation Ground Support (OGS) es una organización sin fines de lucro 501(c)(3) dedicada a servir a nuestros vecinos en Dallas.',
   } as Localized,
 
   /**
@@ -88,7 +88,7 @@ export const org = {
   } as Localized,
 
   /**
-   * An alternate one-line positioning statement, shown in the footer.
+   * A one-line positioning statement: the homepage headline, and the footer on every page.
    */
   tagline: {
     en: "The bridge between need and what's already there to meet it.",
@@ -189,8 +189,8 @@ export const org = {
     },
     {
       name: {
-        en: 'Inventory Management',
-        es: 'Gestión de inventario',
+        en: 'Noble Truth IT Inventory Management',
+        es: 'Gestión de inventario Noble Truth IT',
       },
       description: {
         en: 'Every donation is tracked through the Operation Ground Support Inventory Management app, built with Noble Truth IT. This provides information for real-time logistics and for audits.',

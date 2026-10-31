@@ -16,37 +16,51 @@
 
 :root {
   /* Colour ------------------------------------------------------------------------------------
-   * Deliberately narrow: a warm paper, a soft-black ink, and one structural accent.
-   * When the bridge logo is finalised, re-derive --accent and --accent-deep from the mark and
-   * change nothing else — every other colour is neutral on purpose so the palette can swap here.
+   * A field-operations palette, dark: a deep navy ground, near-white ink, and three accents that
+   * each have one job. Cobalt is for links and counted numbers. Signal orange is for the primary
+   * act (Donate), focus rings, the current-page mark, and the organization's own step in the
+   * bridge diagram. Kraft is the colour of a cardboard box, and is used only for the transparency
+   * bar and the diagram's arrows. The light version of the same palette is under `@media print`
+   * at the end of this file.
+   *
+   * `--paper` and `--ink` keep their names in the dark: they mean the ground and the text, not
+   * which of the two is lighter.
+   *
+   * Every text pairing here passes WCAG AA at small sizes. That is why the text on orange is
+   * near-black rather than white: white on --signal is 2.7:1, --signal-ink is 7.15:1.
    */
-  --paper: #fbf9f5;
-  --paper-sunk: #f3efe7; /* recessed bands: the transparency bar, pull-quotes, the footer */
-  --ink: #1b1a17;
-  --ink-muted: #55524b;
-  --ink-faint: #7d7970;
-  --rule: #ddd7cb;
-  --rule-strong: #bdb5a5;
+  color-scheme: dark;
+  --paper: #0d1129;
+  --paper-sunk: #080b1d; /* recessed bands: the footer, the bridge diagram, an image still loading */
+  --ink: #eeedf6;
+  --ink-muted: #a5a9c9;
+  --ink-faint: #8a8eb0;
+  --rule: #2d3463;
+  --rule-strong: #4b5384;
 
-  --accent: #1f4a54; /* deep slate-teal; links, headings that carry weight */
-  --accent-deep: #143239;
-  --accent-wash: #e6eeef;
+  --accent: #7c8bff; /* cobalt */
+  --signal: #ff7340;
+  --signal-hover: #ff8d61;
+  --signal-ink: #1a0a02; /* text set on --signal */
+  --kraft: #c79f62;
+  --kraft-ink: #1e1506; /* text set on --kraft; --ink-muted is too faint there */
 
   /* Type ---------------------------------------------------------------------------------------
-   * --font-serif and --font-sans are injected by Astro's font pipeline (see astro.config.mjs);
-   * the families are downloaded at build time and served from our own origin.
+   * --font-headline, --font-display, --font-sans, and --font-mono are injected by Astro's font
+   * pipeline (see astro.config.mjs, which says what each is for); the families are downloaded at
+   * build time and served from our own origin.
    *
-   * The scale is fluid but shallow. Display sizes that balloon on a wide screen read as a
-   * marketing page; this one should read as a civic document that happens to be well set.
+   * The body sizes are shallow. The top three are large because they set only condensed display
+   * faces, which at a given size cover far less of the page than a normal-width one.
    */
   --text-xs: 0.78rem;
   --text-sm: 0.875rem;
   --text-base: 1.0625rem;
   --text-lg: 1.1875rem;
   --text-xl: clamp(1.3rem, 1.15rem + 0.6vw, 1.55rem);
-  --text-2xl: clamp(1.6rem, 1.35rem + 1.1vw, 2.05rem);
-  --text-3xl: clamp(2rem, 1.55rem + 2vw, 2.85rem);
-  --text-display: clamp(2.2rem, 1.5rem + 3.1vw, 3.6rem);
+  --text-2xl: clamp(2rem, 1.6rem + 1.8vw, 2.9rem);
+  --text-3xl: clamp(2.6rem, 1.9rem + 3vw, 4.2rem);
+  --text-display: clamp(3rem, 1.8rem + 5vw, 5.75rem);
 
   --leading-tight: 1.15;
   --leading-snug: 1.3;
@@ -160,11 +174,23 @@ h1,
 h2,
 h3,
 h4 {
-  font-family: var(--font-serif), Georgia, serif;
-  font-weight: 600;
-  line-height: var(--leading-tight);
+  font-family: var(--font-display), 'Arial Narrow', sans-serif;
+  font-weight: 800;
+  line-height: 0.95;
+  text-transform: uppercase;
   text-wrap: balance;
-  letter-spacing: -0.011em;
+  letter-spacing: 0.01em;
+}
+
+/* Headings are set solid, with a line height under 1, so they carry almost no space below the
+ * cap line and the next block would touch them. Zero specificity, so any component that sets its
+ * own margin wins. Eyebrows are excluded: they are labels in the mono face, not display type. */
+:where(h1, h2):not(:where(.eyebrow)) + * {
+  margin-block-start: var(--space-s);
+}
+
+:where(h3, h4):not(:where(.eyebrow)) + * {
+  margin-block-start: var(--space-2xs);
 }
 
 h1 {
@@ -200,7 +226,7 @@ a:hover {
 a:focus-visible,
 button:focus-visible,
 summary:focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 3px solid var(--signal);
   outline-offset: 3px;
   border-radius: var(--radius);
 }
@@ -215,21 +241,20 @@ hr {
   margin-block: var(--space-l);
 }
 
-/* A small uppercase label. Used for section eyebrows and metadata. This is the only place
- * letterspaced caps appear; they stop working the moment they are everywhere. */
+/* A small uppercase label in the mono face. Used for section eyebrows and metadata, which is to
+ * say for things a reader scans past rather than reads. */
 .eyebrow {
+  font-family: var(--font-mono), ui-monospace, monospace;
   font-size: var(--text-xs);
-  font-weight: 700;
+  font-weight: 500;
   letter-spacing: 0.09em;
   text-transform: uppercase;
-  color: var(--ink-faint);
+  color: var(--ink-muted);
 }
 
 .lede {
-  font-family: var(--font-serif), Georgia, serif;
   font-size: var(--text-xl);
-  line-height: var(--leading-snug);
-  color: var(--ink-muted);
+  line-height: 1.45;
 }
 
 /* -------------------------------------------------------------------------------------------- *
@@ -319,30 +344,39 @@ main {
  * question of which one is primary. */
 .button {
   display: inline-block;
-  padding: var(--space-xs) var(--space-m);
-  background: var(--accent);
-  color: var(--paper);
-  font-weight: 500;
+  /* More padding below than above: the display face sets its capitals low in the line box, so
+     even padding leaves an all-caps label sitting about 2px low. Measured, not derived — re-check
+     by eye if --font-display changes, because another face can sit high instead. */
+  padding: 0.65rem 1.4rem 0.8rem;
+  background: var(--signal);
+  color: var(--signal-ink);
+  font-family: var(--font-display), 'Arial Narrow', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
   text-decoration: none;
-  border: 1px solid var(--accent);
+  border: 2px solid var(--signal);
   border-radius: var(--radius);
-  transition: background 120ms ease;
+  transition: background 120ms ease, color 120ms ease;
 }
 
 .button:hover {
-  background: var(--accent-deep);
-  border-color: var(--accent-deep);
+  background: var(--signal-hover);
+  border-color: var(--signal-hover);
 }
 
 .button--quiet {
   background: transparent;
-  color: var(--accent);
-  border-color: var(--rule-strong);
+  color: var(--ink);
+  border-color: var(--ink);
 }
 
 .button--quiet:hover {
-  background: var(--accent-wash);
-  border-color: var(--accent);
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--paper);
 }
 
 .visually-hidden {
@@ -356,12 +390,29 @@ main {
   border: 0;
 }
 
+/* Printed pages use the light version of the palette. A dark page would print as a sheet of
+ * toner, and browsers leave out background colours by default anyway, which would put the
+ * near-white screen ink on white paper. */
 @media print {
+  :root {
+    color-scheme: light;
+    --paper: #ffffff;
+    --paper-sunk: #ffffff;
+    --ink: #13183b;
+    --ink-muted: #4f5476;
+    --ink-faint: #5e6280;
+    --rule: #cfcdc3;
+    --rule-strong: #a9a698;
+    --accent: #2d3fbf;
+    --signal: #d14417;
+    --signal-hover: #b83a10;
+    --signal-ink: #ffffff;
+    --kraft: #ddbc85;
+    --kraft-ink: #2a1e0a;
+  }
+
   .skip-link,
   nav {
     display: none;
-  }
-  body {
-    background: #fff;
   }
 }

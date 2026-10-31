@@ -63,7 +63,7 @@ const latestFiling = org.filings.length > 0 ? org.filings[0] : null
 <style>
   .footer {
     background: var(--paper-sunk);
-    border-block-start: 1px solid var(--rule);
+    border-block-start: 2px solid var(--ink);
     font-size: var(--text-sm);
     padding-block: var(--space-xl);
   }
@@ -71,7 +71,7 @@ const latestFiling = org.filings.length > 0 ? org.filings[0] : null
   .footer__ein {
     margin-block-start: var(--space-xs);
     color: var(--ink-muted);
-    font-variant-numeric: tabular-nums;
+    font-family: var(--font-mono), ui-monospace, monospace;
   }
 
   /* The licence line, under the three columns. No copyright notice above it on purpose: the
@@ -80,8 +80,9 @@ const latestFiling = org.filings.length > 0 ? org.filings[0] : null
   .footer__legal {
     margin-block-start: var(--space-l);
     padding-block-start: var(--space-m);
-    border-block-start: 1px solid var(--rule);
+    border-block-start: 2px solid var(--ink);
     display: block;
+    font-family: var(--font-mono), ui-monospace, monospace;
     font-size: var(--text-xs);
     color: var(--ink-faint);
   }
@@ -96,9 +97,12 @@ const latestFiling = org.filings.length > 0 ? org.filings[0] : null
   }
 
   .footer__name {
-    font-family: var(--font-serif), Georgia, serif;
-    font-weight: 600;
-    font-size: var(--text-lg);
+    font-family: var(--font-display), 'Arial Narrow', sans-serif;
+    font-weight: 800;
+    font-size: var(--text-2xl);
+    line-height: 0.95;
+    text-transform: uppercase;
+    margin-block-end: var(--space-2xs);
   }
 
   .footer__muted {

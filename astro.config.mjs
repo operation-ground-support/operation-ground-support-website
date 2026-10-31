@@ -33,15 +33,33 @@ export default defineConfig({
   // Astro downloads these at build time and serves them from our own origin, so there is no
   // runtime request to Google and no third-party tracking surface. NOTE: this means a build
   // needs network access the first time; results are cached under `node_modules/.astro`.
+  //
+  // Four roles: a stencil face for the homepage headline alone, a condensed display face for
+  // every other heading and button, a sans for reading, and a mono for labels and metadata. To try
+  // another face in a role, change `name` (and `weights`, if it has fewer); a weight the face
+  // lacks falls back to its nearest, never a synthesised bold.
   fonts: [
     {
       provider: fontProviders.google(),
-      name: 'Source Serif 4',
-      cssVariable: '--font-serif',
-      weights: [400, 600],
-      styles: ['normal', 'italic'],
+      name: 'Big Shoulders Stencil',
+      cssVariable: '--font-headline',
+      weights: [900],
+      styles: ['normal'],
       subsets: ['latin', 'latin-ext'],
-      fallbacks: ['Georgia', 'Times New Roman', 'serif'],
+      fallbacks: ['Impact', 'Arial Narrow', 'sans-serif'],
+      // The family has an optical-size axis, and Google's default instance is its small-text end,
+      // set wider and looser. 72 is the display end — what Google used to publish separately as
+      // "Big Shoulders Stencil Display", which is no longer a name Astro can find.
+      options: { experimental: { variableAxis: { opsz: ['72'] } } },
+    },
+    {
+      provider: fontProviders.google(),
+      name: 'Barlow Condensed',
+      cssVariable: '--font-display',
+      weights: [800],
+      styles: ['normal'],
+      subsets: ['latin', 'latin-ext'],
+      fallbacks: ['Arial Narrow', 'sans-serif'],
     },
     {
       provider: fontProviders.google(),
@@ -51,6 +69,15 @@ export default defineConfig({
       styles: ['normal'],
       subsets: ['latin', 'latin-ext'],
       fallbacks: ['system-ui', 'Segoe UI', 'Helvetica Neue', 'sans-serif'],
+    },
+    {
+      provider: fontProviders.google(),
+      name: 'IBM Plex Mono',
+      cssVariable: '--font-mono',
+      weights: [400, 500],
+      styles: ['normal'],
+      subsets: ['latin', 'latin-ext'],
+      fallbacks: ['ui-monospace', 'Menlo', 'Consolas', 'monospace'],
     },
   ],
 

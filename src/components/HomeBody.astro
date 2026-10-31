@@ -11,6 +11,7 @@
  * behind the English one structurally. The prose comes from `org.ts`, already in both languages.
  */
 import Doors from './Doors.astro'
+import BridgeChain from './BridgeChain.astro'
 import Programs from './Programs.astro'
 import TaxCode from './TaxCode.astro'
 import MetricRow from './MetricRow.astro'
@@ -41,9 +42,11 @@ const allUpdates = navLink('updates', locale)
 ---
 
 <p class="eyebrow">{pick(text.eyebrow, locale)}</p>
-<h1 class="statement"><TaxCode text={pick(org.mission, locale)} /></h1>
+<h1 class="statement">{pick(org.tagline, locale)}</h1>
 
-<p class="lede">{pick(org.lede, locale)}</p>
+{/* The mission leads the paragraph rather than the page: it is the sentence that names the
+    organization and its 501(c)(3) status, so a reviewer still meets it first. */}
+<p class="lede"><TaxCode text={pick(org.mission, locale)} /> {pick(org.lede, locale)}</p>
 
 <Doors locale={locale} />
 
@@ -53,6 +56,9 @@ const allUpdates = navLink('updates', locale)
 <EventList locale={locale} />
 
 <MetricRow locale={locale} />
+
+{/* Just above the programs: it is the model, and each program below is one way of doing it. */}
+<BridgeChain locale={locale} />
 
 <Programs locale={locale} />
 
@@ -81,16 +87,24 @@ const allUpdates = navLink('updates', locale)
 }
 
 <style>
-  /* The opening statement. Serif, large, tight — and capped in width so it stays a sentence
-     someone reads rather than a banner they skim past. Four lines is the target: past that it
-     stops reading as a sentence and starts reading as a wall. If `--measure` moves, re-check
-     the line count here, because `ch` is relative to the font size and not to the column. */
+  /* The place name, as a cobalt tag: the one spot on the page where that colour is a fill. */
+  .eyebrow {
+    display: inline-block;
+    justify-self: start;
+    background: var(--accent);
+    color: var(--paper);
+    padding: 0.2em 0.6em;
+  }
+
+  /* The tagline, at the largest size on the site and in the stencil face, which appears nowhere
+     else. It is short enough for display size; a longer sentence here would need a step down.
+     If the sentence or `--measure` changes, re-check the line count. */
   .statement {
-    font-size: var(--text-3xl);
-    line-height: 1.14;
-    letter-spacing: -0.015em;
-    margin-block-start: var(--space-2xs);
-    max-width: 28ch;
+    font-family: var(--font-headline), Impact, 'Arial Narrow', sans-serif;
+    font-size: var(--text-display);
+    font-weight: 900;
+    line-height: 0.9;
+    margin-block-start: var(--space-s);
     text-wrap: balance;
   }
 
@@ -115,9 +129,9 @@ const allUpdates = navLink('updates', locale)
 
   .recent time {
     display: block;
+    font-family: var(--font-mono), ui-monospace, monospace;
     font-size: var(--text-xs);
     color: var(--ink-faint);
-    font-variant-numeric: tabular-nums;
   }
 
   .recent a {
