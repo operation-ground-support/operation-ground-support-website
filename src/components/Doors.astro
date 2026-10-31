@@ -7,7 +7,7 @@
  * single "Learn more".
  *
  * Deliberately not icon cards. Icon triptychs are the strongest single tell of a template site,
- * and an icon adds nothing to "Donate money" that the words do not already carry.
+ * and an icon adds nothing to "Donate" that the word does not already carry.
  */
 import { useTranslations } from '../i18n/ui'
 import { navLink, type Locale } from '../i18n/routes'
@@ -22,7 +22,7 @@ const t = useTranslations(locale)
 // As in the nav, a door whose page is not translated still opens — onto the English page, marked
 // as such. `hreflang` without `lang`, for the reason given in Header.astro.
 //
-// "Donate money" is solid because it is the one act with no logistics in the way. Emphasis
+// "Donate" is solid because it is the one act with no logistics in the way. Emphasis
 // matches the navigation so the same action does not look primary in one place and secondary in
 // another.
 const doors = [
@@ -55,10 +55,11 @@ const doors = [
 </ul>
 
 <style>
+  /* No margin of its own: it sits in its parent's grid, and the grid's gap places it. */
   .doors {
     list-style: none;
     padding: 0;
-    margin: var(--space-l) 0 0;
+    margin: 0;
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-s);

@@ -1,0 +1,76 @@
+---
+/**
+ * The closing call to action at the foot of the homepage: one stencilled sentence and the two
+ * doors. The doors used to sit under the opening paragraph; now that the masthead stays in view
+ * as the page scrolls, they appear once in the nav and once here, after a reader has seen
+ * everything else.
+ */
+import Doors from './Doors.astro'
+import { pick, type Locale } from '../i18n/routes'
+
+interface Props {
+  locale: Locale
+}
+
+const { locale } = Astro.props
+
+const text = {
+  heading: { en: 'Help us build the bridge', es: 'Ayúdenos a construir el puente' },
+}
+---
+
+<section class="closing full">
+  <div class="closing__inner">
+    <h2 class="closing__heading">{pick(text.heading, locale)}</h2>
+    <Doors locale={locale} />
+  </div>
+</section>
+
+<style>
+  /* A cobalt band: a light ground on a dark page. Near-white ink is 2.6:1 on it, so the band
+     swaps `--ink` for the page's navy, and everything inside that draws in ink follows: the
+     heading, the outline button, and the hover shadow.
+
+     The negative bottom margin cancels `main`'s bottom padding (`--space-2xl` in global.css) so
+     the band meets the footer. That is only right while it is the last thing on the page. */
+  .closing {
+    --ink: var(--paper);
+    margin-block: var(--space-2xl) calc(-1 * var(--space-2xl));
+    padding-block: var(--space-xl);
+    background: var(--accent);
+    color: var(--ink);
+  }
+
+  .closing__inner {
+    max-width: var(--shell);
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+    display: grid;
+    gap: var(--space-l) var(--space-xl);
+    align-items: center;
+  }
+
+  @media (min-width: 56rem) {
+    .closing__inner {
+      grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+    }
+  }
+
+  /* The homepage's other use of the stencil face, after its opening headline. */
+  .closing__heading {
+    font-family: var(--font-headline), Impact, 'Arial Narrow', sans-serif;
+    font-size: var(--text-3xl);
+    font-weight: 900;
+    line-height: 0.9;
+  }
+
+  /* Orange against cobalt is 1.1:1, so neither the solid button's edge nor the usual orange focus
+     ring would show here. Both are drawn in the band's ink instead. */
+  .closing :global(.button) {
+    border-color: var(--ink);
+  }
+
+  .closing :global(a:focus-visible) {
+    outline-color: var(--ink);
+  }
+</style>

@@ -54,7 +54,7 @@ const en = {
   'a11y.mainNav': 'Main navigation',
   'a11y.transparencyBar': 'Organizational transparency',
 
-  'cta.donate': 'Donate money',
+  'cta.donate': 'Donate',
   'cta.volunteer': 'Volunteer',
 } as const
 
@@ -94,7 +94,7 @@ const es: Record<keyof typeof en, string> = {
   'a11y.mainNav': 'Navegación principal',
   'a11y.transparencyBar': 'Transparencia de la organización',
 
-  'cta.donate': 'Donar dinero',
+  'cta.donate': 'Donar',
   'cta.volunteer': 'Ser voluntario',
 }
 

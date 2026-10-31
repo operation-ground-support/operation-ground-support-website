@@ -10,8 +10,8 @@
  * One body for both languages, like `ContactBody.astro`, so the Spanish homepage cannot fall
  * behind the English one structurally. The prose comes from `org.ts`, already in both languages.
  */
-import Doors from './Doors.astro'
 import BridgeChain from './BridgeChain.astro'
+import CallToAction from './CallToAction.astro'
 import Programs from './Programs.astro'
 import TaxCode from './TaxCode.astro'
 import MetricRow from './MetricRow.astro'
@@ -47,8 +47,6 @@ const allUpdates = navLink('updates', locale)
 {/* The mission leads the paragraph rather than the page: it is the sentence that names the
     organization and its 501(c)(3) status, so a reviewer still meets it first. */}
 <p class="lede"><TaxCode text={pick(org.mission, locale)} /> {pick(org.lede, locale)}</p>
-
-<Doors locale={locale} />
 
 {/* Above the programs on purpose. Someone who already knows this organization comes back to
     find out when the next distribution is, and a dated list of real events is more convincing
@@ -86,8 +84,11 @@ const allUpdates = navLink('updates', locale)
   )
 }
 
+{/* Last on the page, and it has to stay last: it pulls itself down to meet the footer. */}
+<CallToAction locale={locale} />
+
 <style>
-  /* The place name, as a cobalt tag: the one spot on the page where that colour is a fill. */
+  /* The place name, as a cobalt tag, answering the cobalt band that closes the page. */
   .eyebrow {
     display: inline-block;
     justify-self: start;
@@ -96,9 +97,9 @@ const allUpdates = navLink('updates', locale)
     padding: 0.2em 0.6em;
   }
 
-  /* The tagline, at the largest size on the site and in the stencil face, which appears nowhere
-     else. It is short enough for display size; a longer sentence here would need a step down.
-     If the sentence or `--measure` changes, re-check the line count. */
+  /* The tagline, at the largest size on the site and in the stencil face, which appears only here
+     and in the closing band. It is short enough for display size; a longer sentence here would
+     need a step down. If the sentence or `--measure` changes, re-check the line count. */
   .statement {
     font-family: var(--font-headline), Impact, 'Arial Narrow', sans-serif;
     font-size: var(--text-display);

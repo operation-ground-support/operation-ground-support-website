@@ -59,14 +59,15 @@ requires a caption so the image has to earn its place.
 Colour, type, and spacing are tokens in `src/styles/global.css`. The site is dark on screen and
 light in print, with no light screen theme and no toggle. The light values are under `@media print`
 at the end of that file, and a new colour token needs one there too, or it prints as near-white on
-white paper. Each accent has one job: signal orange
-for the primary act (Donate), focus rings, and the current-page mark; cobalt for links; kraft for
-the transparency bar and the bridge diagram's arrows. Text on orange is near-black, because white
-fails contrast there. How the palette relates to the coming bridge logo is in `docs/logo.md`.
+white paper. Each accent has one job: signal orange for the primary act (Donate), focus rings, and
+the current-page mark; cobalt for links and the homepage's closing band; kraft for the transparency
+bar and the bridge diagram's arrows. Text on orange is near-black, because white fails contrast
+there. How the palette relates to the coming bridge logo is in `docs/logo.md`.
 
-The fonts have fixed roles. The stencil face (`--font-headline`) sets the homepage headline and
-nothing else. Every other heading, button, and title is `--font-display` (Barlow Condensed), body
-text is `--font-sans`, and labels and metadata are `--font-mono`.
+The fonts have fixed roles. The stencil face (`--font-headline`) sets two headings, the homepage's
+opening tagline and its closing "Help us build the bridge", and nothing else. Every other heading,
+button, and title is `--font-display` (Barlow Condensed), body text is `--font-sans`, and labels
+and metadata are `--font-mono`.
 
 ## Structural invariants
 

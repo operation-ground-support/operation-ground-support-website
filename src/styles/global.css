@@ -17,7 +17,8 @@
 :root {
   /* Colour ------------------------------------------------------------------------------------
    * A field-operations palette, dark: a deep navy ground, near-white ink, and three accents that
-   * each have one job. Cobalt is for links and counted numbers. Signal orange is for the primary
+   * each have one job. Cobalt is for links, counted numbers, and the homepage's closing band.
+   * Signal orange is for the primary
    * act (Donate), focus rings, the current-page mark, and the organization's own step in the
    * bridge diagram. Kraft is the colour of a cardboard box, and is used only for the transparency
    * bar and the diagram's arrows. The light version of the same palette is under `@media print`
@@ -40,7 +41,7 @@
 
   --accent: #7c8bff; /* cobalt */
   --signal: #ff7340;
-  --signal-hover: #ff8d61;
+  --signal-current: #ff8d61; /* the nav's Donate button while on the Donate page */
   --signal-ink: #1a0a02; /* text set on --signal */
   --kraft: #c79f62;
   --kraft-ink: #1e1506; /* text set on --kraft; --ink-muted is too faint there */
@@ -121,6 +122,15 @@
 html {
   -webkit-text-size-adjust: 100%;
   scroll-behavior: smooth;
+}
+
+/* Where the masthead stays in view (see `Header.astro`), an in-page jump (the skip link, a text
+ * fragment) has to stop below it rather than under it. Its height is the 4rem sign plus padding
+ * and border; the rest is air. */
+@media (min-width: 56rem) {
+  html {
+    scroll-padding-top: 6.5rem;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -359,24 +369,22 @@ main {
   text-decoration: none;
   border: 2px solid var(--signal);
   border-radius: var(--radius);
-  transition: background 120ms ease, color 120ms ease;
+  transition: transform 150ms ease, box-shadow 150ms ease;
 }
 
+/* Hover lifts a button rather than recolouring it: up and left by 2px, over a hard shadow in the
+ * ink colour. Motion is for hover and colour is for state, so the nav can still mark the current
+ * page by colour without the two being confused. Under reduced motion the lift still happens,
+ * just without the movement between. */
 .button:hover {
-  background: var(--signal-hover);
-  border-color: var(--signal-hover);
+  transform: translate(-2px, -2px);
+  box-shadow: 4px 4px 0 var(--ink);
 }
 
 .button--quiet {
   background: transparent;
   color: var(--ink);
   border-color: var(--ink);
-}
-
-.button--quiet:hover {
-  background: var(--ink);
-  border-color: var(--ink);
-  color: var(--paper);
 }
 
 .visually-hidden {
@@ -405,7 +413,7 @@ main {
     --rule-strong: #a9a698;
     --accent: #2d3fbf;
     --signal: #d14417;
-    --signal-hover: #b83a10;
+    --signal-current: #b83a10;
     --signal-ink: #ffffff;
     --kraft: #ddbc85;
     --kraft-ink: #2a1e0a;

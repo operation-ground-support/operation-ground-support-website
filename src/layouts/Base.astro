@@ -58,7 +58,7 @@ const known = (value: string | null | undefined): value is string => Boolean(val
     <link rel="sitemap" href="/sitemap-index.xml" />
     <link rel="alternate" type="application/rss+xml" title={`${org.name} — ${t('updates.heading')}`} href="/rss.xml" />
 
-    {/* Preloaded only on pages keyed `home`: the stencil face sets the homepage headline and nothing else. */}
+    {/* Preloaded only on pages keyed `home`: the stencil face sets two homepage headings and nothing else. */}
     <Font cssVariable="--font-headline" preload={pageKey === 'home'} />
     <Font cssVariable="--font-display" preload />
     <Font cssVariable="--font-sans" preload />

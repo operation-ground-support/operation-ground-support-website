@@ -84,16 +84,29 @@ const homeHref = path('home', locale) ?? '/'
 
 <style>
   .masthead {
+    background: var(--paper);
     border-block-end: 2px solid var(--ink);
+  }
+
+  /* The masthead stays at the top of the window as the page scrolls, so Donate and Volunteer are
+     always in reach; the transparency bar above it scrolls away. Only from 56rem, where it fits on
+     one row: on a phone it is three rows tall and would hold down a third of the screen. The
+     in-page jump offset that goes with this is `scroll-padding-top` in global.css. */
+  @media (min-width: 56rem) {
+    .masthead {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
   }
 
   .masthead__inner {
     max-width: var(--shell);
     margin-inline: auto;
-    padding: var(--space-m) var(--gutter);
+    padding: var(--space-xs) var(--gutter);
     display: flex;
     flex-wrap: wrap;
-    align-items: flex-end;
+    align-items: center;
     justify-content: space-between;
     gap: var(--space-m);
   }
@@ -174,7 +187,14 @@ const homeHref = path('home', locale) ?? '/'
     line-height: 1;
     letter-spacing: 0.06em;
     text-transform: uppercase;
-    transition: background 120ms ease, color 120ms ease;
+    transition: transform 150ms ease, box-shadow 150ms ease;
+  }
+
+  /* The same lift on hover as `.button` in global.css, except on the current page's button, which
+     is marked by colour instead and stays put. */
+  .nav__action:not([aria-current='page']):hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 4px 4px 0 var(--ink);
   }
 
   .nav__action--solid {
@@ -183,11 +203,9 @@ const homeHref = path('home', locale) ?? '/'
     color: var(--signal-ink);
   }
 
-  .nav__action--solid:hover,
   .nav__action--solid[aria-current='page'] {
-    background: var(--signal-hover);
-    border-color: var(--signal-hover);
-    color: var(--signal-ink);
+    background: var(--signal-current);
+    border-color: var(--signal-current);
   }
 
   .nav__action--outline {
@@ -196,7 +214,6 @@ const homeHref = path('home', locale) ?? '/'
     border-color: var(--ink);
   }
 
-  .nav__action--outline:hover,
   .nav__action--outline[aria-current='page'] {
     background: var(--ink);
     border-color: var(--ink);
