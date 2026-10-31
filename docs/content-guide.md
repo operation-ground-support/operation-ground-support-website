@@ -41,6 +41,12 @@ One file per event in `src/content/events/`. Copy the `_EXAMPLE_` file there —
 filled in and a comment on each — and delete its `draft: true` line once the event is confirmed.
 `src/content/events/README.md` has the short version.
 
+If the time is not set yet, give the day alone (`date: 2026-12-05`) and the event says the time is
+to be confirmed. A sign-up form made for one event can have its own button text, such as "Sign up
+for this event". An event can also show a photo or two from an earlier time; send those to
+whoever maintains the site, as with any photo (see Photographs below), along with a line saying
+what they show and when.
+
 Past events move into a collapsed list automatically; leave them there, since a visible history of
 things that actually happened is worth more than an empty page.
 

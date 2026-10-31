@@ -5,7 +5,8 @@ title:
 start: 2026-11-07T13:00:00-06:00 # NOTE: use `-05:00` suffix during daylight saving, `-06:00` otherwise
 end: 2026-11-07T17:00:00-06:00
 
-location: Crossroads Community Services, 4500 S. Cockrell Hill Road, Dallas
+location: Crossroads Community Services
+address: 4500 S. Cockrell Hill Road, Dallas
 
 description:
   en: >-
@@ -15,3 +16,20 @@ description:
     Acción de Gracias.
 
 signUpUrl: https://docs.google.com/forms/d/e/1FAIpQLSekDKfaRJt4B5hGoRKIJATxoykEtHrO8XJKN3Hp4Sp7MbPAhA/viewform
+signUpLabel:
+  en: Sign up for this event
+  es: Inscríbase para este evento
+
+photos:
+  # No one identifiable in this photo.
+  - src: ./2026-11-07-produce.jpg
+    alt:
+      en: >-
+        Produce in crates and boxes on folding tables: pineapples, strawberries, oranges, broccoli,
+        zucchini, and bags of potatoes.
+      es: >-
+        Frutas y verduras en cajas y canastas sobre mesas plegables: piñas, fresas, naranjas,
+        brócoli, calabacitas y bolsas de papas.
+photoCaption:
+  en: Produce set out for food boxes, from an earlier packing day
+  es: Frutas y verduras listas para las cajas de alimentos, de una jornada de empaque anterior

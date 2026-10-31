@@ -19,8 +19,8 @@
    * A field-operations palette, dark: a deep navy ground, near-white ink, and three accents that
    * each have one job. Cobalt is for links, counted numbers, and the homepage's closing band.
    * Signal orange is for the primary
-   * act (Donate), focus rings, the current-page mark, and the organization's own step in the
-   * bridge diagram. Kraft is the colour of a cardboard box, and is used only for the transparency
+   * act (Donate, an event's sign-up), focus rings, the current-page mark, an event's countdown,
+   * and the organization's own step in the bridge diagram. Kraft is the colour of a cardboard box, and is used only for the transparency
    * bar and the diagram's arrows. The light version of the same palette is under `@media print`
    * at the end of this file.
    *
@@ -33,6 +33,7 @@
   color-scheme: dark;
   --paper: #0d1129;
   --paper-sunk: #080b1d; /* recessed bands: the footer, the bridge diagram, an image still loading */
+  --paper-raised: #161c42; /* surfaces lifted off the page: the event cards */
   --ink: #eeedf6;
   --ink-muted: #a5a9c9;
   --ink-faint: #8a8eb0;
@@ -103,6 +104,11 @@
   --gutter: clamp(1.25rem, 5vw, 3rem);
 
   --radius: 2px; /* almost square. Rounded cards read as a template. */
+
+  /* One consistent treatment across every photograph, on a page or on an event card. Consistency
+   * is most of what separates "phone snapshots" from "photographed by someone with a point of
+   * view". Tune once, here. */
+  --photo-filter: saturate(0.92) contrast(1.02);
 }
 
 /* -------------------------------------------------------------------------------------------- *
@@ -406,6 +412,7 @@ main {
     color-scheme: light;
     --paper: #ffffff;
     --paper-sunk: #ffffff;
+    --paper-raised: #ffffff;
     --ink: #13183b;
     --ink-muted: #4f5476;
     --ink-faint: #5e6280;

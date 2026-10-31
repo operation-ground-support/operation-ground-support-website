@@ -100,9 +100,8 @@ const sizes = `(max-width: ${maxWidth + 6}rem) 100vw, ${maxWidth}rem`
     width: 100%;
     aspect-ratio: 4 / 3;
     object-fit: cover;
-    /* One consistent treatment across every photograph. Consistency is most of what separates
-       "phone snapshots" from "photographed by someone with a point of view". Tune once, here. */
-    filter: saturate(0.92) contrast(1.02);
+    /* The site-wide treatment; see `--photo-filter` in global.css. */
+    filter: var(--photo-filter);
     background: var(--paper-sunk);
   }
 

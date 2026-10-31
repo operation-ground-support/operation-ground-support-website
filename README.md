@@ -108,7 +108,9 @@ These are not stylistic preferences. Each one is something a grant reviewer chec
 4. **`null` beats a plausible guess.** A missing fact renders as nothing and shows up in
    `just audit`. A fabricated one survives until a funder probes it.
 
-`just add-photo <source> <name>` resizes a photograph and strips its EXIF metadata. Phone photos
+`just add-photo <source> <name>` resizes a photograph and strips its EXIF metadata, and
+`just add-event-photo <source> <name>` does the same for an event's photo, beside the event files.
+Phone photos
 carry GPS coordinates; publishing them from this address would be a real disclosure.
 
 ## Licensing

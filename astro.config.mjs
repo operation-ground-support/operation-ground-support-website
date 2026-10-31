@@ -34,7 +34,8 @@ export default defineConfig({
   // runtime request to Google and no third-party tracking surface. NOTE: this means a build
   // needs network access the first time; results are cached under `node_modules/.astro`.
   //
-  // Four roles: a stencil face for the homepage's opening and closing headings alone, a condensed
+  // Four roles: a stencil face for the homepage's opening and closing headings and the day numbers
+  // on event cards, a condensed
   // display face for every other heading and button, a sans for reading, and a mono for labels and
   // metadata. To try
   // another face in a role, change `name` (and `weights`, if it has fewer); a weight the face

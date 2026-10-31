@@ -156,13 +156,20 @@ sync: _deps
 
 # Resize a photograph, strip its metadata, and copy it into src/assets/photos/
 add-photo SRC NAME:
+  @just _photo "{{SRC}}" "src/assets/photos/{{NAME}}.jpg"
+
+# Same, for an event's photo, beside the event files. Start NAME with the event's date, like the
+# event's own file, so the two sort together: `just add-event-photo ~/IMG_1234.jpg 2026-12-05-cards-1`
+add-event-photo SRC NAME:
+  @just _photo "{{SRC}}" "src/content/events/{{NAME}}.jpg"
+
+_photo SRC TARGET:
   #!/usr/bin/env bash
   set -euo pipefail
-  mkdir -p src/assets/photos
-  target="src/assets/photos/{{NAME}}.jpg"
-  magick "{{SRC}}" -auto-orient -resize '2400x2400>' -quality 88 -strip "$target"
-  exiftool -all= -overwrite_original "$target" >/dev/null
-  echo "wrote $target ($(du -h "$target" | cut -f1)), metadata stripped"
+  mkdir -p "$(dirname "{{TARGET}}")"
+  magick "{{SRC}}" -auto-orient -resize '2400x2400>' -quality 88 -strip "{{TARGET}}"
+  exiftool -all= -overwrite_original "{{TARGET}}" >/dev/null
+  echo "wrote {{TARGET}} ($(du -h "{{TARGET}}" | cut -f1)), metadata stripped"
 
 # Minify an SVG in place, for logo files
 optimize-svg FILE:

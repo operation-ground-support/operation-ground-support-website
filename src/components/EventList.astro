@@ -1,13 +1,15 @@
 ---
 /**
- * Upcoming and past events.
+ * Upcoming and past events. Each upcoming event is a card: its photos if it has any, a date
+ * block, the details, a countdown, and a button. Past events are a plain collapsed list.
  *
  * The awkward part of events on a static site: "upcoming" is computed when the site is built, so
  * a page built in August still calls an August event upcoming in September. Two mitigations,
  * both cheap:
  *
- *   1. Every item carries the ISO timestamp it ends at in `data-ends`, and a few lines of script
- *      move anything already over into the past list on load. No framework, no hydration.
+ *   1. Every card carries the moment it ends in `data-ends`, and a few lines of script move
+ *      anything already over into the past list on load, and fill in each countdown. No
+ *      framework, no hydration.
  *   2. The deploy is rebuilt on a schedule so the no-JavaScript rendering is never far off.
  *      See `docs/operations.md`.
  *
@@ -15,15 +17,20 @@
  * portability the rest of the stack buys.
  *
  * Every date and time here is rendered in Dallas time, deliberately and explicitly. `formatDate`
- * defaults to UTC, which is right for the date-only values elsewhere on the site (`2026-08-27`
- * is midnight UTC, and formatting it in Chicago would show the day before). An event is a moment,
- * not a date: 7 PM in Dallas is already tomorrow in UTC, so formatting an evening event's date in
- * UTC would print the next day beside the correct time, and someone would turn up a day late.
+ * defaults to UTC, which is right for date-only values (`2026-08-27` is midnight UTC, and
+ * formatting it in Chicago would show the day before). An event is a moment, not a date: 7 PM in
+ * Dallas is already tomorrow in UTC, so formatting an evening event's date in UTC would print the
+ * next day beside the correct time, and someone would turn up a day late. An event with a `date`
+ * and no `start` yet is a date-only value, and is formatted in UTC like any other.
+ *
+ * The cards are square and bordered, in a site that otherwise avoids cards, because each is one
+ * real, dated event rather than one of a set of features.
  */
+import { Image } from 'astro:assets'
 import { getCollection } from 'astro:content'
 import { useTranslations, formatDate } from '../i18n/ui'
 import { tr } from '../i18n/content'
-import type { Locale } from '../i18n/routes'
+import { navLink, type Locale } from '../i18n/routes'
 
 interface Props {
   locale: Locale
@@ -36,91 +43,232 @@ const t = useTranslations(locale)
 
 /** Where every event happens. See the note above on why this is passed explicitly. */
 const TZ = 'America/Chicago'
+const HOUR = 3_600_000
+const intlLocale = locale === 'es' ? 'es-US' : 'en-US'
 
-const now = Date.now()
-const all = (await getCollection('events', ({ data }) => !data.draft)).sort(
-  (a, b) => a.data.start.getTime() - b.data.start.getTime(),
-)
-
-const upcoming = all.filter((e) => (e.data.end ?? e.data.start).getTime() >= now).slice(0, limit)
-const past = all.filter((e) => (e.data.end ?? e.data.start).getTime() < now).reverse().slice(0, 4)
+// "Follow updates" is offered on an event with no sign-up link, but only once there is something
+// to follow: until the first update is posted, the button would lead to an empty page.
+const hasUpdates = (await getCollection('updates', ({ data }) => !data.draft)).length > 0
+const updates = navLink('updates', locale)
 
 function timeLabel(start: Date, end?: Date): string {
-  const opts: Intl.DateTimeFormatOptions = { hour: 'numeric', minute: '2-digit', timeZone: TZ }
-  const fmt = (d: Date) => new Intl.DateTimeFormat(locale === 'es' ? 'es-US' : 'en-US', opts).format(d)
+  const fmt = (d: Date) =>
+    new Intl.DateTimeFormat(intlLocale, { hour: 'numeric', minute: '2-digit', timeZone: TZ }).format(d)
   return end ? `${fmt(start)}–${fmt(end)}` : fmt(start)
 }
+
+const all = (await getCollection('events', ({ data }) => !data.draft))
+  .map(({ id, data }) => {
+    // A timed event is placed in Dallas time. One with only a `date` is that calendar day, read as
+    // midnight UTC and so formatted in UTC. It sorts from 06:00 UTC on the day, and is over at
+    // 06:00 UTC the next morning: midnight in Dallas in winter, 1 AM in summer.
+    const timed = data.start !== undefined
+    const at = (data.start ?? data.date)!
+    const zone = timed ? TZ : 'UTC'
+    const part = (opts: Intl.DateTimeFormatOptions) =>
+      new Intl.DateTimeFormat(intlLocale, { ...opts, timeZone: zone }).format(at)
+    // `en-CA` is the locale whose dates come out as `YYYY-MM-DD`.
+    const day = new Intl.DateTimeFormat('en-CA', { year: 'numeric', month: '2-digit', day: '2-digit', timeZone: zone }).format(at)
+
+    return {
+      id,
+      data,
+      sortsAt: timed ? at.getTime() : at.getTime() + 6 * HOUR,
+      ends: timed ? (data.end ?? at) : new Date(at.getTime() + 30 * HOUR),
+      /** The event's day in Dallas, for the countdown. */
+      day,
+      datetime: timed ? at.toISOString() : day,
+      // Spanish short months can end in a full stop ("nov."), which looks like a typo in capitals.
+      month: part({ month: 'short' }).replace(/\.$/, ''),
+      dayOfMonth: part({ day: 'numeric' }),
+      year: part({ year: 'numeric' }),
+      pastDate: formatDate(at, locale, { month: 'short', day: 'numeric', timeZone: zone }),
+      time: timed ? timeLabel(at, data.end) : t('events.timeTbd'),
+    }
+  })
+  .sort((a, b) => a.sortsAt - b.sortsAt)
+
+const now = Date.now()
+const upcoming = all.filter((e) => e.ends.getTime() >= now).slice(0, limit)
+const past = all.filter((e) => e.ends.getTime() < now).reverse().slice(0, 4)
+
+type EventItem = (typeof all)[number]
+
+/** The card's button: the event's own sign-up form, or else the updates page once it has posts. */
+function action({ data }: EventItem) {
+  if (data.signUpUrl) {
+    const label = data.signUpLabel ? tr(data.signUpLabel, locale) : t('cta.volunteer')
+    return { href: data.signUpUrl, label, quiet: false, rel: 'noopener', hreflang: undefined }
+  }
+  if (hasUpdates) {
+    const hreflang = updates.isFallback ? updates.lang : undefined
+    return { href: updates.href, label: t('events.followUpdates'), quiet: true, rel: undefined, hreflang }
+  }
+  return undefined
+}
+
+/** Two photos share the card's width, so each is drawn at half of it. 40rem is a card in the two-column grid. */
+const photoSizes = (count: number) =>
+  count === 2 ? '(max-width: 56rem) 50vw, 20rem' : '(max-width: 56rem) 100vw, 40rem'
 ---
 
-<section class="events" data-events>
+<section
+  class="events wide"
+  data-events
+  data-today={t('events.today')}
+  data-tomorrow={t('events.tomorrow')}
+  data-days-away={t('events.daysAway')}
+>
   <h2>{t('events.heading')}</h2>
 
   <ul class="events__list" data-list="upcoming">
     {
-      upcoming.map((e) => (
-        <li data-ends={(e.data.end ?? e.data.start).toISOString()}>
-          <time datetime={e.data.start.toISOString()}>
-            <span class="events__date">{formatDate(e.data.start, locale, { month: 'short', day: 'numeric', timeZone: TZ })}</span>
-            <span class="events__time">{timeLabel(e.data.start, e.data.end)}</span>
-          </time>
-          <div>
-            <p class="events__title">{tr(e.data.title, locale)}</p>
-            {e.data.location && (
-              <p class="events__where">
-                <span class="visually-hidden">{t('events.location')}: </span>
-                {tr(e.data.location, locale)}
-              </p>
+      upcoming.map((e) => {
+        const button = action(e)
+        const { photos, photoCaption } = e.data
+        return (
+          <li class="event" data-ends={e.ends.toISOString()} data-day={e.day}>
+            {photos.length > 0 && (
+              <figure class="event__photos">
+                <div class="event__frames" data-count={photos.length}>
+                  {photos.map((photo) => (
+                    <Image
+                      src={photo.src}
+                      alt={tr(photo.alt, locale)}
+                      widths={[400, 600, 900, 1200]}
+                      sizes={photoSizes(photos.length)}
+                      loading="lazy"
+                      decoding="async"
+                      style={photo.focus && `object-position: ${photo.focus}`}
+                    />
+                  ))}
+                </div>
+                {/* The schema requires a caption whenever there are photos. */}
+                <figcaption>{tr(photoCaption!, locale)}</figcaption>
+              </figure>
             )}
-            {e.data.description && <p class="events__desc">{tr(e.data.description, locale)}</p>}
-            {e.data.signUpUrl && <p class="events__signup"><a href={e.data.signUpUrl} rel="noopener">{t('cta.volunteer')}</a></p>}
-          </div>
-        </li>
-      ))
+
+            <div class="event__main">
+              <time class="event__date" datetime={e.datetime}>
+                <span class="event__month">{e.month}</span>
+                <span class="event__day">{e.dayOfMonth}</span>
+                <span class="event__year">{e.year}</span>
+              </time>
+
+              <div class="event__body">
+                <p class="event__away" data-away hidden />
+                <h3 class="event__title">{tr(e.data.title, locale)}</h3>
+                <p class="event__time">{e.time}</p>
+                {e.data.location && (
+                  <p class="event__where">
+                    <span class="visually-hidden">{t('events.location')}: </span>
+                    <strong>{tr(e.data.location, locale)}</strong>
+                    {e.data.address && (
+                      <>
+                        <br />
+                        <span class="event__address">{e.data.address}</span>
+                      </>
+                    )}
+                  </p>
+                )}
+                {e.data.description && <p class="event__desc">{tr(e.data.description, locale)}</p>}
+                {button && (
+                  <p class="event__action">
+                    <a
+                      class:list={['button', button.quiet && 'button--quiet']}
+                      href={button.href}
+                      rel={button.rel}
+                      hreflang={button.hreflang}
+                    >
+                      {button.label}
+                    </a>
+                  </p>
+                )}
+              </div>
+            </div>
+
+            {/* The row this event becomes in the past list, for the script to swap in once it is over. */}
+            <template>
+              <li>
+                <time datetime={e.datetime}>{e.pastDate}</time>
+                <span>{tr(e.data.title, locale)}</span>
+              </li>
+            </template>
+          </li>
+        )
+      })
     }
   </ul>
 
   <p class="events__empty" data-empty hidden={upcoming.length > 0}>{t('events.none')}</p>
 
-  {
-    past.length > 0 && (
-      <details class="events__past">
-        <summary>{t('events.past')}</summary>
-        <ul class="events__list" data-list="past">
-          {past.map((e) => (
-            <li>
-              <time datetime={e.data.start.toISOString()}>
-                <span class="events__date">{formatDate(e.data.start, locale, { month: 'short', day: 'numeric', timeZone: TZ })}</span>
-              </time>
-              <div>
-                <p class="events__title">{tr(e.data.title, locale)}</p>
-              </div>
-            </li>
-          ))}
-        </ul>
-      </details>
-    )
-  }
+  {/* Always rendered, so the script has somewhere to put an event that ends after the build. */}
+  <details class="events__past" data-past hidden={past.length === 0}>
+    <summary>{t('events.past')}</summary>
+    <ul class="events__past-list" data-list="past">
+      {
+        past.map((e) => (
+          <li>
+            <time datetime={e.datetime}>{e.pastDate}</time>
+            <span>{tr(e.data.title, locale)}</span>
+          </li>
+        ))
+      }
+    </ul>
+  </details>
 </section>
 
 <script>
-  // Re-evaluate "upcoming" in the visitor's browser, so a stale build does not advertise an event
-  // that already happened. Progressive enhancement: with scripting off, the build-time split
-  // still applies and is at worst a few days out of date.
-  for (const root of document.querySelectorAll('[data-events]')) {
+  // Two jobs in the visitor's browser, because the page may have been built days ago. Progressive
+  // enhancement: with scripting off, the build-time split stands and there is no countdown.
+  //
+  //   1. An event that is already over leaves the cards for the past list, as the row it carries.
+  //   2. Every other event shows how many days away it is, counted in Dallas calendar days.
+  const dallasDay = (date: Date) =>
+    new Intl.DateTimeFormat('en-CA', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      timeZone: 'America/Chicago',
+    }).format(date)
+
+  // Days counted between UTC midnights, so a clock change cannot make one 23 or 25 hours long.
+  const dayNumber = (iso: string) =>
+    Date.UTC(Number(iso.slice(0, 4)), Number(iso.slice(5, 7)) - 1, Number(iso.slice(8, 10))) / 86_400_000
+
+  for (const root of document.querySelectorAll<HTMLElement>('[data-events]')) {
     const upcoming = root.querySelector('[data-list="upcoming"]')
     const past = root.querySelector('[data-list="past"]')
-    const empty = root.querySelector('[data-empty]')
+    const pastBox = root.querySelector<HTMLElement>('[data-past]')
+    const empty = root.querySelector<HTMLElement>('[data-empty]')
     if (!upcoming) continue
 
-    const now = Date.now()
-    for (const item of Array.from(upcoming.querySelectorAll('li[data-ends]'))) {
-      const ends = item.getAttribute('data-ends')
-      if (ends && new Date(ends).getTime() < now) {
-        if (past) past.prepend(item)
-        else item.remove()
+    const now = new Date()
+    const today = dayNumber(dallasDay(now))
+    for (const card of Array.from(upcoming.querySelectorAll<HTMLElement>(':scope > li[data-ends]'))) {
+      if (new Date(card.dataset.ends!).getTime() < now.getTime()) {
+        const row = card.querySelector('template')
+        if (row && past && pastBox) {
+          past.prepend(row.content.cloneNode(true))
+          pastBox.hidden = false
+        }
+        card.remove()
+        continue
+      }
+
+      const away = card.querySelector<HTMLElement>('[data-away]')
+      const days = dayNumber(card.dataset.day!) - today
+      if (away && days >= 0) {
+        away.textContent =
+          days === 0
+            ? root.dataset.today!
+            : days === 1
+              ? root.dataset.tomorrow!
+              : root.dataset.daysAway!.replace('{n}', String(days))
+        away.hidden = false
       }
     }
-    if (empty) (empty as HTMLElement).hidden = upcoming.children.length > 0
+    if (empty) empty.hidden = upcoming.children.length > 0
   }
 </script>
 
@@ -131,79 +279,184 @@ function timeLabel(start: Date, end?: Date): string {
     margin-block-start: var(--space-2xl);
   }
 
+  /* Each card keeps its own height. Stretched to match its neighbour, a card with no photo beside
+     one with a photo becomes a tall box that is mostly empty. */
   .events__list {
     list-style: none;
     padding: 0;
-    margin: var(--space-m) 0 0;
-  }
-
-  /* Wide enough for "Sep 26, 2026" and "10:00 AM–1:00 PM" each on one line. Below 34rem the date
-     moves above the title instead, because a fixed column that wide on a phone would squeeze the
-     description into a four-word ribbon. */
-  .events__list li {
+    margin: var(--space-l) 0 0;
     display: grid;
-    grid-template-columns: 8.25rem 1fr;
     gap: var(--space-m);
-    padding-block: var(--space-s);
-    border-block-start: 1px solid var(--rule);
+    align-items: start;
   }
 
-  @media (max-width: 34rem) {
-    .events__list li {
-      grid-template-columns: 1fr;
-      gap: var(--space-2xs);
-    }
-
-    .events__list time {
-      display: flex;
-      gap: var(--space-2xs);
-      align-items: baseline;
+  @media (min-width: 56rem) {
+    .events__list {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
 
-  .events__date {
-    display: block;
-    font-family: var(--font-mono), ui-monospace, monospace;
-    font-weight: 500;
+  /* Photos across the top, if any; below them the date block beside the details. */
+  .event {
+    background: var(--paper-raised);
+    border: 2px solid var(--ink);
   }
 
-  .events__time {
+  .event__photos {
+    margin: 0;
+    border-block-end: 2px solid var(--ink);
+  }
+
+  .event__frames {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 1fr);
+  }
+
+  .event__frames :global(img) {
     display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    filter: var(--photo-filter);
+    background: var(--paper-sunk);
+  }
+
+  /* Two photos side by side are each cut wider, so the strip is not twice as tall as one. */
+  .event__frames[data-count='2'] :global(img) {
+    aspect-ratio: 3 / 2;
+  }
+
+  .event__frames :global(img + img) {
+    border-inline-start: 2px solid var(--ink);
+  }
+
+  .event__photos figcaption {
+    padding: var(--space-2xs) var(--space-s);
+    border-block-start: 2px solid var(--ink);
     font-family: var(--font-mono), ui-monospace, monospace;
     font-size: var(--text-xs);
-    color: var(--ink-faint);
+    color: var(--ink-muted);
   }
 
-  /* A title, so it is set like one, in the display face. */
-  .events__title {
-    font-family: var(--font-display), 'Arial Narrow', sans-serif;
-    font-size: var(--text-xl);
-    font-weight: 800;
-    line-height: 1;
+  .event__main {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  /* The date as a block in the ink colour: month and year in the mono face, the day in the
+     stencil face, one of the few places it appears. */
+  .event__date {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 6.5rem;
+    padding: var(--space-s) var(--space-m);
+    background: var(--ink);
+    color: var(--paper);
+    text-align: center;
+  }
+
+  .event__month,
+  .event__year {
+    font-family: var(--font-mono), ui-monospace, monospace;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
   }
 
-  .events__title + * {
-    margin-block-start: var(--space-2xs);
+  .event__month {
+    font-size: 0.8rem;
   }
 
-  /* Where to go is a fact, like the date beside it, so it is set in full ink; the description is
-     commentary on it, so it stays muted, a step below. Same size for both — the difference is
-     colour, weight, and the gap between them, not a label or an icon. */
-  .events__where {
-    font-size: var(--text-sm);
+  .event__day {
+    font-family: var(--font-headline), Impact, 'Arial Narrow', sans-serif;
+    font-size: var(--text-3xl);
+    font-weight: 900;
+    line-height: 0.9;
+  }
+
+  .event__year {
+    font-size: var(--text-xs);
+  }
+
+  .event__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+    min-width: 0;
+    padding: var(--space-m);
+  }
+
+  /* The countdown. No `display` here, or it would override the `hidden` it starts with. */
+  .event__away {
+    align-self: flex-start;
+    padding: 0.15em 0.6em;
+    background: var(--signal);
+    color: var(--signal-ink);
+    font-family: var(--font-mono), ui-monospace, monospace;
+    font-size: var(--text-xs);
     font-weight: 500;
-    color: var(--ink);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
   }
 
-  .events__desc {
-    font-size: var(--text-sm);
+  .event__title {
+    font-size: var(--text-xl);
+  }
+
+  /* The flex gap spaces the body; this cancels the gap global.css puts after every heading. */
+  .event__title + * {
+    margin-block-start: 0;
+  }
+
+  .event__time {
+    font-family: var(--font-mono), ui-monospace, monospace;
+    font-size: var(--text-xs);
     color: var(--ink-muted);
-    margin-block-start: var(--space-2xs);
   }
 
-  .events__signup {
-    margin-block-start: var(--space-2xs);
+  .event__where {
+    font-size: var(--text-sm);
+  }
+
+  .event__address,
+  .event__desc {
+    color: var(--ink-muted);
+  }
+
+  .event__desc {
+    font-size: var(--text-sm);
+  }
+
+  .event__action {
+    padding-block-start: var(--space-xs);
+  }
+
+  /* The card's button at the nav's smaller size, as `Header.astro` does for the same pair. */
+  .event__action .button {
+    font-size: 1rem;
+    padding: 0.35rem 0.9rem 0.45rem;
+  }
+
+  /* On a narrow phone the date goes above the details, as a line rather than a block. */
+  @media (max-width: 30rem) {
+    .event__main {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .event__date {
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: baseline;
+      gap: var(--space-xs);
+      padding-block: var(--space-xs);
+    }
+
+    .event__day {
+      font-size: var(--text-2xl);
+    }
   }
 
   .events__empty {
@@ -219,5 +472,24 @@ function timeLabel(start: Date, end?: Date): string {
   .events__past summary {
     cursor: pointer;
     color: var(--ink-muted);
+  }
+
+  .events__past-list {
+    list-style: none;
+    padding: 0;
+    margin: var(--space-s) 0 0;
+  }
+
+  .events__past-list li {
+    display: grid;
+    grid-template-columns: 8.25rem 1fr;
+    gap: var(--space-m);
+    padding-block: var(--space-xs);
+    border-block-start: 1px solid var(--rule);
+  }
+
+  .events__past-list time {
+    font-family: var(--font-mono), ui-monospace, monospace;
+    color: var(--ink-faint);
   }
 </style>

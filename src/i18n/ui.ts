@@ -43,6 +43,14 @@ const en = {
   'events.none': 'Nothing is scheduled at the moment.',
   /** Read aloud before an event's location; the page itself shows it by styling alone. */
   'events.location': 'Location',
+  /** In place of the hours, for an event that has a `date` but no `start` yet. */
+  'events.timeTbd': 'Time to be confirmed',
+  /** The button on an event with no sign-up link, pointing at the updates page. */
+  'events.followUpdates': 'Follow updates',
+  /** The countdown on an upcoming event, filled in by the visitor's browser. `{n}` is the count. */
+  'events.today': 'Today',
+  'events.tomorrow': 'Tomorrow',
+  'events.daysAway': '{n} days away',
 
   'metrics.asOf': 'as of',
 
@@ -83,6 +91,11 @@ const es: Record<keyof typeof en, string> = {
   'events.past': 'Eventos anteriores',
   'events.none': 'No hay nada programado por el momento.',
   'events.location': 'Lugar',
+  'events.timeTbd': 'Hora por confirmar',
+  'events.followUpdates': 'Seguir las novedades',
+  'events.today': 'Hoy',
+  'events.tomorrow': 'Mañana',
+  'events.daysAway': 'Faltan {n} días',
 
   'metrics.asOf': 'al',
 

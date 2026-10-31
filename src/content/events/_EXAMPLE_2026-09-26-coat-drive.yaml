@@ -6,7 +6,9 @@
 #
 #   1. Copy this file to `YYYY-MM-DD-short-name.yaml`. The filename is for file explorer ordering; the `start`
 #      field below is what the site actually reads.
-#   2. Edit the fields. `title` and `start` are required; everything else is optional.
+#   2. Edit the fields. `title` and `start` are required; everything else is optional. If the time
+#      is not set yet, write `date: 2026-09-26` instead of `start` and `end`, and the card says
+#      the time is to be confirmed.
 #   3. Remove `draft: true` when ready to publish
 #   4. Run `just dev` and look at the homepage. A malformed file fails the build with the field
 #      name in the error, rather than rendering a blank section.
@@ -22,8 +24,9 @@ start: 2026-09-26T10:00:00-05:00 # NOTE: use `-05:00` suffix during daylight sav
 end: 2026-09-26T13:00:00-05:00
 
 location:
-  en: Grace UMC parking lot, Old East Dallas
-  es: Estacionamiento de Grace UMC, Old East Dallas
+  en: Grace UMC parking lot
+  es: Estacionamiento de Grace UMC
+address: 123 Example St, Dallas # optional: shown on its own line under the location
 
 description:
   en: >-
@@ -38,3 +41,25 @@ description:
     entrar. Se aceptan tallas de adulto y de niño, y la ropa usada limpia es tan útil como la nueva.
 
 signUpUrl: https://example.org/example-signup-not-a-real-link
+# The button's text. Leave it out and the button says "Volunteer"; use this when the form is the
+# event's own rather than the general volunteer sign-up.
+signUpLabel:
+  en: Sign up for this event
+  es: Inscríbase para este evento
+
+# Photos: one or two, at the top of the card. Add each with `just add-event-photo`, which strips
+# the location data phones put in photos, naming it with this event's date so it sorts beside this
+# file. Anyone identifiable must have agreed to be on the site (a child through a parent or
+# guardian): record it in a comment beside the photo, with the date. Left as comments here because
+# this example has no photo beside it, and a missing file fails the build.
+#
+# photos:
+#   # Everyone identifiable agreed to appear on the site (confirmed 2026-09-20).
+#   - src: ./2026-09-26-coat-drive-1.jpg
+#     alt:
+#       en: What the photo shows, for someone who cannot see it.
+#       es: Lo que muestra la foto, para quien no puede verla.
+#     focus: center 70% # optional: which part to keep when it is cropped
+# photoCaption: # required with photos: what they show, and when
+#   en: Last year's coat drive, October 2025
+#   es: La colecta de abrigos del año pasado, octubre de 2025

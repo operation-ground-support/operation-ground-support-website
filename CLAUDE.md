@@ -29,7 +29,8 @@ rule below exists because a grant reviewer checks that specific thing.
   volunteers, or distributions are not, under any framing.
 - **A person served appears in a photograph only with their consent.** Everyone identifiable must
   have agreed to appear on the public site, and a child needs a parent's or guardian's consent.
-  Record it in a comment beside the `<Photo>`, with the date it was confirmed; if anyone in the
+  Record it in a comment beside the `<Photo>`, or beside the photo's entry in an event file, with
+  the date it was confirmed; if anyone in the
   frame has not agreed, crop them out or use another photo. The organization works with immigrant
   communities and families affected by ICE detentions, so being findable on a public website is
   a real risk, and only the person in the picture gets to take it. This is a safety constraint,
@@ -47,25 +48,31 @@ The site is type-led on purpose. Do not introduce:
 - a third button treatment — solid (`.button`) and outline (`.button--quiet`) are the whole
   vocabulary. The homepage doors use those classes directly; the nav redraws the same pair at its
   own smaller size in `Header.astro`
-- rounded "card" containers
+- rounded "card" containers. The event cards in `EventList.astro` are square, and allowed because
+  each one is a real, dated event, not a feature
 - a photo slot that nobody has a photograph for — add the photograph when it exists, not a
-  placeholder for it
+  placeholder for it. An event card has no photo area until its file lists a photo
 
 Photo-hungry layouts generate demand for roughly twenty images the organization does not have, and
 that pressure is what pushes small nonprofits toward stock and synthetic filler. Eight to twelve
 real photographs are enough for this whole site, and each one goes through `Photo.astro`, which
-requires a caption so the image has to earn its place.
+requires a caption so the image has to earn its place. An event's photos are the exception: they
+are listed in its file and drawn by `EventList.astro`, whose schema requires the same alt text and
+a caption saying what they show and when. They go in beside the event file through
+`just add-event-photo`, which strips their location metadata as `just add-photo` does.
 
 Colour, type, and spacing are tokens in `src/styles/global.css`. The site is dark on screen and
 light in print, with no light screen theme and no toggle. The light values are under `@media print`
 at the end of that file, and a new colour token needs one there too, or it prints as near-white on
-white paper. Each accent has one job: signal orange for the primary act (Donate), focus rings, and
-the current-page mark; cobalt for links and the homepage's closing band; kraft for the transparency
+white paper. Each accent has one job: signal orange for the primary act (Donate, an event's
+sign-up), focus rings, the current-page mark, and event countdowns; cobalt for links and the
+homepage's closing band; kraft for the transparency
 bar and the bridge diagram's arrows. Text on orange is near-black, because white fails contrast
 there. How the palette relates to the coming bridge logo is in `docs/logo.md`.
 
-The fonts have fixed roles. The stencil face (`--font-headline`) sets two headings, the homepage's
-opening tagline and its closing "Help us build the bridge", and nothing else. Every other heading,
+The fonts have fixed roles. The stencil face (`--font-headline`) sets the homepage's opening
+tagline, its closing "Help us build the bridge", and the day numbers on event cards, and nothing
+else. Every other heading,
 button, and title is `--font-display` (Barlow Condensed), body text is `--font-sans`, and labels
 and metadata are `--font-mono`.
 
