@@ -55,8 +55,8 @@ Photo-hungry layouts generate demand for roughly twenty images the organization 
 that pressure is what pushes small nonprofits toward stock and synthetic filler. Eight to twelve
 real photographs are enough for this whole site, and each one goes through `Photo.astro`, which
 requires a caption so the image has to earn its place. An event's photos are the exception: they
-are listed in its file and drawn by `EventList.astro`, whose schema requires the same alt text and
-a caption saying what they show and when. They go in beside the event file through
+are listed in its file and drawn by `EventList.astro`, whose schema requires alt text for each but
+leaves the caption (`photoCaption`) optional. They go in beside the event file through
 `just add-event-photo`, which strips their location metadata as `just add-photo` does.
 
 Colour, type, and spacing are tokens in `src/styles/global.css`. The site is dark on screen and

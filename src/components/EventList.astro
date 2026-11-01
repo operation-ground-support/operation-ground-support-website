@@ -145,8 +145,7 @@ const photoSizes = (count: number) => {
                     />
                   ))}
                 </div>
-                {/* The schema requires a caption whenever there are photos. */}
-                <figcaption>{tr(photoCaption!, locale)}</figcaption>
+                {photoCaption && <figcaption>{tr(photoCaption, locale)}</figcaption>}
               </figure>
             )}
 

@@ -43,9 +43,8 @@ rather than the general volunteer sign-up, set `signUpLabel` as above. An event 
 are, the smaller each one is drawn. Put each beside the event's file with
 `just add-event-photo <photo> <name>`, starting the name with the event's date so the photo sorts
 next to its file. That command also removes the location data phones record in every photo. Then
-list them under `photos`, each with `alt` text, and add a `photoCaption` saying what they show and
-when: a photo on an upcoming event is always of something earlier. The example file has the full
-layout. Anyone recognisable should have agreed to be on the website (a child through a parent or
+list them under `photos`, each with `alt` text. A `photoCaption` is optional: one line under the
+photos saying what they show and when. The example file has the full layout. Anyone recognisable should have agreed to be on the website (a child through a parent or
 guardian).
 
 Old files can stay. Past events move into the collapsed "Past" list automatically, and a short

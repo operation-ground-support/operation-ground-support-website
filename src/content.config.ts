@@ -102,10 +102,7 @@ const events = defineCollection({
             }),
           )
           .default([]),
-        /**
-         * What the photos show and when. Required with photos, because a photo on an upcoming
-         * event is necessarily of something earlier, and should say so.
-         */
+        /** Optional: one line under the photos, saying what they show and when. */
         photoCaption: localized.optional(),
         /**
          * Keep a file in the repo without publishing it. Same field and same meaning as `updates`.
@@ -123,10 +120,6 @@ const events = defineCollection({
       .refine((e) => e.end === undefined || e.start !== undefined, {
         message: '`end` needs a `start`. An event with only a `date` has no time to end at.',
         path: ['end'],
-      })
-      .refine((e) => e.photos.length === 0 || e.photoCaption !== undefined, {
-        message: 'Photos need a `photoCaption` saying what they show and when.',
-        path: ['photoCaption'],
       }),
 })
 

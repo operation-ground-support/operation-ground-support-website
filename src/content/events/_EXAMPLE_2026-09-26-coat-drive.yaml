@@ -59,6 +59,6 @@ signUpLabel:
 #       en: What the photo shows, for someone who cannot see it.
 #       es: Lo que muestra la foto, para quien no puede verla.
 #     focus: center 70% # optional: which part to keep when it is cropped
-# photoCaption: # required with photos: what they show, and when
+# photoCaption: # optional: one line under the photos, saying what they show and when
 #   en: Last year's coat drive, October 2025
 #   es: La colecta de abrigos del año pasado, octubre de 2025
