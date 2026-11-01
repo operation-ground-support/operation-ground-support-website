@@ -14,6 +14,7 @@ import Photo from './Photo.astro'
 import TaxCode from './TaxCode.astro'
 import { org, type Person } from '../data/org'
 import { pick, type Locale } from '../i18n/routes'
+import { formatDate } from '../i18n/ui'
 import board_corrected from '../assets/photos/board_corrected.jpg'
 import homelessnessSummit from '../assets/photos/homelessness-summit-4.jpg'
 
@@ -26,9 +27,12 @@ const { locale } = Astro.props
 const text = {
   heading: { en: 'About', es: 'Quiénes somos' },
   history: { en: 'Our history', es: 'Nuestra historia' },
+  /** Opens with the founding month, from `org.founded`, when it is known. */
   historyBody: {
-    en: 'We originally began as a medical support group, organized to provide support on the ground to doctors treating people with heat exhaustion. It was there that we began to realize the plight of the unhoused. There are many implications of being homeless or just food insecure, that most people are completely unaware of. There are many who are living out of their car, who have many logistical difficulties that you would never think about unless hearing about it. There are many struggling families who would be greatly helped by organized food boxes with plenty of healthy foods. Thus we began branching out.',
-    es: 'Comenzamos como un grupo de apoyo médico, organizado para brindar apoyo en el terreno a los médicos que atendían a personas con agotamiento por calor. Fue allí donde empezamos a comprender la difícil situación de las personas sin hogar. Vivir sin hogar, o simplemente con inseguridad alimentaria, tiene muchas consecuencias que la mayoría de la gente desconoce por completo. Hay muchas personas que viven en su auto y enfrentan dificultades logísticas en las que nadie pensaría si no las oyera contar. Hay muchas familias con dificultades a las que les ayudarían mucho unas cajas de alimentos bien organizadas, con abundantes alimentos saludables. Así fue como empezamos a ampliar nuestro trabajo.',
+    en: (began: string | null) =>
+      `${began ? `We began in ${began}` : 'We originally began'} as a medical support group, organized to provide support on the ground to doctors treating people with heat exhaustion. It was there that we began to realize the plight of the unhoused. There are many implications of being homeless or just food insecure, that most people are completely unaware of. There are many who are living out of their car, who have many logistical difficulties that you would never think about unless hearing about it. There are many struggling families who would be greatly helped by organized food boxes with plenty of healthy foods. Thus we began branching out.`,
+    es: (began: string | null) =>
+      `Comenzamos${began ? ` en ${began}` : ''} como un grupo de apoyo médico, organizado para brindar apoyo en el terreno a los médicos que atendían a personas con agotamiento por calor. Fue allí donde empezamos a comprender la difícil situación de las personas sin hogar. Vivir sin hogar, o simplemente con inseguridad alimentaria, tiene muchas consecuencias que la mayoría de la gente desconoce por completo. Hay muchas personas que viven en su auto y enfrentan dificultades logísticas en las que nadie pensaría si no las oyera contar. Hay muchas familias con dificultades a las que les ayudarían mucho unas cajas de alimentos bien organizadas, con abundantes alimentos saludables. Así fue como empezamos a ampliar nuestro trabajo.`,
   },
   board: { en: 'Board', es: 'Junta directiva' },
   staff: { en: 'Staff and volunteers', es: 'Personal y voluntarios' },
@@ -38,6 +42,18 @@ const text = {
   },
   boardCaption: { en: 'The board, May 30, 2026.', es: 'La junta directiva, 30 de mayo de 2026.' },
   tax: { en: 'Tax status', es: 'Situación fiscal' },
+  official: {
+    en: (since: string) => `Our nonprofit status became official in ${since}.`,
+    es: (since: string) => `Nuestra condición de organización sin fines de lucro se hizo oficial en ${since}.`,
+  },
+  ein: {
+    en: (ein: string) => `Our EIN is ${ein}.`,
+    es: (ein: string) => `Nuestro EIN es ${ein}.`,
+  },
+  letter: {
+    en: 'Read the IRS determination letter (PDF)',
+    es: 'Ver la carta de determinación del IRS (PDF, en inglés)',
+  },
   summitAlt: {
     en: 'Looking down from a balcony into a wood-panelled hall with stained-glass windows: two speakers stand beside a screen while an audience sits facing them on chairs and sofas, with a table of food in one corner.',
     es: 'Vista desde un balcón hacia un salón con paneles de madera y vitrales: dos oradores están de pie junto a una pantalla mientras el público, sentado en sillas y sofás, los escucha; en una esquina hay una mesa con comida.',
@@ -53,6 +69,20 @@ const people = [
   { heading: pick(text.staff, locale), list: org.staff },
 ].filter((group) => group.list.length > 0)
 
+/**
+ * Month and year, as "June 2025" or "junio de 2025". The facts are date-only ISO values, which
+ * parse as midnight UTC, so `formatDate`'s UTC default keeps them in the right month.
+ */
+const monthYear = (iso: string) => formatDate(new Date(iso), locale, { day: undefined })
+
+const history = pick(text.historyBody, locale)(org.founded ? monthYear(org.founded) : null)
+
+/** The legal facts after the tax status, each only when it is known. */
+const taxFacts = [
+  org.exemptSince && pick(text.official, locale)(monthYear(org.exemptSince)),
+  org.ein && pick(text.ein, locale)(org.ein),
+].filter(Boolean)
+
 /** A bio is one paragraph or a list of them; blank entries, the slots waiting to be filled, are skipped. */
 const paragraphs = (bio: Person['bio']) =>
   bio === undefined ? [] : [pick(bio, locale)].flat().filter((p) => p.trim() !== '')
@@ -63,7 +93,7 @@ const paragraphs = (bio: Person['bio']) =>
 
 <section class="section">
   <h2>{pick(text.history, locale)}</h2>
-  <p>{pick(text.historyBody, locale)}</p>
+  <p>{history}</p>
 </section>
 
 {
@@ -95,7 +125,16 @@ const paragraphs = (bio: Person['bio']) =>
 
 <section class="section">
   <h2>{pick(text.tax, locale)}</h2>
-  <p><TaxCode text={pick(org.taxStatus, locale)} /></p>
+  <p><TaxCode text={pick(org.taxStatus, locale)} />{taxFacts.map((fact) => ` ${fact}`)}</p>
+  {
+    org.determinationLetter && (
+      <p class="tax__letter">
+        <a href={org.determinationLetter} type="application/pdf" hreflang={locale === 'en' ? undefined : 'en'}>
+          {pick(text.letter, locale)}
+        </a>
+      </p>
+    )
+  }
 </section>
 
 <Photo src={homelessnessSummit} alt={pick(text.summitAlt, locale)} caption={pick(text.summitCaption, locale)} />
@@ -126,5 +165,9 @@ const paragraphs = (bio: Person['bio']) =>
 
   .person__bio + .person__bio {
     margin-block-start: var(--space-2xs);
+  }
+
+  .tax__letter {
+    margin-block-start: var(--space-xs);
   }
 </style>

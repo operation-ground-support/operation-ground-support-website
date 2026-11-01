@@ -66,8 +66,17 @@ export interface Filing {
   href: string
 }
 
+/** The name the IRS and Candid have on file, used in the tax status below and as `legalName`. */
+const legalName = 'Operation Ground Support Foundation'
+
 export const org = {
   name: 'Operation Ground Support',
+
+  /**
+   * The registered name, as on the IRS determination letter and the Candid profile. The site uses
+   * `name` everywhere else; a reviewer comparing the two documents should find this one stated.
+   */
+  legalName,
 
   /** Main statement: the first sentence of the homepage lede, the About lede, and the RSS feed's description. */
   mission: {
@@ -83,8 +92,8 @@ export const org = {
    * of a legal statement and should still be read in the final translation pass.
    */
   taxStatus: {
-    en: 'Operation Ground Support is a 501(c)(3) tax-exempt public charity, classified under IRC Section 509(a)(2).',
-    es: 'Operation Ground Support es una organización benéfica pública exenta de impuestos según la sección 501(c)(3), clasificada bajo la sección 509(a)(2) del Código de Rentas Internas.',
+    en: `Operation Ground Support (our legal name is ${legalName}) is a 501(c)(3) tax-exempt public charity, classified under IRC Section 509(a)(2).`,
+    es: `Operation Ground Support (nuestro nombre legal es ${legalName}) es una organización benéfica pública exenta de impuestos según la sección 501(c)(3), clasificada bajo la sección 509(a)(2) del Código de Rentas Internas.`,
   } as Localized,
 
   /**
@@ -242,13 +251,32 @@ export const org = {
 
   /** Federal EIN, formatted "12-3456789". Lights up the transparency bar and the footer. */
   ein: '42-1818184',
-  /** Path under /public to a scan of the IRS 501(c)(3) determination letter. TODO. */
-  determinationLetter: null as string | null,
-  /** Candid/GuideStar profile URL. Free to claim; grantmakers check it directly. TODO. */
-  candidUrl: null as string | null,
-  /** Year the organization began operating, e.g. "2025". TODO. */
-  founded: null as string | null,
-  /** Public financial filings, newest first. TODO. */
+  /**
+   * Path under /public to a scan of the IRS 501(c)(3) determination letter: Letter 947, dated
+   * 2026-06-29. Made from a phone photo with its location data removed, and with the mailing
+   * address blacked out because it was temporary. A replacement needs the same: a phone photo of a
+   * document carries GPS coordinates like any other.
+   */
+  determinationLetter: '/filings/irs-determination-letter.pdf' as string | null,
+  /** Candid/GuideStar profile URL. Grantmakers check it directly; viewing it needs a Candid sign-in. */
+  candidUrl: 'https://app.candid.org/profile/16723534/operation-ground-support-foundation-42-1818184' as
+    | string
+    | null,
+  /**
+   * When the organization began operating, as an ISO year or year and month (`2025`, `2025-06`).
+   * Earlier than `exemptSince`: the work began before the IRS recognized it. Shown on About and
+   * published as `foundingDate`.
+   */
+  founded: '2025-06' as string | null,
+  /**
+   * When the 501(c)(3) exemption took effect, as an ISO date: the "effective date of exemption" on
+   * the determination letter. Shown on About as when nonprofit status became official.
+   */
+  exemptSince: '2026-04-06' as string | null,
+  /**
+   * Public financial filings, newest first. None yet: no annual return (Form 990, 990-EZ, or
+   * 990-N) has been filed. The determination letter says one is required, so the first belongs here.
+   */
   filings: [] as Filing[],
   /** Path under /public to an annual report, if one exists. TODO. */
   annualReport: null as string | null,

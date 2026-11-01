@@ -76,6 +76,7 @@ const known = (value: string | null | undefined): value is string => Boolean(val
       '@context': 'https://schema.org',
       '@type': 'NGO',
       name: org.name,
+      ...(known(org.legalName) ? { legalName: org.legalName } : {}),
       url: Astro.site?.href,
       email: org.email,
       ...(known(org.phone) ? { telephone: org.phone } : {}),
