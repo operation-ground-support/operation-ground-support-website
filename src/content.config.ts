@@ -42,8 +42,8 @@ const updates = defineCollection({
   schema: z.object({
     title: z.string(),
     date: z.coerce.date(),
-    /** One sentence for the index page and the RSS feed. */
-    summary: z.string(),
+    /** Optional: one sentence for the index page and the RSS feed. Leave it out and the title stands alone. */
+    summary: z.string().optional(),
     /** Which language this post is written in. Posts are not auto-translated. */
     lang: z.enum(['en', 'es']).default('en'),
     /** Set true to keep a draft in the repo without publishing it. */
@@ -87,9 +87,9 @@ const events = defineCollection({
         /** The sign-up button's text. Leave it out for "Volunteer". */
         signUpLabel: localized.optional(),
         /**
-         * One photograph or two, as files beside this one. The same rules as every photo on the
-         * site: real photographs only, and anyone identifiable has agreed to appear, recorded in a
-         * comment beside the entry with the date it was confirmed.
+         * Photographs, as files beside this one, in a row across the top of the card; the more
+         * there are, the smaller each is drawn. The same rules as every photo on the site: real
+         * photographs only, and anyone identifiable has agreed to appear.
          */
         photos: z
           .array(
@@ -101,7 +101,6 @@ const events = defineCollection({
               focus: z.string().optional(),
             }),
           )
-          .max(2)
           .default([]),
         /**
          * What the photos show and when. Required with photos, because a photo on an upcoming

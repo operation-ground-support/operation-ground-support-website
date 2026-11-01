@@ -1,6 +1,6 @@
 ---
 /**
- * Upcoming and past events. Each upcoming event is a card: its photos if it has any, a date
+ * Upcoming and past events. Each upcoming event is a card: a row of its photos if it has any, a date
  * block, the details, a countdown, and a button. Past events are a plain collapsed list.
  *
  * The awkward part of events on a static site: "upcoming" is computed when the site is built, so
@@ -107,9 +107,11 @@ function action({ data }: EventItem) {
   return undefined
 }
 
-/** Two photos share the card's width, so each is drawn at half of it. 40rem is a card in the two-column grid. */
-const photoSizes = (count: number) =>
-  count === 2 ? '(max-width: 56rem) 50vw, 20rem' : '(max-width: 56rem) 100vw, 40rem'
+/** The photos share the card's width equally. 40rem is a card in the two-column grid. */
+const photoSizes = (count: number) => {
+  const share = (whole: number) => Math.round((whole / count) * 100) / 100
+  return `(max-width: 56rem) ${share(100)}vw, ${share(40)}rem`
+}
 ---
 
 <section
@@ -313,17 +315,24 @@ const photoSizes = (count: number) =>
     grid-auto-columns: minmax(0, 1fr);
   }
 
+  /* All the photos in one row, sharing the width, so each is drawn smaller the more there are.
+     The shape changes with the count to keep the row a sensible height: one photo at 4:3, two
+     cut wider at 3:2 so the pair is not twice as tall as one, and three or more square, so they
+     do not shrink to slivers. */
   .event__frames :global(img) {
     display: block;
     width: 100%;
     height: auto;
-    aspect-ratio: 4 / 3;
+    aspect-ratio: 1;
     object-fit: cover;
     filter: var(--photo-filter);
     background: var(--paper-sunk);
   }
 
-  /* Two photos side by side are each cut wider, so the strip is not twice as tall as one. */
+  .event__frames[data-count='1'] :global(img) {
+    aspect-ratio: 4 / 3;
+  }
+
   .event__frames[data-count='2'] :global(img) {
     aspect-ratio: 3 / 2;
   }

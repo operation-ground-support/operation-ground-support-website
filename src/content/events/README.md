@@ -39,13 +39,14 @@ other, never both; the site refuses to build otherwise, and says why.
 rather than the general volunteer sign-up, set `signUpLabel` as above. An event with no
 `signUpUrl` gets a "Follow updates" button instead, once there is at least one update posted.
 
-**Photos** are optional: one or two, across the top of the card. Put each beside the event's file
-with `just add-event-photo <photo> <name>`, starting the name with the event's date so the photo
-sorts next to its file. That command also removes the location data phones record in every photo.
-Then list them under `photos`, each with `alt` text, and add a `photoCaption` saying what they show
-and when: a photo on an upcoming event is always of something earlier. The example file has the
-full layout. Anyone recognisable must have agreed to be on the website (a child through a parent
-or guardian); write who agreed and the date in a comment beside the photo.
+**Photos** are optional, as many as you like, in a row across the top of the card; the more there
+are, the smaller each one is drawn. Put each beside the event's file with
+`just add-event-photo <photo> <name>`, starting the name with the event's date so the photo sorts
+next to its file. That command also removes the location data phones record in every photo. Then
+list them under `photos`, each with `alt` text, and add a `photoCaption` saying what they show and
+when: a photo on an upcoming event is always of something earlier. The example file has the full
+layout. Anyone recognisable should have agreed to be on the website (a child through a parent or
+guardian).
 
 Old files can stay. Past events move into the collapsed "Past" list automatically, and a short
 visible history of things that actually happened is worth more than an empty page.

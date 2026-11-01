@@ -9,7 +9,6 @@ If both are clean, change the TXT record at _dmarc in Squarespace DNS to: v=DMAR
 
 - Set a nightly rebuild, needed to advance events
 - bump all `lastReviewed`s
-- need more for thanksgiving event
 - we will have headshots for the board members, fill up the empty space by putting images to the right of bios
 - make sure no cruft appears in the HTML of the final site
 - Double check that our claims about "Partner:"s are all OK

@@ -27,14 +27,12 @@ rule below exists because a grant reviewer checks that specific thing.
 - **Do not generate imagery that implies an event occurred.** The logo, icons, patterns, a service
   map, and charts of real data are fine to construct. AI or stock photographs of people, shelves,
   volunteers, or distributions are not, under any framing.
-- **A person served appears in a photograph only with their consent.** Everyone identifiable must
-  have agreed to appear on the public site, and a child needs a parent's or guardian's consent.
-  Record it in a comment beside the `<Photo>`, or beside the photo's entry in an event file, with
-  the date it was confirmed; if anyone in the
-  frame has not agreed, crop them out or use another photo. The organization works with immigrant
-  communities and families affected by ICE detentions, so being findable on a public website is
-  a real risk, and only the person in the picture gets to take it. This is a safety constraint,
-  not a style preference.
+- **Consent for photos of people is the team's to check; reminding them is yours.** Assume they
+  are careful about the images they choose: use a photo they give you, and do not block on consent
+  or ask for a written record of it. But whenever you add or place a photo in which someone can be
+  recognised, remind them once, briefly, that everyone in it should have agreed to appear on the
+  public site, a child through a parent or guardian, and that anyone who has not can be cropped out
+  or the photo swapped.
 
 ## Design constraints
 

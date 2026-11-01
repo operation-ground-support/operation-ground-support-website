@@ -2,7 +2,7 @@ title:
   en: Holiday card writing
   es: Escritura de tarjetas para las fiestas
 
-date: 2026-12-05 # the day only: the time is not set yet. When it is, replace this line with `start` (and `end`)
+date: 2026-12-05 # TODO replace this line with `start` (and `end`)
 
 location: Dickinson Senior Apartments
 
@@ -14,3 +14,24 @@ description:
     Estudiantes se reúnen con personas mayores para escribir tarjetas para las fiestas a vecinos
     que a menudo quedan en el olvido: veteranos, residentes de hogares de ancianos, personas
     privadas de libertad y nuestros vecinos sin hogar.
+
+photos:
+  - src: ./2026-12-05-holiday-cards-1.jpg
+    alt:
+      en: >-
+        A student and a senior in a Santa hat smile for a selfie while others make cards with
+        markers at a long table.
+      es: >-
+        Una estudiante y una señora mayor con gorro de Santa Claus sonríen para una selfi mientras
+        otras personas hacen tarjetas con marcadores en una mesa larga.
+  - src: ./2026-12-05-holiday-cards-2.jpg
+    alt:
+      en: >-
+        A group of students and seniors in holiday hats and sweaters pose together beside a
+        Christmas tree.
+      es: >-
+        Un grupo de estudiantes y personas mayores con gorros y suéteres navideños posan juntos junto
+        a un árbol de Navidad.
+photoCaption:
+  en: From an earlier holiday card writing
+  es: De una jornada anterior de escritura de tarjetas para las fiestas

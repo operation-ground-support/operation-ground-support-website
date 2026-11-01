@@ -100,9 +100,8 @@ These are not stylistic preferences. Each one is something a grant reviewer chec
    people, shelves, volunteers, or distributions. Generating the logo, icons, patterns, or a map is
    fine; generating evidence is not. One synthetic photo discredits every other claim on the page.
 3. **Photograph the people served only with their consent.** Everyone identifiable agrees to
-   appear on the public site (a child through a parent or guardian), and a comment beside the
-   photo records when that was confirmed. This is a safety question given who walks through that
-   door, not only a dignity one. Volunteers appear with their consent too. Rooms, hands, shelves,
+   appear on the public site (a child through a parent or guardian). This is a safety question
+   given who walks through that door, not only a dignity one. Volunteers appear with their consent too. Rooms, hands, shelves,
    boxes, doors, and the parking lot are still the main visual vocabulary — unglamorous
    specificity is more convincing than smiling-recipient photography, which reads as marketing.
 4. **`null` beats a plausible guess.** A missing fact renders as nothing and shows up in

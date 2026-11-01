@@ -43,7 +43,7 @@ const text = {
             {formatDate(post.data.date, locale)}
           </time>
           <h2><a href={`/updates/${post.id}`}>{post.data.title}</a></h2>
-          <p>{post.data.summary}</p>
+          {post.data.summary && <p>{post.data.summary}</p>}
         </li>
       ))}
     </ul>

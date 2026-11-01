@@ -47,14 +47,13 @@ signUpLabel:
   en: Sign up for this event
   es: Inscríbase para este evento
 
-# Photos: one or two, at the top of the card. Add each with `just add-event-photo`, which strips
-# the location data phones put in photos, naming it with this event's date so it sorts beside this
-# file. Anyone identifiable must have agreed to be on the site (a child through a parent or
-# guardian): record it in a comment beside the photo, with the date. Left as comments here because
+# Photos: as many as you like, in a row at the top of the card, drawn smaller the more there are.
+# Add each with `just add-event-photo`, which strips the location data phones put in photos,
+# naming it with this event's date so it sorts beside this file. Anyone identifiable should have
+# agreed to be on the site (a child through a parent or guardian). Left as comments here because
 # this example has no photo beside it, and a missing file fails the build.
 #
 # photos:
-#   # Everyone identifiable agreed to appear on the site (confirmed 2026-09-20).
 #   - src: ./2026-09-26-coat-drive-1.jpg
 #     alt:
 #       en: What the photo shows, for someone who cannot see it.

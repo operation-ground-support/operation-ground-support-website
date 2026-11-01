@@ -15,7 +15,6 @@ Short posts, in `src/content/updates/`. One file each, named `YYYY-MM-DD-a-short
 ---
 title: 120 bags out the door in August
 date: 2026-09-02
-summary: One sentence, shown on the index page and in the RSS feed.
 lang: en
 draft: false
 ---
@@ -25,7 +24,8 @@ short.
 ```
 
 Set `draft: true` to keep something in the repo without publishing it. Set `lang: es` for a post
-written in Spanish.
+written in Spanish. Add `summary:` with one sentence if you want a line under the title in the list
+of updates and in the RSS feed; without it, the title stands alone.
 
 The quickest way to start one is to copy the `_EXAMPLE_` file in that folder, rename it, and delete
 its `draft: true` line when it is ready. Leave the example itself where it is — it is kept on
@@ -43,7 +43,7 @@ filled in and a comment on each — and delete its `draft: true` line once the e
 
 If the time is not set yet, give the day alone (`date: 2026-12-05`) and the event says the time is
 to be confirmed. A sign-up form made for one event can have its own button text, such as "Sign up
-for this event". An event can also show a photo or two from an earlier time; send those to
+for this event". An event can also show photos from an earlier time; send those to
 whoever maintains the site, as with any photo (see Photographs below), along with a line saying
 what they show and when.
 
@@ -80,5 +80,4 @@ nobody in it.
 **Photograph the people receiving goods only if they agree first** — every person who can be
 recognized, told plainly that the picture will be on the public website, and for a child, their
 parent or guardian. If someone in the frame has not agreed, crop them out or pick another shot.
-When you send a photo like that, say who agreed and when, so it can be noted beside the photo.
 Volunteers too: ask them first. Shoot two hundred frames, keep twelve.

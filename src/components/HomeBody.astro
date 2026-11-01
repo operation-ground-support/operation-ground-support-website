@@ -71,7 +71,7 @@ const allUpdates = navLink('updates', locale)
               {formatDate(post.data.date, locale)}
             </time>
             <a href={`/updates/${post.id}`}>{post.data.title}</a>
-            <p>{post.data.summary}</p>
+            {post.data.summary && <p>{post.data.summary}</p>}
           </li>
         ))}
       </ul>

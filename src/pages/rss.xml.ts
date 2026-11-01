@@ -18,6 +18,7 @@ export async function GET(context: APIContext) {
     site: context.site!,
     items: posts.map((post) => ({
       title: post.data.title,
+      // Optional in RSS as in the post; a feed reader shows the title alone when there is none.
       description: post.data.summary,
       pubDate: post.data.date,
       link: `/updates/${post.id}`,

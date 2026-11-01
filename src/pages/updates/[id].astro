@@ -23,7 +23,7 @@ const back = { en: 'All updates', es: 'Todas las novedades' }
 
 <Base
   title={post.data.title}
-  description={post.data.summary}
+  description={post.data.summary ?? post.data.title}
   locale={locale}
   pageKey="updates"
   lastReviewed={post.data.date.toISOString().slice(0, 10)}

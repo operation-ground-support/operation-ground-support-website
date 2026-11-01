@@ -1,19 +1,18 @@
 title:
-  en: Student training for Thanksgiving event
-  es: Capacitación de estudiantes para el evento de Acción de Gracias
+  en: Student volunteer food box and produce sorting training
+  es: Capacitación de estudiantes voluntarios para empacar cajas de alimentos y clasificar frutas y verduras
 
 start: 2026-11-07T13:00:00-06:00 # NOTE: use `-05:00` suffix during daylight saving, `-06:00` otherwise
 end: 2026-11-07T17:00:00-06:00
 
-location: Crossroads Community Services
-address: 4500 S. Cockrell Hill Road, Dallas
+location: Rhema Dallas Church
+address: 805 Peak St., Dallas 75223
 
 description:
   en: >-
-    We will be doing food box packing and training for everything needed for Thanksgiving.
+    We will be doing food box packing and training.
   es: >-
-    Vamos a empacar cajas de alimentos y a capacitarnos en todo lo necesario para el evento de
-    Acción de Gracias.
+    Vamos a empacar cajas de alimentos y a capacitarnos.
 
 signUpUrl: https://docs.google.com/forms/d/e/1FAIpQLSekDKfaRJt4B5hGoRKIJATxoykEtHrO8XJKN3Hp4Sp7MbPAhA/viewform
 signUpLabel:
@@ -21,7 +20,6 @@ signUpLabel:
   es: Inscríbase para este evento
 
 photos:
-  # No one identifiable in this photo.
   - src: ./2026-11-07-produce.jpg
     alt:
       en: >-
@@ -30,6 +28,15 @@ photos:
       es: >-
         Frutas y verduras en cajas y canastas sobre mesas plegables: piñas, fresas, naranjas,
         brócoli, calabacitas y bolsas de papas.
+  - src: ./2026-11-07-packing.jpg
+    focus: center 70%
+    alt:
+      en: >-
+        Volunteers packing food boxes along two long tables, with crates of canned goods and pasta
+        in the foreground and pantry shelves along the wall.
+      es: >-
+        Voluntarios empacando cajas de alimentos a lo largo de dos mesas largas, con cajas de latas
+        y pasta en primer plano y estantes de despensa junto a la pared.
 photoCaption:
-  en: Produce set out for food boxes, from an earlier packing day
-  es: Frutas y verduras listas para las cajas de alimentos, de una jornada de empaque anterior
+  en: Produce and food boxes from an earlier packing day
+  es: Frutas, verduras y cajas de alimentos de una jornada de empaque anterior
