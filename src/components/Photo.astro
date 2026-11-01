@@ -41,9 +41,16 @@ interface Props {
 
 const { src, alt, caption, credit, focus, eager = false } = Astro.props
 
+// The original's size and path, read without shipping the original. An imported image is a proxy
+// that marks the full-size file as used when any property is read, which copies it into the build
+// beside the resized versions: several megabytes per photo that no page asks for. `clone` is the
+// untracked copy Astro's own `<Image>` reads; it is private, so if an upgrade removes it this
+// falls back to the proxy, and the only cost is the originals shipping again.
+const original: ImageMetadata = (src as ImageMetadata & { clone?: ImageMetadata }).clone ?? src
+
 // The type requires a caption, but `''` satisfies it and ships an empty figcaption with a stray
 // rule beside it. Refuse it here, where it is still a build error rather than a visual glitch.
-if (caption.trim() === '') throw new Error(`Photo ${src.src} has an empty caption`)
+if (caption.trim() === '') throw new Error(`Photo ${original.src} has an empty caption`)
 
 /*
  * Most photos fill the full 82rem column. Two kinds are drawn narrower, and centred:
@@ -55,9 +62,9 @@ if (caption.trim() === '') throw new Error(`Photo ${src.src} has an empty captio
  *
  * On a screen narrower than the result, every photo fills the column.
  */
-const whole = src.height > src.width && !focus
-let scale = whole ? (3 / 4) * (src.width / src.height) : 1
-if (src.width < 82 * 16 * scale) scale *= 0.7
+const whole = original.height > original.width && !focus
+let scale = whole ? (3 / 4) * (original.width / original.height) : 1
+if (original.width < 82 * 16 * scale) scale *= 0.7
 const maxWidth = Math.round(82 * scale * 100) / 100
 
 /*

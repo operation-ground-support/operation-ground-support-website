@@ -8,12 +8,5 @@ If it's an @operation-ground-support.org address: Donorbox needs its own DKIM ke
 If both are clean, change the TXT record at _dmarc in Squarespace DNS to: v=DMARC1; p=quarantine; pct=100; rua=mailto:dmarc@operation-ground-support.org; fo=1 This is reversible in minutes. About a month later, if nothing broke, move to p=reject.
 
 - Set a nightly rebuild, needed to advance events
-- bump all `lastReviewed`s
 - we will have headshots for the board members, fill up the empty space by putting images to the right of bios
-- make sure no cruft appears in the HTML of the final site
-- Double check that our claims about "Partner:"s are all OK
-- As a final step, make sure our Spanish pages all correspond with the English ones. We should probably have a Spanish speaker make sure that the connotations are accurate, paraphrase as needed.
 - the Van picture will eventually be replaced
-
-
-
