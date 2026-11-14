@@ -134,7 +134,7 @@ bucket. See [docs/operations.md](docs/operations.md) for the DNS sequence, the s
 and the account-ownership checklist, and [docs/dns.md](docs/dns.md) for the email-authentication
 records and what still needs the Workspace administrator.
 
-There is a staging copy at <https://operation-ground-support.pages.dev> for sending people a link
-before the domain moves. `just deploy-setup` once, then `just deploy-preview`. It is marked
-`noindex`, it is not the live site, and it changes no DNS record — see
-[the staging site](docs/operations.md#the-staging-site).
+There is a staging copy at <https://staging.operation-ground-support.pages.dev> for sending people
+a link before a change goes live: `just deploy-preview` publishes the working tree there. It is
+marked `noindex` and is not the live site, which is the same Cloudflare Pages project's `main`
+branch — see [the staging site](docs/operations.md#the-staging-site).

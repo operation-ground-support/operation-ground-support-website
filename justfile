@@ -112,9 +112,9 @@ deploy-preview: _deps
   rm -rf dist-preview
   npm run build -- --outDir dist-preview
 
-  # Keep the staging copy out of search results. Cloudflare adds this header to *preview*
-  # deployments automatically but not to the project's main `.pages.dev` address, which is the
-  # stable link this recipe produces — so it has to be set here.
+  # Keep the staging copy out of search results. Cloudflare adds this header to preview
+  # deployments itself, which a `staging` branch is; it is written here as well so the copy stays
+  # out even if that default changes.
   #
   # A header and not `Disallow: /` in robots.txt, which is the intuitive fix and the wrong one:
   # disallowing crawling stops a crawler from ever fetching the page, so it never sees the
@@ -123,15 +123,16 @@ deploy-preview: _deps
   # read by Cloudflare Pages and by Netlify, and ignored as a stray file anywhere else.
   printf '%s\n' '/*' '  X-Robots-Tag: noindex, nofollow' > dist-preview/_headers
 
-  # `--branch=main` matches the projects production branch, which is what earns the short stable
-  # hostname; any other branch name would publish to a one-off preview URL instead.
+  # Never `--branch=main`. That is the project's production branch, which is the live site at the
+  # domain, and this upload's `noindex` header would take the real site out of search results. A
+  # named branch gets a stable address of its own, `<branch>.<project>.pages.dev`.
   wrangler pages deploy dist-preview \
     --project-name={{cf_project}} \
-    --branch=main \
+    --branch=staging \
     --commit-dirty=true
 
   echo
-  echo "  Staging site: https://{{cf_project}}.pages.dev"
+  echo "  Staging site: https://staging.{{cf_project}}.pages.dev"
   echo "  Not indexed by search engines. Not the live site."
 
 # Type-check the site, including `.astro` files and content frontmatter
