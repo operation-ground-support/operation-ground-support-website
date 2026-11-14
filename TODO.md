@@ -1,11 +1,8 @@
 
-
-about DMARC:
-Read the aggregate reports sent to dmarc@operation-ground-support.org. Every source sending as your domain should be Google and passing.
-Check one Donorbox receipt's From: line.
-If it's an @donorbox.org address: Donorbox isn't affected.
-If it's an @operation-ground-support.org address: Donorbox needs its own DKIM key or SPF entry before you tighten DMARC. Otherwise your donation receipts will start landing in spam.
-If both are clean, change the TXT record at _dmarc in Squarespace DNS to: v=DMARC1; p=quarantine; pct=100; rua=mailto:dmarc@operation-ground-support.org; fo=1 This is reversible in minutes. About a month later, if nothing broke, move to p=reject.
+```
+Check Cloudflare's DMARC management, then need to change to v=DMARC1; p=quarantine; pct=100; rua=mailto:dmarc@operation-ground-support.org; fo=1
+About a month later, if nothing broke, move to p=reject.
+```
 
 - Set a nightly rebuild, needed to advance events
 - we will have headshots for the board members, fill up the empty space by putting images to the right of bios

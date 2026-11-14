@@ -36,24 +36,23 @@ Squarespace domain dashboard.
 
 ## The staging site
 
-There is a copy of the site at **https://operation-ground-support.pages.dev**, on Cloudflare Pages.
-It exists to be a link you can send someone — a board member reviewing copy, a funder who asked to
-see progress — without waiting for the domain cutover below.
+The live site and the staging copy are two branches of one Cloudflare Pages project,
+`operation-ground-support`. Its `main` branch is production, served at
+**https://operation-ground-support.org**. Its `staging` branch is served at
+**https://staging.operation-ground-support.pages.dev**: a link to send a board member reviewing
+copy, or a funder who asked to see progress, before a change goes live.
 
 ```sh
-nix develop -c just deploy-setup     # once, ever: logs in and creates the project
-nix develop -c just deploy-preview   # every time after that
+nix develop -c just deploy-preview   # build this working tree and publish it as `staging`
 ```
 
-It is deliberately separate from everything that is currently working:
+The upload comes from a working tree, which is the right trade for a staging copy and the wrong
+one for the live site; see Governance below. **It must never be published to `main`**: that is the
+live site, and the upload carries a `noindex` header (below) that would quietly take the real site
+out of search results. The recipe names the `staging` branch for that reason.
 
-- **It touches no DNS record**, so the A records still point at Squarespace and the live site is
-  unaffected. The cutover stays a decision made later, on purpose.
-- **It touches no mail record.** SPF, DKIM, and DMARC are answered by Google Cloud DNS and this
-  does not go near them. Hosting and mail are separate systems that happen to share a domain name,
-  and the only thing that couples them is the zone file, which this never opens.
-- **It is not published from `main`.** The upload comes from a working tree, which is the right
-  trade for a staging copy and the wrong one for the live site — see Governance below.
+Once the project builds from the GitHub repository, any branch pushed there gets a preview of its
+own at `<branch>.operation-ground-support.pages.dev` in the same way.
 
 ### Keeping it out of search results
 
@@ -68,9 +67,8 @@ thing. So `just deploy-preview` writes a `_headers` file into the upload:
 
 Two details worth knowing before changing this.
 
-Cloudflare adds that header automatically to *preview* deployments — the per-commit URLs — but not
-to the project's main `.pages.dev` address, which is the stable link this produces. So it is not
-redundant.
+Cloudflare adds that header itself to preview deployments, which every branch but `main` is. The
+recipe writes it too, so the staging copy stays out even if that default changes.
 
 And it is a header rather than `Disallow: /` in `robots.txt`, which is the intuitive fix and the
 wrong one. Disallowing stops a crawler from fetching the page at all, so it never reads the
@@ -80,21 +78,6 @@ crawl and answering with `noindex` is what actually removes it.
 The file is written into `dist-preview/`, a copy, never into `dist/`. A `noindex` header that
 followed the build into the production deploy would be invisible and would quietly delist the real
 site.
-
-### Giving it a friendlier address
-
-`preview.operation-ground-support.org` works without moving DNS to Cloudflare, and without the
-cutover below:
-
-1. Cloudflare dashboard → the Pages project → **Custom domains** → **Set up a domain**, and enter
-   the subdomain. **Do this first.** Adding the CNAME without registering the domain here produces
-   a 522 error rather than a working site, and it is not obvious why.
-2. Squarespace → DNS Settings → Custom Records: `CNAME`, host `preview`, value
-   `operation-ground-support.pages.dev`.
-
-That is one added record and nothing removed, so the blast radius is the subdomain and nothing
-else. This only works for a subdomain — an apex domain on Cloudflare Pages requires the zone to be
-on Cloudflare, which is step 1 of the cutover.
 
 ### Why Pages and not Workers
 
