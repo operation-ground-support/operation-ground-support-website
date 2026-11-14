@@ -132,9 +132,16 @@ and those links would 404.
 
 Events are sorted into upcoming and past when the site is built, so a site that has not been
 rebuilt in a month will describe a past event as upcoming. `EventList.astro` corrects this in the
-browser, but the no-JavaScript rendering should not drift far. Set a nightly build hook — on
-Cloudflare Pages, a Deploy Hook plus a scheduled trigger; on GitHub Actions, a `schedule:` cron
-that hits the hook. Once a day is plenty.
+browser, but the no-JavaScript rendering should not drift far.
+
+`.github/workflows/nightly-rebuild.yml` asks Cloudflare Pages to rebuild production every night,
+just after midnight in Dallas, through the project's deploy hook. It needs the hook's URL saved as
+the repository secret `CLOUDFLARE_DEPLOY_HOOK`; the setup steps are at the top of that file. It can
+also be run by hand from the Actions tab.
+
+One catch: GitHub switches off scheduled workflows in a **public** repository after 60 days with no
+commits, and emails a warning first. If that email arrives, re-enable the workflow from the Actions
+tab, or make any commit. A private repository is not affected.
 
 ## Governance
 

@@ -1,0 +1,39 @@
+name: Nightly rebuild
+
+# The site sorts events into upcoming and past when it is built, so it is rebuilt every night for
+# an event that has ended to leave the upcoming list. This only asks Cloudflare Pages to rebuild
+# production from `main`, through the project's deploy hook; Cloudflare does the build itself.
+#
+# Setup, once:
+#   1. Cloudflare: the Pages project → Settings → Builds → Deploy hooks → Add deploy hook, for
+#      the `main` branch. Copy the URL it shows.
+#   2. GitHub: the repository → Settings → Secrets and variables → Actions → New repository
+#      secret, named CLOUDFLARE_DEPLOY_HOOK, with that URL as its value. The URL is a secret
+#      because anyone holding it can start a build.
+#
+# Then run this once by hand (Actions → Nightly rebuild → Run workflow) to see it work.
+
+on:
+  schedule:
+    # 06:15 UTC is just after midnight in Dallas in winter, 01:15 in summer, so an event dated
+    # yesterday has ended by the time the site is rebuilt. GitHub may start it a little late.
+    - cron: '15 6 * * *'
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  rebuild:
+    name: Ask Cloudflare Pages to rebuild
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call the deploy hook
+        env:
+          DEPLOY_HOOK: ${{ secrets.CLOUDFLARE_DEPLOY_HOOK }}
+        run: |
+          if [ -z "$DEPLOY_HOOK" ]; then
+            echo "::error::The CLOUDFLARE_DEPLOY_HOOK secret is not set; see the setup steps at the top of this file."
+            exit 1
+          fi
+          curl --fail --silent --show-error --request POST "$DEPLOY_HOOK" > /dev/null
+          echo "Cloudflare Pages accepted the rebuild request."
