@@ -54,7 +54,12 @@ const known = (value: string | null | undefined): value is string => Boolean(val
     <meta property="og:locale" content={locale === 'es' ? 'es_US' : 'en_US'} />
     <meta name="twitter:card" content="summary_large_image" />
 
+    {/* The SVG for browsers that take it, the .ico for the rest, and the PNG for an iPhone home
+        screen; `just favicons` renders the bitmaps from the SVG. `sizes` on the .ico is what lets
+        a browser that supports both prefer the SVG. */}
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <link rel="alternate" type="application/rss+xml" title={`${org.name} — ${t('updates.heading')}`} href="/rss.xml" />
 

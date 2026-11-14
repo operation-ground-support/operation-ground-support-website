@@ -6,8 +6,12 @@ Two marks are in use while the bridge logo is still being drawn:
   the masthead. It is black and white, and stays that way on the site's dark navy: the sign's black
   rim disappears into the background, so it reads as a white plate with black lettering. That is
   expected, not a rendering fault.
-- **The favicon** (`public/favicon.svg`) is a placeholder: a bridge abstracted to three strokes, a
-  deck and two supports, in the site's orange on its navy. It is scaffolding, not the logo.
+- **The favicon** (`public/favicon.svg`) is "OGS" in black on a white plate, inset in the site's
+  navy, the letters lifted from the road sign's own D-DIN outlines so the two match. It is a
+  placeholder until the bridge mark has an icon. `just favicons` renders `favicon.ico` (16, 32, and
+  48 px) and `apple-touch-icon.png` from it, so change the SVG and rerun that rather than editing
+  the bitmaps. At 16 px, the size tabs use on standard-resolution screens, three letters are about
+  as much as fits, which is one more reason the bridge icon will do better.
 
 The bridge is also drawn on the homepage, as the "How the bridge works" diagram
 (`src/components/BridgeChain.astro`). That is the site's illustration of the idea rather than a
