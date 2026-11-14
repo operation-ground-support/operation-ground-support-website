@@ -172,6 +172,10 @@ _photo SRC TARGET:
   exiftool -all= -overwrite_original "{{TARGET}}" >/dev/null
   echo "wrote {{TARGET}} ($(du -h "{{TARGET}}" | cut -f1)), metadata stripped"
 
+# Render favicon.ico and apple-touch-icon.png from public/favicon.svg, after changing it
+favicons: _deps
+  node tools/favicons.mjs
+
 # Minify an SVG in place, for logo files
 optimize-svg FILE:
   svgo --multipass "{{FILE}}"
