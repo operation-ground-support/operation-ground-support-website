@@ -57,6 +57,12 @@ const known = (value: string | null | undefined): value is string => Boolean(val
     {/* The SVG for browsers that take it, the .ico for the rest, and the PNG for an iPhone home
         screen; `just favicons` renders the bitmaps from the SVG. `sizes` on the .ico is what lets
         a browser that supports both prefer the SVG. */}
+    {/* The colour for browsers that tint their own toolbar to match the page (Safari, Chrome on
+        Android, Vivaldi). Without it they sample the top of the page, catch it half-loaded on each
+        navigation, and the top of the window seems to flicker between shades. The site's navy,
+        `--paper` in global.css, written out because a meta tag cannot read a CSS variable. */}
+    <meta name="theme-color" content="#0d1129" />
+
     <link rel="icon" href="/favicon.ico" sizes="32x32" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
