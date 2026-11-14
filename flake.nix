@@ -17,8 +17,12 @@
 
         # Node is only a build-time tool here. Nothing it produces is served at runtime; the
         # deployable artifact is the static `dist/` directory, so the exact Node version only has
-        # to be new enough for Astro (Astro 7 wants >=22.12).
-        nodejs = pkgs.nodejs_22;
+        # to be new enough for Astro (Astro 7.4 wants >=22.22).
+        #
+        # The major version is read from `.node-version`, which GitHub Actions and Cloudflare Pages
+        # also read, so the dev shell, CI, and the production build cannot drift apart. Change it
+        # there, to a version nixpkgs has a `nodejs_<major>` for.
+        nodejs = pkgs."nodejs_${pkgs.lib.fileContents ./.node-version}";
 
         commonTools = with pkgs; [
           nodejs

@@ -115,9 +115,11 @@ on `main`, not behind a command anyone can run from a laptop.
 
 Cloudflare Pages, connected to the GitHub repo:
 
-- Build command: `npm ci && npm run build`
+- Build command: `npm run build` (Pages installs the dependencies itself first)
 - Output directory: `dist`
-- Node version: 22
+- Node version: none set in the dashboard. Pages reads it from `.node-version` in the repository,
+  as the dev shell and CI do; a `NODE_VERSION` setting in the dashboard could override that file
+  and let production drift from what was tested.
 
 Netlify and GitHub Pages take the same two settings. Nothing in this project depends on a host's
 runtime, which is the point.
