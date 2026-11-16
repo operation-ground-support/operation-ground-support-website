@@ -1,0 +1,231 @@
+---
+/**
+ * A suspension bridge with supplies crossing it, on the homepage just above the closing band:
+ * the picture "Help us build the bridge" is talking about. Adapted from the designer's draft,
+ * where it sat in the opening section.
+ *
+ * It reads left to right, the way the supplies travel: partners and supplies on one bank, the
+ * organization in the middle, neighbors in need on the other. `BridgeChain.astro` tells the
+ * same story in words, starting from the neighbor; this one follows the parcels.
+ *
+ * The labels are text under the drawing, not inside it. Inside the SVG they scale with it, which
+ * is about 6px on a phone, and the end piers stood on top of them.
+ *
+ * The moving traffic is one of the site's few allowances for motion (see CLAUDE.md). With reduced
+ * motion asked for, and in print, the parcels stand still, spaced along the deck.
+ */
+import { org } from '../data/org'
+import { pick, type Locale } from '../i18n/routes'
+
+interface Props {
+  locale: Locale
+}
+
+const { locale } = Astro.props
+
+const text = {
+  from: { en: 'Partners & supplies', es: 'Aliados y suministros' },
+  to: { en: 'Neighbors in need', es: 'Vecinos que necesitan ayuda' },
+}
+
+/* The drawing, in viewBox units (800 × 200). Every hanger's length is worked out from the cable
+   below, so a change to the deck or a tower moves the hangers with it instead of leaving them
+   short of the cable or poking through it. */
+const deck = 120
+const deckWidth = 5
+const cableWidth = 3
+const water = 192
+const ends = [40, 760] // the outer edges of the two end piers, where the deck and the cable stop
+const pierWidth = 16
+const piers = [ends[0] + pierWidth / 2, ends[1] - pierWidth / 2] // their centres
+const towers = [240, 560]
+const towerTop = 26
+const cableTop = 30 // where the cable passes over a tower
+const sideSag = 112 // control points: lower means a deeper curve
+const mainSag = 158
+
+/** A quadratic curve with its control point midway across, so x moves evenly along it. */
+const span = (x0: number, y0: number, cy: number, x1: number, y1: number) => ({
+  path: `Q${(x0 + x1) / 2} ${cy} ${x1} ${y1}`,
+  yAt(x: number) {
+    const t = (x - x0) / (x1 - x0)
+    return (1 - t) ** 2 * y0 + 2 * t * (1 - t) * cy + t ** 2 * y1
+  },
+  covers: (x: number) => x > x0 && x < x1,
+})
+
+/* The cable comes down to the middle of the deck at its ends. Being thinner than the deck, its
+   last stretch disappears inside it rather than ending in a nub on top. It stops half its own
+   width short of the deck's ends: its end is cut square to its slope, so a cable running right
+   to the end would put one corner a sliver past it. */
+const tuck = cableWidth / 2
+const spans = [
+  span(ends[0] + tuck, deck, sideSag, towers[0], cableTop),
+  span(towers[0], cableTop, mainSag, towers[1], cableTop),
+  span(towers[1], cableTop, sideSag, ends[1] - tuck, deck),
+]
+const cable = `M${ends[0] + tuck} ${deck}` + spans.map((s) => s.path).join('')
+
+// A hanger every 40 units, skipping the stubs too short to read as hangers near the ends.
+const hangers = Array.from({ length: 17 }, (_, i) => 80 + i * 40)
+  .filter((x) => !towers.includes(x))
+  .map((x) => ({ x, top: spans.find((s) => s.covers(x))!.yAt(x) }))
+  .filter(({ top }) => deck - top >= 8)
+  .map(({ x, top }) => `M${x} ${deck}V${top.toFixed(1)}`)
+  .join('')
+
+/* The traffic: parcels that fade in at one end of the deck and out at the other, evenly spaced
+   in time. Moving, they pass in front of the cable where it comes down to the deck near each
+   end, as traffic seen from the side would. Standing still, a parcel there looks stuck on it, so
+   the still version spreads them over the middle 70% of the deck instead.
+
+   They run the whole deck, resting on it: the bottom of each one meets the top of the deck's
+   line exactly. A parcel begins its fade in centred on the outer corner of the left end pier and
+   finishes its fade out centred on the outer corner of the right one. Half of it is past the end
+   of the deck at those two moments, but it is invisible then, and on the deck by the time it
+   can be seen. */
+const radius = 6
+const roadway = deck - deckWidth / 2 - radius
+const start = ends[0]
+const travel = ends[1] - start
+const seconds = 9
+const count = 5
+const parcels = Array.from({ length: count }, (_, i) => ({
+  'animation-delay': `${((-i / count) * seconds).toFixed(2)}s`,
+  '--rest': `${((0.15 + (i * 0.7) / (count - 1)) * travel).toFixed(1)}px`,
+}))
+---
+
+<div class="crossing wide">
+  <svg
+    viewBox="0 0 800 200"
+    aria-hidden="true"
+    focusable="false"
+    style={{ '--travel': `${travel}px`, '--duration': `${seconds}s` }}
+  >
+    <path class="crossing__water" d={`M0 ${water}H800`} />
+    {
+      towers.map((x) => (
+        <>
+          <rect x={x - 5} y={towerTop} width="10" height={water - towerTop} />
+          <rect x={x - 14} y={water - 12} width="28" height="12" />
+        </>
+      ))
+    }
+    {
+      piers.map((x) => (
+        <>
+          <rect x={x - pierWidth / 2} y={deck} width={pierWidth} height={water - deck} />
+          <rect x={x - 24} y={water - 12} width="48" height="12" />
+        </>
+      ))
+    }
+    <path class="crossing__hangers" d={hangers} />
+    <path class="crossing__deck" d={`M${ends[0]} ${deck}H${ends[1]}`} stroke-width={deckWidth} />
+    <path class="crossing__cable" d={cable} stroke-width={cableWidth} />
+    {
+      parcels.map((style) => (
+        <circle class="crossing__parcel" cx={start} cy={roadway} r={radius} style={style} />
+      ))
+    }
+  </svg>
+
+  <ol class="crossing__ends">
+    <li class="eyebrow">{pick(text.from, locale)}</li>
+    <li class="eyebrow">{org.name}</li>
+    <li class="eyebrow">{pick(text.to, locale)}</li>
+  </ol>
+</div>
+
+<style>
+  .crossing {
+    margin-block-start: var(--space-2xl);
+    color: var(--ink);
+  }
+
+  svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    fill: currentColor;
+  }
+
+  .crossing__deck,
+  .crossing__cable,
+  .crossing__hangers,
+  .crossing__water {
+    fill: none;
+    stroke: currentColor;
+  }
+
+  /* The deck's and the cable's widths are set on the paths, from the numbers above, because the
+     parcels' height and the cable's ends are worked out from them. A width set here would win
+     over those and quietly undo both. */
+
+  /* The fine lines hold their width as the drawing shrinks; at phone width they would otherwise
+     thin to a fraction of a pixel and break up. */
+  .crossing__hangers,
+  .crossing__water {
+    stroke-width: 1.5;
+    vector-effect: non-scaling-stroke;
+  }
+
+  .crossing__hangers {
+    stroke: var(--ink-faint);
+  }
+
+  .crossing__water {
+    stroke: var(--rule-strong);
+    stroke-dasharray: 3 7;
+  }
+
+  /* Kraft, the colour of a cardboard box, as on the bridge diagram's arrows: what crosses. */
+  .crossing__parcel {
+    fill: var(--kraft);
+    animation: cross var(--duration) linear infinite;
+  }
+
+  /* The fade in is half the length of the fade out, on purpose. Faint kraft barely shows on the
+     navy, so a parcel fading in as slowly as it fades out is first noticed already past the end
+     pier and seems to start late. One fading out has been followed all the way across, and is
+     tracked to the corner. At 3% a parcel is half there while still over the pier. */
+  @keyframes cross {
+    0% {
+      transform: translateX(0);
+      opacity: 0;
+    }
+    3%,
+    94% {
+      opacity: 1;
+    }
+    100% {
+      transform: translateX(var(--travel));
+      opacity: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce), print {
+    .crossing__parcel {
+      animation: none;
+      transform: translateX(var(--rest));
+    }
+  }
+
+  /* Under the two ends and the middle of the bridge, in the order the supplies travel. */
+  .crossing__ends {
+    list-style: none;
+    padding: 0;
+    margin-block-start: var(--space-xs);
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--space-s);
+  }
+
+  .crossing__ends li:nth-child(2) {
+    text-align: center;
+  }
+
+  .crossing__ends li:last-child {
+    text-align: end;
+  }
+</style>
