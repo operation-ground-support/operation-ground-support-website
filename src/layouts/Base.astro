@@ -52,6 +52,18 @@ const known = (value: string | null | undefined): value is string => Boolean(val
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:locale" content={locale === 'es' ? 'es_US' : 'en_US'} />
+    <meta property="og:site_name" content={org.name} />
+    {/* The picture a link shows when pasted into a text message or a post: the road sign, made by
+        `just social-card`. Without one, iMessage takes a photograph off the page instead. It must
+        be an absolute URL, and a bitmap; no link preview accepts an SVG. */}
+    <meta property="og:image" content={new URL('/social-card.png', Astro.site).href} />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content={locale === 'es' ? `Logotipo de ${org.name}` : `${org.name} logo`}
+    />
     <meta name="twitter:card" content="summary_large_image" />
 
     {/* The SVG for browsers that take it, the .ico for the rest, and the PNG for an iPhone home

@@ -176,6 +176,10 @@ _photo SRC TARGET:
 favicons: _deps
   node tools/favicons.mjs
 
+# Render social-card.png, the picture a pasted link shows, from the road sign, after changing it
+social-card: _deps
+  node tools/social-card.mjs
+
 # Minify an SVG in place, for logo files
 optimize-svg FILE:
   svgo --multipass "{{FILE}}"

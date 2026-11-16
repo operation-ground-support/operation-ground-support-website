@@ -12,6 +12,10 @@ Two marks are in use while the bridge logo is still being drawn:
   48 px) and `apple-touch-icon.png` from it, so change the SVG and rerun that rather than editing
   the bitmaps. At 16 px, the size tabs use on standard-resolution screens, three letters are about
   as much as fits, which is one more reason the bridge icon will do better.
+- **The link preview** (`public/social-card.png`) is the road sign centred on navy, 1200 × 630:
+  the picture a link to the site shows in a text message, a social post, or a chat. Those apps
+  take only a bitmap, never an SVG, so `just social-card` renders it from `sign.svg`; rerun it if
+  the sign changes. Every page names it as its `og:image` in `Base.astro`.
 
 The bridge is also drawn twice on the homepage: as the "How the bridge works" diagram
 (`src/components/BridgeChain.astro`), and as a suspension bridge with parcels crossing it, just
