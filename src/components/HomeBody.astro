@@ -11,6 +11,7 @@
  * behind the English one structurally. The prose comes from `org.ts`, already in both languages.
  */
 import BridgeChain from './BridgeChain.astro'
+import BridgeCrossing from './BridgeCrossing.astro'
 import CallToAction from './CallToAction.astro'
 import Programs from './Programs.astro'
 import TaxCode from './TaxCode.astro'
@@ -83,6 +84,9 @@ const allUpdates = navLink('updates', locale)
     </section>
   )
 }
+
+{/* The bridge itself, just before the band that asks for help building it. */}
+<BridgeCrossing locale={locale} />
 
 {/* Last on the page, and it has to stay last: it pulls itself down to meet the footer. */}
 <CallToAction locale={locale} />

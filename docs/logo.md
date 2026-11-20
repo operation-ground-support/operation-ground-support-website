@@ -12,10 +12,15 @@ Two marks are in use while the bridge logo is still being drawn:
   48 px) and `apple-touch-icon.png` from it, so change the SVG and rerun that rather than editing
   the bitmaps. At 16 px, the size tabs use on standard-resolution screens, three letters are about
   as much as fits, which is one more reason the bridge icon will do better.
+- **The link preview** (`public/social-card.png`) is the road sign centred on navy, 1200 × 630:
+  the picture a link to the site shows in a text message, a social post, or a chat. Those apps
+  take only a bitmap, never an SVG, so `just social-card` renders it from `sign.svg`; rerun it if
+  the sign changes. Every page names it as its `og:image` in `Base.astro`.
 
-The bridge is also drawn on the homepage, as the "How the bridge works" diagram
-(`src/components/BridgeChain.astro`). That is the site's illustration of the idea rather than a
-mark, and it does not need to change when the logo does.
+The bridge is also drawn twice on the homepage: as the "How the bridge works" diagram
+(`src/components/BridgeChain.astro`), and as a suspension bridge with parcels crossing it, just
+above the closing band (`src/components/BridgeCrossing.astro`). Those are the site's
+illustrations of the idea rather than marks, and they do not need to change when the logo does.
 
 The palette no longer comes from a mark. It was set in the redesign (a navy ground, signal orange,
 kraft, and cobalt) and lives as tokens in `src/styles/global.css`, so the designer should have

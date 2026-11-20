@@ -21,7 +21,7 @@
    * Signal orange is for the primary
    * act (Donate, an event's sign-up), focus rings, the current-page mark, an event's countdown,
    * and the organization's own step in the bridge diagram. Kraft is the colour of a cardboard box, and is used only for the transparency
-   * bar and the diagram's arrows. The light version of the same palette is under `@media print`
+   * bar, the diagram's arrows, and the parcels crossing the bridge drawing. The light version of the same palette is under `@media print`
    * at the end of this file.
    *
    * `--paper` and `--ink` keep their names in the dark: they mean the ground and the text, not

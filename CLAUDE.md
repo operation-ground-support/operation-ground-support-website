@@ -42,7 +42,8 @@ The site is type-led on purpose. Do not introduce:
 - icon triptychs or three-up feature cards. The one exception is the bridge diagram in
   `BridgeChain.astro`, allowed because it is a sequence (ordered steps joined by arrows), not a
   set of features. Do not reuse its shape for anything that is not a sequence
-- a carousel, a parallax section, or an autoplaying video (actually, we may include two or three of these things, but there is a limited specialness budget)
+- a carousel, a parallax section, or an autoplaying video (actually, we may include two or three of these things, but there is a limited specialness budget). The parcels moving across the
+  bridge drawing above the closing band (`BridgeCrossing.astro`) already spend some of it
 - a third button treatment — solid (`.button`) and outline (`.button--quiet`) are the whole
   vocabulary. The homepage doors use those classes directly; the nav redraws the same pair at its
   own smaller size in `Header.astro`
@@ -65,7 +66,7 @@ at the end of that file, and a new colour token needs one there too, or it print
 white paper. Each accent has one job: signal orange for the primary act (Donate, an event's
 sign-up), focus rings, the current-page mark, and event countdowns; cobalt for links and the
 homepage's closing band; kraft for the transparency
-bar and the bridge diagram's arrows. Text on orange is near-black, because white fails contrast
+bar, the bridge diagram's arrows, and the parcels crossing the bridge drawing. Text on orange is near-black, because white fails contrast
 there. How the palette relates to the coming bridge logo is in `docs/logo.md`.
 
 The fonts have fixed roles. The stencil face (`--font-headline`) sets the homepage's opening
